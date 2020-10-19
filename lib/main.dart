@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:carePanda/HomePage.dart';
-import 'package:carePanda/DashboardPage.dart';
-import 'package:carePanda/SettingsPage.dart';
+import 'package:carePanda/Pages/HomePage.dart';
+import 'package:carePanda/Pages/DashboardPage.dart';
+import 'package:carePanda/Pages/SettingsPage.dart';
 
 void main() {
   runApp(MyApp());
