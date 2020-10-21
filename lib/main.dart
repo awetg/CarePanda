@@ -38,12 +38,13 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final navBarColor = Color(0xff027DC5);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Care Panda'),
-      ),
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: navBarColor,
+        unselectedItemColor: Color.fromRGBO(255, 255, 255, 60),
+        selectedItemColor: Colors.white,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
           BottomNavigationBarItem(
