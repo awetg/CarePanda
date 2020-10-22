@@ -1,9 +1,18 @@
+import 'package:carePanda/pages/user_boarding.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/Pages/HomePage.dart';
-import 'package:carePanda/Pages/DashboardPage.dart';
-import 'package:carePanda/Pages/SettingsPage.dart';
+import 'package:carePanda/pages/HomePage.dart';
+import 'package:carePanda/pages/DashboardPage.dart';
+import 'package:carePanda/pages/SettingsPage.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+bool showBoarding;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  showBoarding = await prefs.getBool("showBoarding") ?? true;
+  await prefs.setBool("showBoarding", false);
+  print("showBoarding = $showBoarding");
   runApp(MyApp());
 }
 
@@ -11,6 +20,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return MaterialApp(
       title: 'Care Panda',
       theme: ThemeData(
@@ -20,7 +33,11 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyStatefulWidget(),
+      initialRoute: showBoarding ? "/boarding" : "/",
+      routes: {
+        "/": (context) => MyStatefulWidget(),
+        "/boarding": (context) => UserBoarding(),
+      },
     );
   }
 }
