@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:developer';
-import 'package:carePanda/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WeekCountdown extends StatefulWidget {
   @override
@@ -9,32 +9,32 @@ class WeekCountdown extends StatefulWidget {
 }
 
 class _WeekCountdownState extends State<WeekCountdown> {
-  Timer timer;
-  DateTime currentTime;
+  Timer _timer;
+  DateTime _currentTime;
 
   @override
   void initState() {
     super.initState();
-    currentTime = DateTime.now();
-    timer = Timer.periodic(Duration(seconds: 1), onTimeChange);
+    _currentTime = DateTime.now();
+    _timer = Timer.periodic(Duration(seconds: 1), onTimeChange);
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
-  void onTimeChange(Timer timer) {
+  void onTimeChange(Timer _timer) {
     setState(() {
-      currentTime = DateTime.now();
+      _currentTime = DateTime.now();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final textColor = Color(0xff027DC5);
-    final newTime = currentTime.subtract(new Duration(hours: 15));
+    final newTime = _currentTime.subtract(new Duration(hours: 15));
     final nextWednesday = calculateNextWednesday(newTime);
     final remaining = nextWednesday.difference(newTime);
 
@@ -52,7 +52,12 @@ class _WeekCountdownState extends State<WeekCountdown> {
     }
 
     if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-      globals.hasQuestionnaire = true;
+      _setHasQuestionnaire() async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('hasQuestionnaire', true);
+      }
+
+      _setHasQuestionnaire();
     }
 
     return Text(formattedRemaining,
