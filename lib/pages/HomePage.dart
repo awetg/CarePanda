@@ -49,14 +49,14 @@ class _HomePageState extends State<HomePage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      if (_hasQuestionnaire)
+                      if (!_hasQuestionnaire)
                         SizedBox(
                           width: double.infinity,
                           child: CardWidget(
                             widget: Questionnaire(),
                           ),
                         ),
-                      if (!_hasQuestionnaire)
+                      if (_hasQuestionnaire)
                         SizedBox(
                           width: double.infinity,
                           child: CardWidget(
@@ -121,76 +121,98 @@ class Timer extends StatelessWidget {
 }
 
 class Questionnaire extends StatelessWidget {
-  final textColor = Color(0xff027DC5);
+  final _blueColor = Color(0xff027DC5);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('You have a questionnaire',
-                style: TextStyle(fontSize: 22.0, color: textColor)),
-          ],
-        ),
-        SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            RaisedButton(
-              child: const Text('Answer now', style: TextStyle(fontSize: 18)),
-              color: textColor,
-              textColor: Colors.white,
-              splashColor: Color(0xffD7E0EB),
-              onPressed: () {
-                log("button pressed");
-              },
-            ),
-            SizedBox(width: 15),
-          ],
-        ),
-        SizedBox(height: 15),
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: 18),
+        Icon(Icons.assignment, size: 55, color: _blueColor),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(height: 18),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('You have a questionnaire',
+                      style: TextStyle(fontSize: 22.0, color: _blueColor)),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  RaisedButton(
+                    child: const Text('Answer now',
+                        style: TextStyle(fontSize: 18)),
+                    color: _blueColor,
+                    textColor: Colors.white,
+                    splashColor: Color(0xffD7E0EB),
+                    onPressed: () {
+                      log("button pressed");
+                    },
+                  ),
+                  SizedBox(width: 18),
+                ],
+              ),
+              SizedBox(height: 18),
+            ],
+          ),
+        )
       ],
     );
   }
 }
 
 class ContactHR extends StatelessWidget {
-  final textColor = Color(0xff027DC5);
+  final _blueColor = Color(0xff027DC5);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Need help?',
-                style: TextStyle(fontSize: 22.0, color: textColor)),
-          ],
-        ),
-        SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            RaisedButton(
-              child: const Text('Contact HR', style: TextStyle(fontSize: 18)),
-              color: textColor,
-              textColor: Colors.white,
-              splashColor: Color(0xffD7E0EB),
-              onPressed: () {
-                log("button pressed");
-              },
-            ),
-            SizedBox(width: 15),
-          ],
-        ),
-        SizedBox(height: 15),
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: 18),
+        Icon(Icons.help, size: 55, color: _blueColor),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(height: 18),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Need professional help?',
+                      style: TextStyle(fontSize: 22.0, color: _blueColor)),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  RaisedButton(
+                    child: const Text('Contact HR',
+                        style: TextStyle(fontSize: 18)),
+                    color: _blueColor,
+                    textColor: Colors.white,
+                    splashColor: Color(0xffD7E0EB),
+                    onPressed: () {
+                      log("button pressed");
+                    },
+                  ),
+                  SizedBox(width: 18),
+                ],
+              ),
+              SizedBox(height: 18),
+            ],
+          ),
+        )
       ],
     );
   }
