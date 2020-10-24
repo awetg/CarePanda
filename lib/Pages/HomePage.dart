@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carePanda/Countdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
+import 'package:carePanda/HRpopup.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -29,51 +30,52 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: const Text('Home', style: TextStyle(color: Color(0xff027DC5))),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(height: 10),
-              Image.asset(
-                'assets/images/carepandaLogo.png',
-                height: 150,
-                width: 250,
-              ),
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (!_hasQuestionnaire)
-                        SizedBox(
-                          width: double.infinity,
-                          child: CardWidget(
-                            widget: Questionnaire(),
-                          ),
-                        ),
-                      if (_hasQuestionnaire)
-                        SizedBox(
-                          width: double.infinity,
-                          child: CardWidget(
-                            widget: Timer(),
-                          ),
-                        ),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(height: 10),
+                Image.asset(
+                  'assets/images/carepandaLogo.png',
+                  height: 150,
+                  width: 250,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(height: 30),
+                    if (!_hasQuestionnaire)
                       SizedBox(
                         width: double.infinity,
                         child: CardWidget(
-                          widget: ContactHR(),
+                          widget: Questionnaire(),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )
-            ],
+                    if (_hasQuestionnaire)
+                      SizedBox(
+                        width: double.infinity,
+                        child: CardWidget(
+                          widget: Timer(),
+                        ),
+                      ),
+                    SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: CardWidget(
+                        widget: ContactHR(),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -154,7 +156,7 @@ class Questionnaire extends StatelessWidget {
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     onPressed: () {
-                      log("button pressed");
+                      log("Questionnaire button pressed");
                     },
                   ),
                   SizedBox(width: 18),
@@ -203,7 +205,11 @@ class ContactHR extends StatelessWidget {
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     onPressed: () {
-                      log("button pressed");
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return HRPopup();
+                          });
                     },
                   ),
                   SizedBox(width: 18),
