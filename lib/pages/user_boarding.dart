@@ -30,7 +30,7 @@ class _UserBoardingState extends State<UserBoarding> {
 
   // handle next page of PageContorller
   nextPage() {
-    if (currentIndex < 2)
+    if (currentIndex < (_sliderItems.length - 1))
       _pageController.nextPage(
           duration: animation_duration, curve: animation_type);
     else
@@ -71,7 +71,7 @@ class _UserBoardingState extends State<UserBoarding> {
           scrollDirection: Axis.horizontal,
           controller: _pageController,
           onPageChanged: onChangedFunction,
-          itemCount: 3,
+          itemCount: _sliderItems.length,
           itemBuilder: (context, i) => SliderPage(_sliderItems[i]),
         ),
         Stack(
@@ -116,7 +116,7 @@ class _UserBoardingState extends State<UserBoarding> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  for (int i = 0; i < 3; i++)
+                  for (int i = 0; i < _sliderItems.length; i++)
                     SliderDot(positionIndex: i, currentIndex: currentIndex)
                 ],
               ),
