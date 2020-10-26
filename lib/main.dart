@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Care Panda',
       theme: ThemeData(
         primarySwatch: Colors.blue,
