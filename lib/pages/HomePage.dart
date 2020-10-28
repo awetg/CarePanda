@@ -63,7 +63,7 @@ class _AllCards extends State<AllCards> {
   }
 
   Future<bool> _loadQuestionnaire() =>
-      Future.delayed(Duration(seconds: 1), () async {
+      Future.delayed(Duration(seconds: 0), () async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         _hasQuestionnaire = (prefs.getBool('hasQuestionnaire') ?? false);
         return _hasQuestionnaire;

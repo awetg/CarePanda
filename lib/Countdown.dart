@@ -36,7 +36,8 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
   _setHasQuestionnaire() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('hasQuestionnaire', false);
+    prefs.setBool('hasQuestionnaire', true);
+    widget.questionnaireStatusChanged();
   }
 
   @override
@@ -62,7 +63,6 @@ class _WeekCountdownState extends State<WeekCountdown> {
     if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _setHasQuestionnaire();
-        widget.questionnaireStatusChanged();
       });
     }
 
