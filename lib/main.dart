@@ -57,11 +57,11 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Care Panda'),
-      ),
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        unselectedItemColor: Color.fromRGBO(2, 125, 197, 90),
+        selectedItemColor: Color(0xff027DC5),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
           BottomNavigationBarItem(

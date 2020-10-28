@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:developer';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WeekCountdown extends StatefulWidget {
+  final VoidCallback questionnaireStatusChanged;
+  WeekCountdown({this.questionnaireStatusChanged});
+
   @override
   State<StatefulWidget> createState() => _WeekCountdownState();
 }
@@ -14,7 +19,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
   void initState() {
     super.initState();
     _currentTime = DateTime.now();
-    _timer = Timer.periodic(Duration(seconds: 1), _onTimeChange);
+    _timer = Timer.periodic(Duration(seconds: 1), onTimeChange);
   }
 
   @override
@@ -23,16 +28,24 @@ class _WeekCountdownState extends State<WeekCountdown> {
     super.dispose();
   }
 
-  void _onTimeChange(Timer timer) {
+  void onTimeChange(Timer _timer) {
     setState(() {
       _currentTime = DateTime.now();
     });
   }
 
+  _setHasQuestionnaire() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('hasQuestionnaire', true);
+    widget.questionnaireStatusChanged();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final nextWednesday = calculateNextWednesday(_currentTime);
-    final remaining = nextWednesday.difference(_currentTime);
+    final textColor = Color(0xff027DC5);
+    final newTime = _currentTime.subtract(new Duration(hours: 15));
+    final nextWednesday = calculateNextWednesday(newTime);
+    final remaining = nextWednesday.difference(newTime);
 
     final days = remaining.inDays;
     final hours = remaining.inHours - remaining.inDays * 24;
@@ -47,7 +60,14 @@ class _WeekCountdownState extends State<WeekCountdown> {
       formattedRemaining = '$hours : $minutes : $seconds';
     }
 
-    return Text(formattedRemaining, style: TextStyle(fontSize: 36.0));
+    if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _setHasQuestionnaire();
+      });
+    }
+
+    return Text(formattedRemaining,
+        style: TextStyle(fontSize: 36.0, color: textColor));
   }
 }
 
