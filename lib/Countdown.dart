@@ -4,6 +4,9 @@ import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WeekCountdown extends StatefulWidget {
+  final VoidCallback questionnaireStatusChanged;
+  WeekCountdown({this.questionnaireStatusChanged});
+
   @override
   State<StatefulWidget> createState() => _WeekCountdownState();
 }
@@ -31,6 +34,11 @@ class _WeekCountdownState extends State<WeekCountdown> {
     });
   }
 
+  _setHasQuestionnaire() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('hasQuestionnaire', false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final textColor = Color(0xff027DC5);
@@ -52,12 +60,10 @@ class _WeekCountdownState extends State<WeekCountdown> {
     }
 
     if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-      _setHasQuestionnaire() async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('hasQuestionnaire', true);
-      }
-
-      _setHasQuestionnaire();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _setHasQuestionnaire();
+        widget.questionnaireStatusChanged();
+      });
     }
 
     return Text(formattedRemaining,

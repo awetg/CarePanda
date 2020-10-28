@@ -14,17 +14,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _hasQuestionnaire = false;
-
   @override
   void initState() {
     super.initState();
-    _loadQuestionnaire();
-  }
-
-  _loadQuestionnaire() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _hasQuestionnaire = (prefs.getBool('hasQuestionnaire') ?? false);
   }
 
   Widget build(BuildContext context) {
@@ -46,34 +38,7 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   width: 250,
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(height: 30),
-                    if (!_hasQuestionnaire)
-                      SizedBox(
-                        width: double.infinity,
-                        child: CardWidget(
-                          widget: Questionnaire(),
-                        ),
-                      ),
-                    if (_hasQuestionnaire)
-                      SizedBox(
-                        width: double.infinity,
-                        child: CardWidget(
-                          widget: Timer(),
-                        ),
-                      ),
-                    SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      child: CardWidget(
-                        widget: ContactHR(),
-                      ),
-                    ),
-                  ],
-                )
+                AllCards(),
               ],
             ),
           ),
@@ -81,6 +46,87 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class AllCards extends StatefulWidget {
+  @override
+  _AllCards createState() => _AllCards();
+}
+
+class _AllCards extends State<AllCards> {
+  bool _hasQuestionnaire = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuestionnaire();
+  }
+
+  Future<bool> _loadQuestionnaire() =>
+      Future.delayed(Duration(seconds: 1), () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        _hasQuestionnaire = (prefs.getBool('hasQuestionnaire') ?? false);
+        return _hasQuestionnaire;
+      });
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder(
+      future: _loadQuestionnaire(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(height: 30),
+              if (_hasQuestionnaire)
+                SizedBox(
+                  width: double.infinity,
+                  child: CardWidget(
+                    widget: Questionnaire(),
+                  ),
+                ),
+              if (!_hasQuestionnaire)
+                SizedBox(
+                  width: double.infinity,
+                  child: CardWidget(
+                    widget: Timer(
+                      timerWidget: WeekCountdown(
+                        questionnaireStatusChanged: () {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: CardWidget(
+                  widget: ContactHR(),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(height: 30),
+                CircularProgressIndicator(),
+                SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: CardWidget(
+                    widget: ContactHR(),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      });
 }
 
 class CardWidget extends StatelessWidget {
@@ -105,6 +151,8 @@ class CardWidget extends StatelessWidget {
 }
 
 class Timer extends StatelessWidget {
+  Timer({this.timerWidget});
+  final timerWidget;
   final textColor = Color(0xff027DC5);
   @override
   Widget build(BuildContext context) {
@@ -115,7 +163,7 @@ class Timer extends StatelessWidget {
         Text('Time until next questionnaire',
             style: TextStyle(fontSize: 22.0, color: textColor)),
         SizedBox(height: 10),
-        WeekCountdown(),
+        timerWidget,
         SizedBox(height: 15),
       ],
     );
