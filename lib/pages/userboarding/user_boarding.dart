@@ -1,6 +1,6 @@
 import 'package:carePanda/model/slider_item.dart';
-import 'package:carePanda/pages/slider_dot.dart';
-import 'package:carePanda/pages/slider_page.dart';
+import 'package:carePanda/pages/userboarding/slider_dot.dart';
+import 'package:carePanda/pages/userboarding/slider_page.dart';
 import 'package:flutter/material.dart';
 
 class UserBoarding extends StatefulWidget {
