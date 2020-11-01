@@ -1,3 +1,4 @@
+import 'package:carePanda/pages/survey/survey_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/Countdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,6 +67,7 @@ class _AllCards extends State<AllCards> {
       Future.delayed(Duration(seconds: 0), () async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         _hasQuestionnaire = (prefs.getBool('hasQuestionnaire') ?? false);
+        // _hasQuestionnaire = true;
         return _hasQuestionnaire;
       });
 
@@ -204,6 +206,10 @@ class Questionnaire extends StatelessWidget {
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     onPressed: () {
+                      Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => SurveyFlow()));
                       log("Questionnaire button pressed");
                     },
                   ),

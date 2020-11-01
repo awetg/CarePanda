@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/slider_item.dart';
+import '../../model/slider_item.dart';
 
 class SliderPage extends StatelessWidget {
   final SliderItem _sliderItem;
