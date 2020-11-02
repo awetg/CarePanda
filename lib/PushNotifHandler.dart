@@ -1,19 +1,26 @@
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:developer';
+import 'package:carePanda/ServiceLocator.dart';
 
 class PushNotificationHandler {
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
   Future initialise() async {
+    var _storageService = locator<LocalStorageService>();
+
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        log("onMessage: $message");
+        _storageService.hasQuestionnaire = true;
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        log("onLaunch: $message");
+        _storageService.hasQuestionnaire = true;
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        log("onResume: $message");
+        _storageService.hasQuestionnaire = true;
       },
     );
 

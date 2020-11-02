@@ -1,7 +1,8 @@
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:developer';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:carePanda/ServiceLocator.dart';
 
 class WeekCountdown extends StatefulWidget {
   final VoidCallback questionnaireStatusChanged;
@@ -14,12 +15,14 @@ class WeekCountdown extends StatefulWidget {
 class _WeekCountdownState extends State<WeekCountdown> {
   Timer _timer;
   DateTime _currentTime;
+  var _storageService;
 
   @override
   void initState() {
     super.initState();
     _currentTime = DateTime.now();
     _timer = Timer.periodic(Duration(seconds: 1), onTimeChange);
+    _storageService = locator<LocalStorageService>();
   }
 
   @override
@@ -32,12 +35,6 @@ class _WeekCountdownState extends State<WeekCountdown> {
     setState(() {
       _currentTime = DateTime.now();
     });
-  }
-
-  _setHasQuestionnaire() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('hasQuestionnaire', true);
-    widget.questionnaireStatusChanged();
   }
 
   @override
@@ -62,7 +59,8 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
     if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _setHasQuestionnaire();
+        _storageService.hasQuestionnaire = true;
+        widget.questionnaireStatusChanged();
       });
     }
 

@@ -6,12 +6,16 @@ import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carePanda/PushNotifHandler.dart';
+import 'package:carePanda/ServiceLocator.dart';
 
 bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   showBoarding = await prefs.getBool("showBoarding") ?? true;
+  await prefs.setBool("showBoarding", false);
+  print("showBoarding = $showBoarding");
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -50,13 +54,10 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
-  final pushNotifHandler = PushNotificationHandler();
-
   int _selectedPage = 0;
   final _pageOptions = [HomePage(), DashBoardPage(), SettingsPage()];
   @override
   Widget build(BuildContext context) {
-    pushNotifHandler.initialise();
     return Scaffold(
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(

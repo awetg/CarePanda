@@ -1,9 +1,10 @@
 import 'package:carePanda/pages/survey/survey_flow.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/Countdown.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 import 'package:carePanda/HRpopup.dart';
+import 'package:carePanda/ServiceLocator.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -55,40 +56,37 @@ class AllCards extends StatefulWidget {
 }
 
 class _AllCards extends State<AllCards> {
-  bool _hasQuestionnaire = false;
-
   @override
   void initState() {
     super.initState();
-    _loadQuestionnaire();
   }
 
-  Future<bool> _loadQuestionnaire() =>
-      Future.delayed(Duration(seconds: 0), () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        _hasQuestionnaire = (prefs.getBool('hasQuestionnaire') ?? false);
-        // _hasQuestionnaire = true;
-        return _hasQuestionnaire;
-      });
+  // Gets data wheter user has questionnare ready or not
+  Future<bool> get checkHasQuestionnaire async {
+    var _storageService = locator<LocalStorageService>();
+    var _hasQuestionnaire = _storageService.hasQuestionnaire;
+    return _hasQuestionnaire;
+  }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-      future: _loadQuestionnaire(),
+  Widget build(BuildContext context) => FutureBuilder<bool>(
+      future: checkHasQuestionnaire,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          log("snapshot " + snapshot.data.toString());
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(height: 30),
-              if (_hasQuestionnaire)
+              if (snapshot.data)
                 SizedBox(
                   width: double.infinity,
                   child: CardWidget(
                     widget: Questionnaire(),
                   ),
                 ),
-              if (!_hasQuestionnaire)
+              if (!snapshot.data)
                 SizedBox(
                   width: double.infinity,
                   child: CardWidget(
