@@ -66,6 +66,13 @@ class _AllCards extends State<AllCards> {
   Future<bool> get checkHasQuestionnaire async {
     var _storageService = locator<LocalStorageService>();
     var _hasQuestionnaire = _storageService.hasQuestionnaire;
+
+    // If the value is null, default it to false
+    if (_hasQuestionnaire == null) {
+      _storageService.hasQuestionnaire = false;
+      _hasQuestionnaire = false;
+    }
+
     return _hasQuestionnaire;
   }
 
