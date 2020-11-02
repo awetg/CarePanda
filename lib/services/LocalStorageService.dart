@@ -52,8 +52,3 @@ class LocalStorageService {
     }
   }
 }
-
-class HasQuestionnaire {
-  final hasQuestionnaire;
-  HasQuestionnaire({this.hasQuestionnaire});
-}

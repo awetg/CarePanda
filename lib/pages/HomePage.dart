@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// Includes all home screen cards (Questionnaire card, Countdown card and HR contacting card)
 class AllCards extends StatefulWidget {
   @override
   _AllCards createState() => _AllCards();
@@ -129,6 +130,7 @@ class _AllCards extends State<AllCards> {
       });
 }
 
+// Base widget for cards. Includes card shape and background color and it takes a widget as a variable
 class CardWidget extends StatelessWidget {
   CardWidget({this.widget});
   final widget;
@@ -150,6 +152,7 @@ class CardWidget extends StatelessWidget {
   }
 }
 
+// Widget with countdown clock
 class Timer extends StatelessWidget {
   Timer({this.timerWidget});
   final timerWidget;
@@ -170,6 +173,7 @@ class Timer extends StatelessWidget {
   }
 }
 
+// Widget card to display that user has a qeustionnaire
 class Questionnaire extends StatelessWidget {
   final _blueColor = Color(0xff027DC5);
 
@@ -223,6 +227,7 @@ class Questionnaire extends StatelessWidget {
   }
 }
 
+// Widget card for contacting HR
 class ContactHR extends StatelessWidget {
   final _blueColor = Color(0xff027DC5);
 
@@ -257,6 +262,7 @@ class ContactHR extends StatelessWidget {
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     onPressed: () {
+                      // Opens pop up to give a phone number
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
