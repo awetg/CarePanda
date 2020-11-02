@@ -1,7 +1,6 @@
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:developer';
 import 'package:carePanda/ServiceLocator.dart';
 
 class WeekCountdown extends StatefulWidget {
