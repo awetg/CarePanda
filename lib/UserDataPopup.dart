@@ -47,6 +47,12 @@ class _UserDataPopup extends State<UserDataPopup> {
     Navigator.of(context).pop();
   }
 
+  // Skips setting data but but changes shared preference so that the popup wont show up when opening app again
+  skipSettingData() {
+    _storageService.firstTimeStartUp = false;
+    Navigator.of(context).pop();
+  }
+
   // Formats date to show in UI, if no date is chosen previously, shows "no date chosen" message
   _dateFormatter(date) {
     if (date == null) {
@@ -65,6 +71,7 @@ class _UserDataPopup extends State<UserDataPopup> {
     // Start date of date time picker
     var _startDate;
 
+    // If birthday is not set previously, shows predetermined date on datepicker when opened
     if (_birthday == null) {
       _startDate = DateTime.parse("2000-01-01 00:00:00");
     } else {
@@ -249,7 +256,7 @@ class _UserDataPopup extends State<UserDataPopup> {
           textColor: _blueColor,
           splashColor: Color(0xffD7E0EB),
           onPressed: () {
-            Navigator.of(context).pop();
+            skipSettingData();
           },
         ),
         RaisedButton(
