@@ -17,14 +17,37 @@ class LocalStorageService {
 
   // Local storage key string
   static const String HasQuestionnaireKey = 'hasQuestionnaire';
+  static const String FirsTimeStartUp = 'firstTimeStartUp';
+  // USER DATA
+  static const String Name = 'name';
+  static const String LastName = 'lastName';
+  static const String Birthday = 'birthday';
+  static const String Gender = 'gender';
+  static const String Building = 'building';
 
-  // Gets boolean value from local storage
+  // Gets value from local storage
   bool get hasQuestionnaire => _getFromLocalStorage(HasQuestionnaireKey);
+  bool get firstTimeStartUp => _getFromLocalStorage(FirsTimeStartUp);
+  // USER DATA
+  String get name => _getFromLocalStorage(Name);
+  String get lastName => _getFromLocalStorage(LastName);
+  String get birthday => _getFromLocalStorage(Birthday);
+  String get gender => _getFromLocalStorage(Gender);
+  String get building => _getFromLocalStorage(Building);
 
-  // Sets boolean value to local storage
+  // Sets value to local storage
   set hasQuestionnaire(bool value) =>
       _saveToLocalStorage(HasQuestionnaireKey, value);
+  set firstTimeStartUp(bool value) =>
+      _saveToLocalStorage(FirsTimeStartUp, value);
+  // USER DATA
+  set name(String value) => _saveToLocalStorage(Name, value);
+  set lastName(String value) => _saveToLocalStorage(LastName, value);
+  set birthday(String value) => _saveToLocalStorage(Birthday, value);
+  set gender(String value) => _saveToLocalStorage(Gender, value);
+  set building(String value) => _saveToLocalStorage(Building, value);
 
+  // VVV Functions to save/load data below VVV
   // Function to get data from local storage
   dynamic _getFromLocalStorage(String key) {
     var value = _preferences.get(key);

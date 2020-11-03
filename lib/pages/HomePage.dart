@@ -5,6 +5,7 @@ import 'package:carePanda/Countdown.dart';
 import 'dart:developer';
 import 'package:carePanda/HRpopup.dart';
 import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/UserDataPopup.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -15,10 +16,42 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+// Base widget for homepage. Includes base layout and icon
 class _HomePageState extends State<HomePage> {
+  var _firstStartUp;
+
   @override
   void initState() {
     super.initState();
+
+    // Gets boolean value wheter the app is started for the first time or not
+    var _storageService = locator<LocalStorageService>();
+    _firstStartUp = _storageService.firstTimeStartUp ?? true;
+    log("first start up " + _firstStartUp.toString());
+    if (_firstStartUp) {
+      openStartUpPopUp();
+    }
+
+    // DEV to log user data
+    /*
+    var _name = _storageService.name;
+    var _lastName = _storageService.lastName;
+    var _birthday = _storageService.birthday;
+    var _gender = _storageService.gender;
+    var _building = _storageService.building;
+    */
+  }
+
+// If application is started for the first time, opens up a popup
+  openStartUpPopUp() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return UserDataPopup();
+          });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -50,7 +83,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Includes all home screen cards (Questionnaire card, Countdown card and HR contacting card)
+// Includes layout for all home screen cards (Questionnaire card, Countdown card and HR contacting card) and a load icon
 class AllCards extends StatefulWidget {
   @override
   _AllCards createState() => _AllCards();
@@ -80,6 +113,7 @@ class _AllCards extends State<AllCards> {
   Widget build(BuildContext context) => FutureBuilder<bool>(
       future: checkHasQuestionnaire,
       builder: (context, snapshot) {
+        // Shows questionnaire/countdown card and HR card when receiving boolean value from shared preference
         if (snapshot.hasData) {
           log("snapshot " + snapshot.data.toString());
           return Column(
@@ -87,6 +121,8 @@ class _AllCards extends State<AllCards> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(height: 30),
+
+              // Shows questionnaire card if shared preference boolean value is true
               if (snapshot.data)
                 SizedBox(
                   width: double.infinity,
@@ -94,6 +130,8 @@ class _AllCards extends State<AllCards> {
                     widget: Questionnaire(),
                   ),
                 ),
+
+              // Shows countdown card if shared preference boolean value is false
               if (!snapshot.data)
                 SizedBox(
                   width: double.infinity,
@@ -116,6 +154,8 @@ class _AllCards extends State<AllCards> {
               ),
             ],
           );
+
+          // Shows loading indicator and HR card until receiving boolean value from shared preference
         } else {
           return Center(
             child: Column(
