@@ -142,7 +142,7 @@ class _UserDataPopup extends State<UserDataPopup> {
             Row(children: [
               Expanded(
                 child: Text(
-                  "Age",
+                  "Birthday",
                   style: TextStyle(color: Colors.grey[700]),
                 ),
               ),
