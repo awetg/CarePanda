@@ -17,6 +17,8 @@ class _UserDataPopup extends State<UserDataPopup> {
   var _birthday;
   var _gender;
   var _building;
+  var _cancelPopupText;
+  var _firstTimeStartUp;
 
   @override
   void initState() {
@@ -26,18 +28,18 @@ class _UserDataPopup extends State<UserDataPopup> {
     _birthday = _storageService.birthday;
     _gender = _storageService.gender ?? "Don't want to tell";
     _building = _storageService.building ?? "Don't want to tell";
+    _firstTimeStartUp = _storageService.firstTimeStartUp ?? true;
+
+    // If popup is opened from settings, shows different button text
+    if (_firstTimeStartUp == true || _firstTimeStartUp == null) {
+      _cancelPopupText = "Skip";
+    } else {
+      _cancelPopupText = "Cancel";
+    }
   }
 
   // Sets data to shared preferences
   setData() {
-    // DEV USER DATA LOG
-    /*
-    log("set name: " + _name.toString());
-    log("set last name: " + _lastName.toString());
-    log("set age: " + _birthday.toString());
-    log("set gender: " + _gender.toString());
-    log("set building: " + _building.toString());
-    */
     _storageService.name = _name;
     _storageService.lastName = _lastName;
     _storageService.birthday = _birthday.toString();
@@ -244,6 +246,15 @@ class _UserDataPopup extends State<UserDataPopup> {
                 Text("* Giving personal data is optional",
                     style: TextStyle(fontSize: 13.0, color: _blueColor)),
               ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (_firstTimeStartUp == true || _firstTimeStartUp == null)
+                  Text("* Personal data can be changed in settings",
+                      style: TextStyle(fontSize: 13.0, color: _blueColor)),
+              ],
             )
           ],
         ),
@@ -252,7 +263,7 @@ class _UserDataPopup extends State<UserDataPopup> {
       // Skip and submit buttons
       actions: [
         FlatButton(
-          child: const Text('Skip', style: TextStyle(fontSize: 18)),
+          child: Text(_cancelPopupText, style: TextStyle(fontSize: 18)),
           textColor: _blueColor,
           splashColor: Color(0xffD7E0EB),
           onPressed: () {
