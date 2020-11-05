@@ -30,6 +30,7 @@ class _LineChartState extends State<LineChart> {
   Widget build(BuildContext context) {
     return Container(
       height: 310,
+      padding: EdgeInsets.only(left: 4.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -43,12 +44,19 @@ class _LineChartState extends State<LineChart> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
 
-          SizedBox(height: 6),
+          SizedBox(height: 8),
           Expanded(
             // Chart
             child: new charts.TimeSeriesChart(
               _getWellbeingData(),
               animate: true,
+              behaviors: [
+                charts.LinePointHighlighter(
+                  drawFollowLinesAcrossChart: true,
+                  showHorizontalFollowLine:
+                      charts.LinePointHighlighterFollowLineType.all,
+                )
+              ],
               domainAxis: charts.DateTimeAxisSpec(
                 tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
                   day: charts.TimeFormatterSpec(
@@ -58,7 +66,8 @@ class _LineChartState extends State<LineChart> {
                 ),
               ),
             ),
-          )
+          ),
+          SizedBox(height: 6),
         ],
       ),
     );
