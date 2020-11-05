@@ -1,8 +1,6 @@
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 import 'package:carePanda/ServiceLocator.dart';
-import 'package:flutter/services.dart';
 
 class UserDataPopup extends StatefulWidget {
   @override
