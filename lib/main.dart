@@ -5,7 +5,6 @@ import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:carePanda/PushNotifHandler.dart';
 import 'package:carePanda/ServiceLocator.dart';
 
 bool showBoarding;
