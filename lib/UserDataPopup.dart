@@ -114,7 +114,8 @@ class _UserDataPopup extends State<UserDataPopup> {
                         labelText: "Name",
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: _blueColor, width: 1.5),
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.5),
                         ),
                       ),
                       initialValue: _name,
@@ -132,7 +133,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                       labelText: "Last name",
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: _blueColor, width: 1.5),
+                        borderSide: BorderSide(color: Colors.grey, width: 1.5),
                       ),
                     ),
                     initialValue: _lastName,
@@ -190,7 +191,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                 value: _gender,
                 underline: Container(
                   height: 1,
-                  color: _blueColor,
+                  color: Colors.grey,
                 ),
                 items: <String>["Don't want to tell", 'Male', 'Female', 'Other']
                     .map((String value) {
@@ -220,7 +221,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                 value: _building,
                 underline: Container(
                   height: 1,
-                  color: _blueColor,
+                  color: Colors.grey,
                 ),
                 items: <String>[
                   "Don't want to tell",

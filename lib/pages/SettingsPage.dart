@@ -91,7 +91,7 @@ class _AppSettingsState extends State<AppSettings> {
               //style: TextStyle(color: _blueColor),
               underline: Container(
                 height: 1.5,
-                color: _blueColor,
+                color: Colors.grey,
               ),
               onChanged: (String newValue) {
                 setState(() {
@@ -124,7 +124,7 @@ class _AppSettingsState extends State<AppSettings> {
                 //style: TextStyle(color: _blueColor),
                 underline: Container(
                   height: 1.5,
-                  color: _blueColor,
+                  color: Colors.grey,
                 ),
                 onChanged: (String newValue) {
                   setState(() {
