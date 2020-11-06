@@ -88,9 +88,9 @@ class _AppSettingsState extends State<AppSettings> {
             ),
             DropdownButton<String>(
               value: dropdownValue,
-              style: TextStyle(color: _blueColor),
+              //style: TextStyle(color: _blueColor),
               underline: Container(
-                height: 2,
+                height: 1.5,
                 color: _blueColor,
               ),
               onChanged: (String newValue) {
@@ -121,9 +121,9 @@ class _AppSettingsState extends State<AppSettings> {
               ),
               DropdownButton<String>(
                 value: themeValue,
-                style: TextStyle(color: _blueColor),
+                //style: TextStyle(color: _blueColor),
                 underline: Container(
-                  height: 2,
+                  height: 1.5,
                   color: _blueColor,
                 ),
                 onChanged: (String newValue) {
