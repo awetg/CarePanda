@@ -40,8 +40,10 @@ class _WeekCountdownState extends State<WeekCountdown> {
   Widget build(BuildContext context) {
     final textColor = Color(0xff027DC5);
     final newTime = _currentTime.subtract(new Duration(hours: 15));
-    final nextWednesday = calculateNextWednesday(newTime);
-    final remaining = nextWednesday.difference(newTime);
+    //final nextWednesday = calculateNextWednesday(newTime);
+    //final remaining = nextWednesday.difference(newTime);
+    final nextDay = calculateNextDay(newTime);
+    final remaining = nextDay.difference(newTime);
 
     final days = remaining.inDays;
     final hours = remaining.inHours - remaining.inDays * 24;
@@ -68,6 +70,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
   }
 }
 
+/*
 DateTime calculateNextWednesday(DateTime time) {
   var daysUntilNextWeek;
   if (time.weekday < 3) {
@@ -77,4 +80,14 @@ DateTime calculateNextWednesday(DateTime time) {
     daysUntilNextWeek = 10 - time.weekday;
   }
   return DateTime(time.year, time.month, time.day + daysUntilNextWeek);
+}*/
+
+DateTime calculateNextDay(DateTime time) {
+  var timeUntilNextDay;
+  if (time.weekday != 6 && time.weekday != 5) {
+    timeUntilNextDay = time.weekday + 1 - time.weekday;
+  } else {
+    timeUntilNextDay = 8 - time.weekday;
+  }
+  return DateTime(time.year, time.month, time.day + timeUntilNextDay);
 }

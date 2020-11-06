@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     // Gets boolean value wheter the app is started for the first time or not
     var _storageService = locator<LocalStorageService>();
     _firstStartUp = _storageService.firstTimeStartUp ?? true;
+
     log("first start up " + _firstStartUp.toString());
     if (_firstStartUp) {
       openStartUpPopUp();
