@@ -55,7 +55,7 @@ class _UserDataPopup extends State<UserDataPopup> {
 
   // Formats date to show in UI, if no date is chosen previously, shows "no date chosen" message
   _dateFormatter(date) {
-    if (date == null) {
+    if (date == null || date == "null") {
       return "No date chosen";
     } else {
       // Parses date because birthday set to shared preference is saved as String
@@ -72,7 +72,7 @@ class _UserDataPopup extends State<UserDataPopup> {
     var _startDate;
 
     // If birthday is not set previously, shows predetermined date on datepicker when opened
-    if (_birthday == null) {
+    if (_birthday == null || _birthday == "null") {
       _startDate = DateTime.parse("2000-01-01 00:00:00");
     } else {
       // Parses date because birthday set to shared preference is saved as String
@@ -113,6 +113,9 @@ class _UserDataPopup extends State<UserDataPopup> {
                       decoration: new InputDecoration(
                         labelText: "Name",
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: _blueColor, width: 1.5),
+                        ),
                       ),
                       initialValue: _name,
                     ),
@@ -128,6 +131,9 @@ class _UserDataPopup extends State<UserDataPopup> {
                     decoration: new InputDecoration(
                       labelText: "Last name",
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: _blueColor, width: 1.5),
+                      ),
                     ),
                     initialValue: _lastName,
                   ),
@@ -184,7 +190,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                 value: _gender,
                 underline: Container(
                   height: 1,
-                  color: Colors.grey,
+                  color: _blueColor,
                 ),
                 items: <String>["Don't want to tell", 'Male', 'Female', 'Other']
                     .map((String value) {
@@ -214,7 +220,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                 value: _building,
                 underline: Container(
                   height: 1,
-                  color: Colors.grey,
+                  color: _blueColor,
                 ),
                 items: <String>[
                   "Don't want to tell",

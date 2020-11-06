@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 // Base widget for homepage. Includes base layout and icon
 class _HomePageState extends State<HomePage> {
   var _firstStartUp;
+  var _userBoarding;
 
   @override
   void initState() {
@@ -27,9 +28,10 @@ class _HomePageState extends State<HomePage> {
     // Gets boolean value wheter the app is started for the first time or not
     var _storageService = locator<LocalStorageService>();
     _firstStartUp = _storageService.firstTimeStartUp ?? true;
+    _userBoarding = _storageService.showBoarding ?? true;
 
     log("first start up " + _firstStartUp.toString());
-    if (_firstStartUp) {
+    if (_firstStartUp && !_userBoarding && _userBoarding != null) {
       openStartUpPopUp();
     }
 
@@ -60,6 +62,7 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          brightness: Brightness.light,
           backgroundColor: Colors.white,
           title: const Text('Home', style: TextStyle(color: Color(0xff027DC5))),
         ),

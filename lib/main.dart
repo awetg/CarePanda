@@ -1,20 +1,19 @@
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
 import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carePanda/ServiceLocator.dart';
 
 bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  showBoarding = await prefs.getBool("showBoarding") ?? true;
-  await prefs.setBool("showBoarding", false);
+  await setupLocator();
+  var _storageService = locator<LocalStorageService>();
+  showBoarding = _storageService.showBoarding ?? true;
   print("showBoarding = $showBoarding");
-  setupLocator();
   runApp(MyApp());
 }
 

@@ -1,7 +1,10 @@
+import 'package:carePanda/main.dart';
 import 'package:carePanda/model/slider_item.dart';
 import 'package:carePanda/pages/userboarding/slider_dot.dart';
 import 'package:carePanda/pages/userboarding/slider_page.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
+import 'package:carePanda/ServiceLocator.dart';
 
 class UserBoarding extends StatefulWidget {
   @override
@@ -28,18 +31,41 @@ class _UserBoardingState extends State<UserBoarding> {
         "Give anonymous feedback on your general wellbeing to improve your workspace.")
   ];
 
+  var _storageService = locator<LocalStorageService>();
+
   // handle next page of PageContorller
-  nextPage() {
+  nextPage() async {
     if (currentIndex < (_sliderItems.length - 1))
       _pageController.nextPage(
           duration: animation_duration, curve: animation_type);
-    else
-      Navigator.pop(context);
+    else {
+      _storageService.showBoarding = false;
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MyStatefulWidget())).then(
+        (value) {
+          setState(
+            () {
+              // refresh state
+            },
+          );
+        },
+      );
+    }
   }
 
   //  pop userboarding page
-  skipAllPages() {
-    Navigator.pop(context);
+  skipAllPages() async {
+    _storageService.showBoarding = false;
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyStatefulWidget())).then(
+      (value) {
+        setState(
+          () {
+            // refresh state
+          },
+        );
+      },
+    );
   }
 
   // initialize pageContorller
