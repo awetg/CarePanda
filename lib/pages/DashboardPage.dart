@@ -70,6 +70,39 @@ class _DashBoardPageState extends State<DashBoardPage> {
     new WellbeingData(new DateTime(2020, 8, 1), 8),
   ];
 
+  final monthPhysicalData = [
+    new WellbeingData(new DateTime(2020, 8, 30), 7),
+    new WellbeingData(new DateTime(2020, 8, 29), 7),
+    new WellbeingData(new DateTime(2020, 8, 28), 7),
+    new WellbeingData(new DateTime(2020, 8, 27), 4),
+    new WellbeingData(new DateTime(2020, 8, 26), 2),
+    new WellbeingData(new DateTime(2020, 8, 25), 3),
+    new WellbeingData(new DateTime(2020, 8, 24), 5),
+    new WellbeingData(new DateTime(2020, 8, 23), 7),
+    new WellbeingData(new DateTime(2020, 8, 22), 9),
+    new WellbeingData(new DateTime(2020, 8, 21), 10),
+    new WellbeingData(new DateTime(2020, 8, 20), 10),
+    new WellbeingData(new DateTime(2020, 8, 19), 10),
+    new WellbeingData(new DateTime(2020, 8, 18), 7),
+    new WellbeingData(new DateTime(2020, 8, 17), 5),
+    new WellbeingData(new DateTime(2020, 8, 16), 5),
+    new WellbeingData(new DateTime(2020, 8, 15), 4),
+    new WellbeingData(new DateTime(2020, 8, 14), 6),
+    new WellbeingData(new DateTime(2020, 8, 13), 4),
+    new WellbeingData(new DateTime(2020, 8, 12), 3),
+    new WellbeingData(new DateTime(2020, 8, 11), 2),
+    new WellbeingData(new DateTime(2020, 8, 10), 3),
+    new WellbeingData(new DateTime(2020, 8, 9), 3),
+    new WellbeingData(new DateTime(2020, 8, 8), 6),
+    new WellbeingData(new DateTime(2020, 8, 7), 5),
+    new WellbeingData(new DateTime(2020, 8, 6), 7),
+    new WellbeingData(new DateTime(2020, 8, 5), 8),
+    new WellbeingData(new DateTime(2020, 8, 4), 8),
+    new WellbeingData(new DateTime(2020, 8, 3), 9),
+    new WellbeingData(new DateTime(2020, 8, 2), 10),
+    new WellbeingData(new DateTime(2020, 8, 1), 8),
+  ];
+
   @override
   void initState() {
     // When page is opened, defaults time period to week
@@ -111,7 +144,10 @@ class _DashBoardPageState extends State<DashBoardPage> {
     if (_timePeriod == "Week" && !_showMentalHealth) {
       _graphData = weekPhysicalData;
     }
-    if (_timePeriod == "Month") {
+    if (_timePeriod == "Month" && _showMentalHealth) {
+      _graphData = monthPhysicalData;
+    }
+    if (_timePeriod == "Month" && !_showMentalHealth) {
       _graphData = monthData;
     }
   }
