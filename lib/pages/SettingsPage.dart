@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:carePanda/UserDataPopup.dart';
 import 'package:carePanda/CardWidget.dart';
 
-final _lightColor = Color(0xffA0C3E2);
+final _lightBlueColor = Color(0xffA0C3E2);
 final _blueColor = Color(0xff027DC5);
 
 class SettingsPage extends StatefulWidget {
@@ -263,7 +263,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                     print(isSwitched);
                   });
                 },
-                activeTrackColor: _lightColor,
+                activeTrackColor: _lightBlueColor,
                 activeColor: _blueColor,
               ),
             ],

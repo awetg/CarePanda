@@ -152,6 +152,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     }
   }
 
+  var _lightColor = Color(0xffA0C3E2);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -176,12 +177,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   RaisedButton(
                     child: const Text('Mental health',
                         style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? Color(0xffF8F8F6) : _blueColor,
-                    textColor: _showMentalHealth ? _blueColor : Colors.white,
+                    color: _showMentalHealth ? _lightColor : _blueColor,
+                    textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: _blueColor, width: 2),
-                    ),
+                    /*shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: _showMentalHealth ? _lightColor : Colors.transparent,
+                          width: 2),
+                    ),*/
                     onPressed: () {
                       _showMentalGraph();
                     },
@@ -192,12 +195,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   RaisedButton(
                     child: const Text('Physical health',
                         style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _blueColor : Color(0xffF8F8F6),
-                    textColor: _showMentalHealth ? Colors.white : _blueColor,
+                    color: _showMentalHealth ? _blueColor : _lightColor,
+                    textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: _blueColor, width: 2),
-                    ),
+                    /*shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: _showMentalHealth ? _blueColor : _lightColor,
+                          width: 2),
+                    ),*/
                     onPressed: () {
                       _showPhysicalGraph();
                     },
