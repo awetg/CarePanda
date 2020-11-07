@@ -157,6 +157,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          brightness: Brightness.light,
           backgroundColor: Colors.white,
           title: const Text('Dashboard',
               style: TextStyle(color: Color(0xff027DC5))),

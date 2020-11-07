@@ -1,11 +1,68 @@
+import 'dart:developer';
+
+import 'package:carePanda/HRLoginPopup.dart';
+import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/Pages/HomePage.dart' as home;
 import 'package:carePanda/UserDataPopup.dart';
+import 'package:carePanda/CardWidget.dart';
 
 final _lightColor = Color(0xffA0C3E2);
 final _blueColor = Color(0xff027DC5);
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  //SettingsPage({Key key}) : super(key: key);
+  final VoidCallback refreshNavBar;
+
+  SettingsPage({this.refreshNavBar});
+
+  @override
+  _SettingsPage createState() => _SettingsPage();
+}
+
+class _SettingsPage extends State<SettingsPage> {
+  var _isLoggedIn;
+  var _storageService = locator<LocalStorageService>();
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn = _storageService.isLoggedIn ?? false;
+  }
+
+  // When user closes popup, changes layout and shows snackbar if user logged in successfully
+  _loginPopupClosed() {
+    setState(
+      () {
+        _isLoggedIn = _storageService.isLoggedIn;
+        if (_isLoggedIn) {
+          _createSnackBar("Successfully logged in");
+          widget.refreshNavBar();
+        }
+      },
+    );
+  }
+
+  // Changes layout and displays snackbar as user logs out
+  _logout() {
+    setState(
+      () {
+        _storageService.isLoggedIn = false;
+        _isLoggedIn = _storageService.isLoggedIn;
+        _createSnackBar("Successfully logged out");
+        widget.refreshNavBar();
+      },
+    );
+  }
+
+  // Creates snackbar with given message
+  _createSnackBar(String message) {
+    final snackBar =
+        new SnackBar(content: new Text(message), backgroundColor: _blueColor);
+
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,46 +74,66 @@ class SettingsPage extends StatelessWidget {
             backgroundColor: Colors.white,
             title: const Text('Settings',
                 style: TextStyle(color: Color(0xff027DC5)))),
-        body: SingleChildScrollView(child: MyStatefulWidget()),
-      ),
-    );
-  }
-}
+        body: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // App settings
+              CardWidget(widget: AppSettings()),
+              SizedBox(height: 14),
 
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
+              // Notification settings
+              CardWidget(widget: NotificationSettings()),
+              SizedBox(height: 14),
 
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
+              // User settings
+              CardWidget(widget: UserSettings()),
+              SizedBox(height: 18),
 
-String dropdownValue = 'English';
-String themeValue = 'Light';
-bool isSwitched = true;
+              // HR login button
+              if (!_isLoggedIn)
+                Padding(
+                  padding: const EdgeInsets.only(right: 14.0),
+                  child: OutlineButton(
+                    child: const Text('HR', style: TextStyle(fontSize: 18)),
+                    textColor: _blueColor,
+                    splashColor: Color(0xffD7E0EB),
+                    borderSide: BorderSide(
+                      color: _blueColor,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return HRLoginPopup();
+                        },
+                      ).then((_) => _loginPopupClosed());
+                    },
+                  ),
+                ),
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final _lightColor = Color(0xffA0C3E2);
-  final _blueColor = Color(0xff027DC5);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // App settings
-          home.CardWidget(widget: AppSettings()),
-          SizedBox(height: 14),
-
-          // Notification settings
-          home.CardWidget(widget: NotificationSettings()),
-          SizedBox(height: 14),
-
-          // User settings
-          home.CardWidget(widget: UserSettings()),
-        ],
+              // HR logout button
+              if (_isLoggedIn)
+                Padding(
+                  padding: const EdgeInsets.only(right: 14.0),
+                  child: OutlineButton(
+                    child: const Text('Logout', style: TextStyle(fontSize: 18)),
+                    textColor: _blueColor,
+                    splashColor: Color(0xffD7E0EB),
+                    borderSide: BorderSide(
+                      color: _blueColor,
+                    ),
+                    onPressed: () {
+                      _logout();
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -68,6 +145,9 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
+  String dropdownValue = 'English';
+  String themeValue = 'Light';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +156,8 @@ class _AppSettingsState extends State<AppSettings> {
         children: [
           Text(
             'App Settings',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
           ),
           SizedBox(height: 6),
 
@@ -153,6 +234,8 @@ class NotificationSettings extends StatefulWidget {
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
+  bool isSwitched = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -161,7 +244,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
         children: [
           Text(
             'Notification Settings',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
           ),
           SizedBox(height: 6),
           Row(
@@ -204,7 +288,8 @@ class _UserSettingsState extends State<UserSettings> {
         children: [
           Text(
             'User Settings',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
           ),
           SizedBox(height: 6),
           Row(

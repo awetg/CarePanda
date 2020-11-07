@@ -19,6 +19,7 @@ class LocalStorageService {
   static const String HasQuestionnaireKey = 'hasQuestionnaire';
   static const String FirsTimeStartUp = 'firstTimeStartUp';
   static const String ShowBoarding = 'showBoarding';
+  static const String IsLoggedIn = 'isLoggedIn';
   // USER DATA
   static const String Name = 'name';
   static const String LastName = 'lastName';
@@ -30,6 +31,7 @@ class LocalStorageService {
   bool get hasQuestionnaire => _getFromLocalStorage(HasQuestionnaireKey);
   bool get firstTimeStartUp => _getFromLocalStorage(FirsTimeStartUp);
   bool get showBoarding => _getFromLocalStorage(ShowBoarding);
+  bool get isLoggedIn => _getFromLocalStorage(IsLoggedIn);
   // USER DATA
   String get name => _getFromLocalStorage(Name);
   String get lastName => _getFromLocalStorage(LastName);
@@ -43,6 +45,7 @@ class LocalStorageService {
   set firstTimeStartUp(bool value) =>
       _saveToLocalStorage(FirsTimeStartUp, value);
   set showBoarding(bool value) => _saveToLocalStorage(ShowBoarding, value);
+  set isLoggedIn(bool value) => _saveToLocalStorage(IsLoggedIn, value);
   // USER DATA
   set name(String value) => _saveToLocalStorage(Name, value);
   set lastName(String value) => _saveToLocalStorage(LastName, value);

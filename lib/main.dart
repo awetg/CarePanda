@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +55,34 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
+  var _isLoggedIn;
+  var _storageService = locator<LocalStorageService>();
   int _selectedPage = 0;
-  final _pageOptions = [HomePage(), DashBoardPage(), SettingsPage()];
+  var _pageOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn = _storageService.isLoggedIn ?? false;
+
+    _pageOptions = [
+      HomePage(),
+      DashBoardPage(),
+      SettingsPage(
+        // Callback which refreshes bottom navigation bar to show new icon for HR
+        refreshNavBar: () {
+          setState(
+            () {
+              _isLoggedIn = _storageService.isLoggedIn ?? false;
+              log("??!?!?!");
+            },
+          );
+        },
+      ),
+      HRdashboardPage(),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,11 +92,14 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
         unselectedItemColor: Color.fromRGBO(2, 125, 197, 90),
         selectedItemColor: Color(0xff027DC5),
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), title: Text('Dashboard')),
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text('Settings'))
+              icon: Icon(Icons.settings), label: 'Settings'),
+          if (_isLoggedIn)
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assessment), label: 'Statistics')
         ],
         showSelectedLabels: true,
         showUnselectedLabels: false,
