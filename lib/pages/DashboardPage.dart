@@ -11,6 +11,7 @@ class DashBoardPage extends StatefulWidget {
 
 class _DashBoardPageState extends State<DashBoardPage> {
   final _blueColor = Color(0xff027DC5);
+  final _lightBlueColor = Color(0xffA0C3E2);
   bool _showMentalHealth = true;
   var _graphTitle = "Personal mental health";
   var _timePeriod = "Week";
@@ -152,7 +153,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
     }
   }
 
-  var _lightColor = Color(0xffA0C3E2);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -177,12 +177,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   RaisedButton(
                     child: const Text('Mental health',
                         style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _lightColor : _blueColor,
+                    color: _showMentalHealth ? _lightBlueColor : _blueColor,
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     /*shape: RoundedRectangleBorder(
                       side: BorderSide(
-                          color: _showMentalHealth ? _lightColor : Colors.transparent,
+                          color: _showMentalHealth ? _lightBlueColor : Colors.transparent,
                           width: 2),
                     ),*/
                     onPressed: () {
@@ -195,12 +195,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   RaisedButton(
                     child: const Text('Physical health',
                         style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _blueColor : _lightColor,
+                    color: _showMentalHealth ? _blueColor : _lightBlueColor,
                     textColor: Colors.white,
                     splashColor: Color(0xffD7E0EB),
                     /*shape: RoundedRectangleBorder(
                       side: BorderSide(
-                          color: _showMentalHealth ? _blueColor : _lightColor,
+                          color: _showMentalHealth ? _blueColor : _lightBlueColor,
                           width: 2),
                     ),*/
                     onPressed: () {
@@ -217,6 +217,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
               ),
               SizedBox(height: 10),
 
+              // Time period
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
                   "Personal data time period",

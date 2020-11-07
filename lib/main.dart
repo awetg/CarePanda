@@ -74,7 +74,6 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
           setState(
             () {
               _isLoggedIn = _storageService.isLoggedIn ?? false;
-              log("??!?!?!");
             },
           );
         },
