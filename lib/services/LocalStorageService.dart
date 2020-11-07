@@ -19,6 +19,8 @@ class LocalStorageService {
   static const String HasQuestionnaireKey = 'hasQuestionnaire';
   static const String FirsTimeStartUp = 'firstTimeStartUp';
   static const String ShowBoarding = 'showBoarding';
+  static const String LastAnsQuestionnaire = 'lastAnsQuestionnaire';
+
   // USER DATA
   static const String Name = 'name';
   static const String LastName = 'lastName';
@@ -30,6 +32,8 @@ class LocalStorageService {
   bool get hasQuestionnaire => _getFromLocalStorage(HasQuestionnaireKey);
   bool get firstTimeStartUp => _getFromLocalStorage(FirsTimeStartUp);
   bool get showBoarding => _getFromLocalStorage(ShowBoarding);
+  String get lastAnsQuestionnaire => _getFromLocalStorage(LastAnsQuestionnaire);
+
   // USER DATA
   String get name => _getFromLocalStorage(Name);
   String get lastName => _getFromLocalStorage(LastName);
@@ -43,6 +47,9 @@ class LocalStorageService {
   set firstTimeStartUp(bool value) =>
       _saveToLocalStorage(FirsTimeStartUp, value);
   set showBoarding(bool value) => _saveToLocalStorage(ShowBoarding, value);
+  set lastAnsQuestionnaire(String value) =>
+      _saveToLocalStorage(LastAnsQuestionnaire, value);
+
   // USER DATA
   set name(String value) => _saveToLocalStorage(Name, value);
   set lastName(String value) => _saveToLocalStorage(LastName, value);
@@ -54,13 +61,13 @@ class LocalStorageService {
   // Function to get data from local storage
   dynamic _getFromLocalStorage(String key) {
     var value = _preferences.get(key);
-    log('(TRACE) LocalStorageService:_getFromLocalStorage. key: $key value: $value');
+    //log('(TRACE) LocalStorageService:_getFromLocalStorage. key: $key value: $value');
     return value;
   }
 
 // Function to set data into local storage
   void _saveToLocalStorage<T>(String key, T content) {
-    log('(TRACE) LocalStorageService:_saveToLocalStorage. key: $key value: $content');
+    //log('(TRACE) LocalStorageService:_saveToLocalStorage. key: $key value: $content');
     if (content is String) {
       _preferences.setString(key, content);
     }

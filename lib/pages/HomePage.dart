@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     // Gets boolean value wheter the app is started for the first time or not
     var _storageService = locator<LocalStorageService>();
     _firstStartUp = _storageService.firstTimeStartUp ?? true;
@@ -88,6 +87,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 // Includes layout for all home screen cards (Questionnaire card, Countdown card and HR contacting card) and a load icon
+
 class AllCards extends StatefulWidget {
   @override
   _AllCards createState() => _AllCards();
@@ -97,6 +97,11 @@ class _AllCards extends State<AllCards> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   // Gets data wheter user has questionnare ready or not
@@ -109,7 +114,6 @@ class _AllCards extends State<AllCards> {
       _storageService.hasQuestionnaire = false;
       _hasQuestionnaire = false;
     }
-
     return _hasQuestionnaire;
   }
 
@@ -227,6 +231,7 @@ class Timer extends StatelessWidget {
 // Widget card to display that user has a qeustionnaire
 class Questionnaire extends StatelessWidget {
   final _blueColor = Color(0xff027DC5);
+  var _storageService = locator<LocalStorageService>();
 
   @override
   Widget build(BuildContext context) {
@@ -263,6 +268,7 @@ class Questionnaire extends StatelessWidget {
                           MaterialPageRoute(
                               fullscreenDialog: true,
                               builder: (context) => SurveyFlow()));
+                      _storageService.hasQuestionnaire = false;
                       log("Questionnaire button pressed");
                     },
                   ),
