@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:carePanda/HRLoginPopup.dart';
 import 'package:carePanda/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/UserDataPopup.dart';
 import 'package:carePanda/CardWidget.dart';
@@ -145,8 +146,8 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
-  String dropdownValue = 'English';
-  String themeValue = 'Light';
+  String _dropdownValue = 'English';
+  String _themeValue = 'Light';
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +169,7 @@ class _AppSettingsState extends State<AppSettings> {
               style: TextStyle(fontSize: 20.0),
             ),
             DropdownButton<String>(
-              value: dropdownValue,
+              value: _dropdownValue,
               //style: TextStyle(color: _blueColor),
               underline: Container(
                 height: 1.5,
@@ -176,7 +177,7 @@ class _AppSettingsState extends State<AppSettings> {
               ),
               onChanged: (String newValue) {
                 setState(() {
-                  dropdownValue = newValue;
+                  _dropdownValue = newValue;
                 });
               },
               items: <String>['English', 'Swedish', 'Finnish']
@@ -201,7 +202,7 @@ class _AppSettingsState extends State<AppSettings> {
                 style: TextStyle(fontSize: 20.0),
               ),
               DropdownButton<String>(
-                value: themeValue,
+                value: _themeValue,
                 //style: TextStyle(color: _blueColor),
                 underline: Container(
                   height: 1.5,
@@ -209,7 +210,7 @@ class _AppSettingsState extends State<AppSettings> {
                 ),
                 onChanged: (String newValue) {
                   setState(() {
-                    themeValue = newValue;
+                    _themeValue = newValue;
                   });
                 },
                 items: <String>['Light', 'Dark']
@@ -234,7 +235,30 @@ class NotificationSettings extends StatefulWidget {
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
-  bool isSwitched = true;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+  var _storageService = locator<LocalStorageService>();
+  bool _isSwitched;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSwitched = _storageService.recievePushNotif ?? true;
+  }
+
+  // Subscribes / unsubscribes to push notifications (uses topic to identify wheter to recieve push notifications or not)
+  _togglePushNotif(value) {
+    if (_storageService.recievePushNotif) {
+      _storageService.recievePushNotif = false;
+      _fcm.unsubscribeFromTopic('notifications');
+    } else {
+      _storageService.recievePushNotif = true;
+      _fcm.subscribeToTopic('notifications');
+    }
+
+    setState(() {
+      _isSwitched = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,12 +280,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 style: TextStyle(fontSize: 20.0),
               ),
               Switch(
-                value: isSwitched,
+                value: _isSwitched,
                 onChanged: (value) {
-                  setState(() {
-                    isSwitched = value;
-                    print(isSwitched);
-                  });
+                  _togglePushNotif(value);
                 },
                 activeTrackColor: _lightBlueColor,
                 activeColor: _blueColor,
