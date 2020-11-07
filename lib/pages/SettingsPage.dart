@@ -35,12 +35,12 @@ class _SettingsPage extends State<SettingsPage> {
     setState(
       () {
         _isLoggedIn = _storageService.isLoggedIn;
-        if (_isLoggedIn) {
-          _createSnackBar("Successfully logged in");
-          widget.refreshNavBar();
-        }
       },
     );
+    if (_isLoggedIn) {
+      _createSnackBar("Successfully logged in");
+      widget.refreshNavBar();
+    }
   }
 
   // Changes layout and displays snackbar as user logs out
@@ -49,10 +49,10 @@ class _SettingsPage extends State<SettingsPage> {
       () {
         _storageService.isLoggedIn = false;
         _isLoggedIn = _storageService.isLoggedIn;
-        _createSnackBar("Successfully logged out");
-        widget.refreshNavBar();
       },
     );
+    _createSnackBar("Successfully logged out");
+    widget.refreshNavBar();
   }
 
   // Creates snackbar with given message

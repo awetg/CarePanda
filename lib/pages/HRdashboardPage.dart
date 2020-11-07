@@ -1,3 +1,4 @@
+import 'package:carePanda/BarChart.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/LineChart.dart';
 import 'package:carePanda/ChartDataStructure.dart';
@@ -13,11 +14,12 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
   final _blueColor = Color(0xff027DC5);
   final _lightBlueColor = Color(0xffA0C3E2);
   bool _showMentalHealth = true;
-  bool lineGraph = true;
+  bool _lineGraph = false;
   var _graphTitle = "Personal mental health";
   var _timePeriod = "Week";
-  var _sortBy = "Time";
-  var _graphData;
+  var _sortBy = "Building";
+  var _lineGraphData;
+  var _barGraphData;
 
   // Fake data
   final weekData = [
@@ -38,6 +40,30 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
     new WellbeingData(new DateTime(2020, 9, 16), 8),
     new WellbeingData(new DateTime(2020, 9, 15), 9),
     new WellbeingData(new DateTime(2020, 9, 14), 6),
+  ];
+
+  final buildingData = [
+    new WellbeingDataByBuilding("Building 1", 7),
+    new WellbeingDataByBuilding("Building 2", 6),
+    new WellbeingDataByBuilding("Building 3", 5),
+    new WellbeingDataByBuilding("Building 4", 4),
+    new WellbeingDataByBuilding("Building 5", 10),
+    new WellbeingDataByBuilding("Building 6", 2),
+  ];
+
+  final buildingDataPhysical = [
+    new WellbeingDataByBuilding("Building 1", 6),
+    new WellbeingDataByBuilding("Building 2", 5),
+    new WellbeingDataByBuilding("Building 3", 5),
+    new WellbeingDataByBuilding("Building 4", 8),
+    new WellbeingDataByBuilding("Building 5", 9),
+    new WellbeingDataByBuilding("Building 6", 2),
+    new WellbeingDataByBuilding("Building 7", 5),
+    new WellbeingDataByBuilding("Building 8", 3),
+    new WellbeingDataByBuilding("Building 9", 2),
+    new WellbeingDataByBuilding("Building 10", 7),
+    new WellbeingDataByBuilding("Building 11", 4),
+    new WellbeingDataByBuilding("Building 12", 2),
   ];
 
   final monthData = [
@@ -109,14 +135,15 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
   @override
   void initState() {
     // When page is opened, defaults time period to week
-    _graphData = weekData;
+    _lineGraphData = weekData;
+    _barGraphData = buildingData;
     super.initState();
   }
 
   // Shows physical health graph
   _showPhysicalGraph() {
     setState(() {
-      _graphTitle = "Personal physical health";
+      _graphTitle = "Physical health";
       _showMentalHealth = false;
     });
     _dataToShow();
@@ -125,7 +152,7 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
   // Shows mental health graph
   _showMentalGraph() {
     setState(() {
-      _graphTitle = "Personal mental health";
+      _graphTitle = "Mental health";
       _showMentalHealth = true;
     });
     _dataToShow();
@@ -143,23 +170,39 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
   _sortByFunction(newValue) {
     setState(() {
       _sortBy = newValue;
+      if (_sortBy != "Time") {
+        _lineGraph = false;
+      } else {
+        _lineGraph = true;
+      }
     });
     _dataToShow();
   }
 
   // Function to know what data to show
   _dataToShow() {
+    if (_sortBy != "Time" && _showMentalHealth && !_lineGraph) {
+      _barGraphData = buildingData;
+    }
+
+    if (_sortBy != "Time" && !_showMentalHealth && !_lineGraph) {
+      _barGraphData = buildingDataPhysical;
+    }
+
     if (_timePeriod == "Week" && _showMentalHealth) {
-      _graphData = weekData;
+      _lineGraphData = weekData;
     }
+
     if (_timePeriod == "Week" && !_showMentalHealth) {
-      _graphData = weekPhysicalData;
+      _lineGraphData = weekPhysicalData;
     }
+
     if (_timePeriod == "Month" && _showMentalHealth) {
-      _graphData = monthPhysicalData;
+      _lineGraphData = monthPhysicalData;
     }
+
     if (_timePeriod == "Month" && !_showMentalHealth) {
-      _graphData = monthData;
+      _lineGraphData = monthData;
     }
   }
 
@@ -221,10 +264,18 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
               ),
               SizedBox(height: 10),
 
-              // Graph which is built inside card widget
-              CardWidget(
-                widget: LineChart(data: _graphData, title: _graphTitle),
-              ),
+              // Line graph which is built inside card widget
+              if (_lineGraph)
+                CardWidget(
+                  widget: LineChart(data: _lineGraphData, title: _graphTitle),
+                ),
+
+              // Bar graph is built inside card widget
+              if (!_lineGraph)
+                CardWidget(
+                  widget: BarChart(data: _barGraphData, title: _graphTitle),
+                ),
+
               SizedBox(height: 10),
 
               Row(
@@ -272,7 +323,7 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
                       color: Colors.grey,
                     ),
                     items:
-                        <String>["Time", 'Building', 'Age'].map((String value) {
+                        <String>["Building", 'Time', 'Age'].map((String value) {
                       return new DropdownMenuItem<String>(
                         value: value,
                         child: new Text(value),

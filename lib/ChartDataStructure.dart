@@ -5,3 +5,10 @@ class WellbeingData {
 
   WellbeingData(this.date, this.wellbeing);
 }
+
+class WellbeingDataByBuilding {
+  final int wellbeing;
+  final String building;
+
+  WellbeingDataByBuilding(this.building, this.wellbeing);
+}
