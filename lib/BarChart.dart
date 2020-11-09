@@ -1,3 +1,5 @@
+import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/ChartDataStructure.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -27,8 +29,26 @@ class _BarChartState extends State<BarChart> {
     return wellbeing;
   }
 
+  _axisColor() {
+    var _storageService = locator<LocalStorageService>();
+    if (_storageService.darkTheme) {
+      return charts.MaterialPalette.white;
+    } else {
+      return charts.MaterialPalette.black;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Color for axis
+    var axis = charts.NumericAxisSpec(
+      renderSpec: charts.GridlineRendererSpec(
+        labelStyle: charts.TextStyleSpec(color: _axisColor()),
+        lineStyle: charts.LineStyleSpec(
+            thickness: 0, color: charts.MaterialPalette.gray.shadeDefault),
+      ),
+    );
+
     return Container(
       height: 310,
       padding: EdgeInsets.only(left: 4.0),
@@ -51,8 +71,15 @@ class _BarChartState extends State<BarChart> {
             child: new charts.BarChart(
               _getWellbeingData(),
               animate: true,
+              primaryMeasureAxis: axis,
               domainAxis: charts.OrdinalAxisSpec(
-                renderSpec: charts.SmallTickRendererSpec(labelRotation: 60),
+                renderSpec: charts.GridlineRendererSpec(
+                  labelRotation: 60,
+                  labelStyle: charts.TextStyleSpec(color: _axisColor()),
+                  lineStyle: charts.LineStyleSpec(
+                      thickness: 0,
+                      color: charts.MaterialPalette.gray.shadeDefault),
+                ),
               ),
             ),
           ),

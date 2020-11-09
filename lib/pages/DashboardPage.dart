@@ -113,20 +113,28 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   // Shows physical health graph
   _showPhysicalGraph() {
-    setState(() {
-      _graphTitle = "Personal physical health";
-      _showMentalHealth = false;
-    });
-    _dataToShow();
+    if (_showMentalHealth) {
+      setState(() {
+        _graphTitle = "Personal physical health";
+        _showMentalHealth = false;
+      });
+      _dataToShow();
+    } else {
+      return null;
+    }
   }
 
   // Shows mental health graph
   _showMentalGraph() {
-    setState(() {
-      _graphTitle = "Personal mental health";
-      _showMentalHealth = true;
-    });
-    _dataToShow();
+    if (!_showMentalHealth) {
+      setState(() {
+        _graphTitle = "Personal mental health";
+        _showMentalHealth = true;
+      });
+      _dataToShow();
+    } else {
+      return null;
+    }
   }
 
   // Changes the time period of personal health graph
@@ -155,94 +163,84 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          title: const Text('Dashboard',
-              style: TextStyle(color: Color(0xff027DC5))),
-        ),
-        body: Container(
-          padding: EdgeInsets.only(top: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Mental health button
-                  RaisedButton(
-                    child: const Text('Mental health',
-                        style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _lightBlueColor : _blueColor,
-                    textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
-                    /*shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: _showMentalHealth ? _lightBlueColor : Colors.transparent,
-                          width: 2),
-                    ),*/
-                    onPressed: () {
-                      _showMentalGraph();
-                    },
-                  ),
-                  SizedBox(width: 12),
-
-                  // Physical health button
-                  RaisedButton(
-                    child: const Text('Physical health',
-                        style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _blueColor : _lightBlueColor,
-                    textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
-                    /*shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: _showMentalHealth ? _blueColor : _lightBlueColor,
-                          width: 2),
-                    ),*/
-                    onPressed: () {
-                      _showPhysicalGraph();
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-
-              // Graph which is built inside card widget
-              CardWidget(
-                widget: LineChart(data: _graphData, title: _graphTitle),
-              ),
-              SizedBox(height: 10),
-
-              // Time period
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  "Personal data time period",
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-                SizedBox(width: 18),
-                DropdownButton(
-                  value: _timePeriod,
-                  underline: Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                  items: <String>["Week", 'Month', 'All'].map((String value) {
-                    return new DropdownMenuItem<String>(
-                      value: value,
-                      child: new Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    _newTimePeriod(newValue);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dashboard',
+            style: TextStyle(color: Theme.of(context).accentColor)),
+      ),
+      body: Container(
+        padding: EdgeInsets.only(top: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Mental health button
+                RaisedButton(
+                  child: const Text('Mental health',
+                      style: TextStyle(fontSize: 18)),
+                  color: _showMentalHealth
+                      ? Theme.of(context).disabledColor
+                      : Theme.of(context).buttonColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    _showMentalGraph();
                   },
                 ),
-              ]),
-            ],
-          ),
+                SizedBox(width: 12),
+
+                // Physical health button
+                RaisedButton(
+                  child: const Text('Physical health',
+                      style: TextStyle(fontSize: 18)),
+                  color: _showMentalHealth
+                      ? Theme.of(context).buttonColor
+                      : Theme.of(context).disabledColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    _showPhysicalGraph();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+
+            // Graph which is built inside card widget
+            CardWidget(
+              widget: LineChart(data: _graphData, title: _graphTitle),
+            ),
+            SizedBox(height: 10),
+
+            // Time period
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                "Personal data time period",
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(width: 18),
+              DropdownButton(
+                value: _timePeriod,
+                underline: Container(
+                  height: 1,
+                ),
+                items: <String>["Week", 'Month', 'All'].map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  _newTimePeriod(newValue);
+                },
+              ),
+            ]),
+          ],
         ),
       ),
     );

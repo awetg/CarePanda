@@ -28,7 +28,6 @@ class PushNotificationHandler {
 
     if (_storageService.recievePushNotif == null) {
       _storageService.recievePushNotif = true;
-      log("Subscribed");
       _fcm.subscribeToTopic('notifications');
     }
 

@@ -1,15 +1,16 @@
-import 'dart:developer';
-
 import 'package:carePanda/HRLoginPopup.dart';
 import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/Theme.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/UserDataPopup.dart';
 import 'package:carePanda/CardWidget.dart';
+import 'dart:developer';
 
-final _lightBlueColor = Color(0xffA0C3E2);
-final _blueColor = Color(0xff027DC5);
+import 'package:provider/provider.dart';
+
+var _storageService = locator<LocalStorageService>();
 
 class SettingsPage extends StatefulWidget {
   //SettingsPage({Key key}) : super(key: key);
@@ -35,7 +36,7 @@ class _SettingsPage extends State<SettingsPage> {
   _loginPopupClosed() {
     setState(
       () {
-        _isLoggedIn = _storageService.isLoggedIn;
+        _isLoggedIn = _storageService.isLoggedIn ?? false;
       },
     );
     if (_isLoggedIn) {
@@ -58,82 +59,81 @@ class _SettingsPage extends State<SettingsPage> {
 
   // Creates snackbar with given message
   _createSnackBar(String message) {
-    final snackBar =
-        new SnackBar(content: new Text(message), backgroundColor: _blueColor);
+    final snackBar = new SnackBar(
+        content: new Text(message),
+        backgroundColor: Theme.of(context).accentColor);
 
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Settings',
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            title: const Text('Settings',
-                style: TextStyle(color: Color(0xff027DC5)))),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // App settings
-              CardWidget(widget: AppSettings()),
-              SizedBox(height: 14),
+    log(Theme.of(context).primaryColor.toString());
 
-              // Notification settings
-              CardWidget(widget: NotificationSettings()),
-              SizedBox(height: 14),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: TextStyle(color: Theme.of(context).accentColor),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            // App settings
+            CardWidget(widget: AppSettings()),
+            SizedBox(height: 14),
 
-              // User settings
-              CardWidget(widget: UserSettings()),
-              SizedBox(height: 18),
+            // Notification settings
+            CardWidget(widget: NotificationSettings()),
+            SizedBox(height: 14),
 
-              // HR login button
-              if (!_isLoggedIn)
-                Padding(
-                  padding: const EdgeInsets.only(right: 14.0),
-                  child: OutlineButton(
-                    child: const Text('HR', style: TextStyle(fontSize: 18)),
-                    textColor: _blueColor,
-                    splashColor: Color(0xffD7E0EB),
-                    borderSide: BorderSide(
-                      color: _blueColor,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return HRLoginPopup();
-                        },
-                      ).then((_) => _loginPopupClosed());
-                    },
+            // User settings
+            CardWidget(widget: UserSettings()),
+            SizedBox(height: 18),
+
+            // HR login button
+            if (!_isLoggedIn)
+              Padding(
+                padding: const EdgeInsets.only(right: 14.0),
+                child: OutlineButton(
+                  child: const Text('HR', style: TextStyle(fontSize: 18)),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
                   ),
+                  onPressed: () {
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return HRLoginPopup();
+                      },
+                    ).then((_) => _loginPopupClosed());
+                  },
                 ),
+              ),
 
-              // HR logout button
-              if (_isLoggedIn)
-                Padding(
-                  padding: const EdgeInsets.only(right: 14.0),
-                  child: OutlineButton(
-                    child: const Text('Logout', style: TextStyle(fontSize: 18)),
-                    textColor: _blueColor,
-                    splashColor: Color(0xffD7E0EB),
-                    borderSide: BorderSide(
-                      color: _blueColor,
-                    ),
-                    onPressed: () {
-                      _logout();
-                    },
+            // HR logout button
+            if (_isLoggedIn)
+              Padding(
+                padding: const EdgeInsets.only(right: 14.0),
+                child: OutlineButton(
+                  child: const Text('Logout', style: TextStyle(fontSize: 18)),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
                   ),
+                  onPressed: () {
+                    _logout();
+                  },
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
@@ -147,10 +147,18 @@ class AppSettings extends StatefulWidget {
 
 class _AppSettingsState extends State<AppSettings> {
   String _dropdownValue = 'English';
-  String _themeValue = 'Light';
+  bool _darkTheme;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _darkTheme = _storageService.darkTheme ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final _themeChanger = Provider.of<ThemeChanger>(context);
     return Container(
       padding: EdgeInsets.all(12),
       child: Column(
@@ -158,7 +166,9 @@ class _AppSettingsState extends State<AppSettings> {
           Text(
             'App Settings',
             style: TextStyle(
-                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
 
@@ -170,10 +180,8 @@ class _AppSettingsState extends State<AppSettings> {
             ),
             DropdownButton<String>(
               value: _dropdownValue,
-              //style: TextStyle(color: _blueColor),
               underline: Container(
                 height: 1.5,
-                color: Colors.grey,
               ),
               onChanged: (String newValue) {
                 setState(() {
@@ -186,7 +194,7 @@ class _AppSettingsState extends State<AppSettings> {
                   value: value,
                   child: Text(
                     value,
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 18.0),
                   ),
                 );
               }).toList(),
@@ -198,29 +206,23 @@ class _AppSettingsState extends State<AppSettings> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Theme',
+                'Dark theme',
                 style: TextStyle(fontSize: 20.0),
               ),
-              DropdownButton<String>(
-                value: _themeValue,
-                //style: TextStyle(color: _blueColor),
-                underline: Container(
-                  height: 1.5,
-                  color: Colors.grey,
-                ),
-                onChanged: (String newValue) {
-                  setState(() {
-                    _themeValue = newValue;
-                  });
+              Switch(
+                value: _darkTheme,
+                onChanged: (value) {
+                  log(value.toString());
+                  if (!value) {
+                    _themeChanger.setTheme("Light");
+                  } else {
+                    _themeChanger.setTheme("Dark");
+                  }
+                  _darkTheme = value;
                 },
-                items: <String>['Light', 'Dark']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: TextStyle(fontSize: 20.0)),
-                  );
-                }).toList(),
-              )
+                activeTrackColor: Theme.of(context).toggleableActiveColor,
+                activeColor: Theme.of(context).accentColor,
+              ),
             ],
           )
         ],
@@ -236,7 +238,6 @@ class NotificationSettings extends StatefulWidget {
 
 class _NotificationSettingsState extends State<NotificationSettings> {
   final FirebaseMessaging _fcm = FirebaseMessaging();
-  var _storageService = locator<LocalStorageService>();
   bool _isSwitched;
 
   @override
@@ -269,7 +270,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
           Text(
             'Notification Settings',
             style: TextStyle(
-                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
           Row(
@@ -284,8 +287,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 onChanged: (value) {
                   _togglePushNotif(value);
                 },
-                activeTrackColor: _lightBlueColor,
-                activeColor: _blueColor,
+                activeTrackColor: Theme.of(context).toggleableActiveColor,
+                activeColor: Theme.of(context).accentColor,
               ),
             ],
           ),
@@ -310,7 +313,9 @@ class _UserSettingsState extends State<UserSettings> {
           Text(
             'User Settings',
             style: TextStyle(
-                fontSize: 20.0, fontWeight: FontWeight.bold, color: _blueColor),
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
           Row(
@@ -322,10 +327,9 @@ class _UserSettingsState extends State<UserSettings> {
               ),
               OutlineButton(
                 child: const Text('Modify', style: TextStyle(fontSize: 18)),
-                textColor: _blueColor,
-                splashColor: Color(0xffD7E0EB),
+                textColor: Theme.of(context).accentColor,
                 borderSide: BorderSide(
-                  color: _blueColor,
+                  color: Theme.of(context).accentColor,
                 ),
                 onPressed: () {
                   showDialog(

@@ -11,11 +11,9 @@ class HRdashboardPage extends StatefulWidget {
 }
 
 class _HRdashboardPageState extends State<HRdashboardPage> {
-  final _blueColor = Color(0xff027DC5);
-  final _lightBlueColor = Color(0xffA0C3E2);
   bool _showMentalHealth = true;
   bool _lineGraph = false;
-  var _graphTitle = "Personal mental health";
+  var _graphTitle = "Mental health";
   var _timePeriod = "Week";
   var _sortBy = "Building";
   var _lineGraphData;
@@ -142,20 +140,28 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
 
   // Shows physical health graph
   _showPhysicalGraph() {
-    setState(() {
-      _graphTitle = "Physical health";
-      _showMentalHealth = false;
-    });
-    _dataToShow();
+    if (_showMentalHealth) {
+      setState(() {
+        _graphTitle = "Physical health";
+        _showMentalHealth = false;
+      });
+      _dataToShow();
+    } else {
+      return null;
+    }
   }
 
   // Shows mental health graph
   _showMentalGraph() {
-    setState(() {
-      _graphTitle = "Mental health";
-      _showMentalHealth = true;
-    });
-    _dataToShow();
+    if (!_showMentalHealth) {
+      setState(() {
+        _graphTitle = "Mental health";
+        _showMentalHealth = true;
+      });
+      _dataToShow();
+    } else {
+      return null;
+    }
   }
 
   // Changes the time period of personal health graph
@@ -208,135 +214,127 @@ class _HRdashboardPageState extends State<HRdashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          title: const Text('HR statistics',
-              style: TextStyle(color: Color(0xff027DC5))),
-        ),
-        body: Container(
-          padding: EdgeInsets.only(top: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Mental health button
-                  RaisedButton(
-                    child: const Text('Mental health',
-                        style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _lightBlueColor : _blueColor,
-                    textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
-                    /*shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: _showMentalHealth ? _lightBlueColor : Colors.transparent,
-                          width: 2),
-                    ),*/
-                    onPressed: () {
-                      _showMentalGraph();
-                    },
-                  ),
-                  SizedBox(width: 12),
-
-                  // Physical health button
-                  RaisedButton(
-                    child: const Text('Physical health',
-                        style: TextStyle(fontSize: 18)),
-                    color: _showMentalHealth ? _blueColor : _lightBlueColor,
-                    textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
-                    /*shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: _showMentalHealth ? _blueColor : _lightBlueColor,
-                          width: 2),
-                    ),*/
-                    onPressed: () {
-                      _showPhysicalGraph();
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-
-              // Line graph which is built inside card widget
-              if (_lineGraph)
-                CardWidget(
-                  widget: LineChart(data: _lineGraphData, title: _graphTitle),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('HR statistics',
+            style: TextStyle(color: Theme.of(context).accentColor)),
+      ),
+      body: Container(
+        padding: EdgeInsets.only(top: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Mental health button
+                RaisedButton(
+                  child: const Text('Mental health',
+                      style: TextStyle(fontSize: 18)),
+                  color: _showMentalHealth
+                      ? Theme.of(context).disabledColor
+                      : Theme.of(context).buttonColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    _showMentalGraph();
+                  },
                 ),
+                SizedBox(width: 12),
 
-              // Bar graph is built inside card widget
-              if (!_lineGraph)
-                CardWidget(
-                  widget: BarChart(data: _barGraphData, title: _graphTitle),
+                // Physical health button
+                RaisedButton(
+                  child: const Text('Physical health',
+                      style: TextStyle(fontSize: 18)),
+                  color: _showMentalHealth
+                      ? Theme.of(context).buttonColor
+                      : Theme.of(context).disabledColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    _showPhysicalGraph();
+                  },
                 ),
+              ],
+            ),
+            SizedBox(height: 10),
 
-              SizedBox(height: 10),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Time period
-                  Text(
-                    "Data time period",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                  SizedBox(width: 18),
-                  DropdownButton(
-                    value: _timePeriod,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.grey,
-                    ),
-                    items: <String>["Week", 'Month', 'All'].map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      _newTimePeriod(newValue);
-                    },
-                  ),
-                  SizedBox(width: 18),
-                ],
+            // Line graph which is built inside card widget
+            if (_lineGraph)
+              CardWidget(
+                widget: LineChart(data: _lineGraphData, title: _graphTitle),
               ),
 
-              // Sort by time/building
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Sort by",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+            // Bar graph is built inside card widget
+            if (!_lineGraph)
+              CardWidget(
+                widget: BarChart(data: _barGraphData, title: _graphTitle),
+              ),
+
+            SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Time period
+                Text(
+                  "Data time period",
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 18),
+                DropdownButton(
+                  value: _timePeriod,
+                  underline: Container(
+                    height: 1,
                   ),
-                  SizedBox(width: 18),
-                  DropdownButton(
-                    value: _sortBy,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.grey,
-                    ),
-                    items:
-                        <String>["Building", 'Time', 'Age'].map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      _sortByFunction(newValue);
-                    },
+                  items: <String>["Week", 'Month', 'All'].map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    _newTimePeriod(newValue);
+                  },
+                ),
+                SizedBox(width: 18),
+              ],
+            ),
+
+            // Sort by time/building
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Sort by",
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 18),
+                DropdownButton(
+                  value: _sortBy,
+                  underline: Container(
+                    height: 1,
                   ),
-                ],
-              )
-            ],
-          ),
+                  items:
+                      <String>["Building", 'Time', 'Age'].map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    _sortByFunction(newValue);
+                  },
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
