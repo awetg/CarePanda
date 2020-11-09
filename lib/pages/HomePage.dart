@@ -1,3 +1,4 @@
+import 'package:carePanda/CardWidget.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'dart:developer';
 import 'package:carePanda/HRpopup.dart';
 import 'package:carePanda/ServiceLocator.dart';
 import 'package:carePanda/UserDataPopup.dart';
+
+var _storageService = locator<LocalStorageService>();
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -33,15 +36,6 @@ class _HomePageState extends State<HomePage> {
     if (_firstStartUp && !_userBoarding && _userBoarding != null) {
       openStartUpPopUp();
     }
-
-    // DEV to log user data
-    /*
-    var _name = _storageService.name;
-    var _lastName = _storageService.lastName;
-    var _birthday = _storageService.birthday;
-    var _gender = _storageService.gender;
-    var _building = _storageService.building;
-    */
   }
 
 // If application is started for the first time, opens up a popup
@@ -57,28 +51,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          title: const Text('Home', style: TextStyle(color: Color(0xff027DC5))),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(height: 10),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text('Home',
+            style: TextStyle(color: Theme.of(context).accentColor)),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(height: 10),
+              // Changes logo depending on theme
+              if (!_storageService.darkTheme)
                 Image.asset(
                   'assets/images/carepandaLogo.png',
                   height: 150,
                   width: 250,
                 ),
-                AllCards(),
-              ],
-            ),
+              if (_storageService.darkTheme)
+                Image.asset(
+                  'assets/images/carepandaLogo_light.png',
+                  height: 150,
+                  width: 250,
+                ),
+              AllCards(),
+            ],
           ),
         ),
       ),
@@ -185,33 +184,11 @@ class _AllCards extends State<AllCards> {
       });
 }
 
-// Base widget for cards. Includes card shape and background color and it takes a widget as a variable
-class CardWidget extends StatelessWidget {
-  CardWidget({this.widget});
-  final widget;
-
-  //final cardColor = Color(0xffD7E0EB);
-  final cardColor = Colors.white;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        color: cardColor,
-        child: widget,
-      ),
-    );
-  }
-}
-
 // Widget with countdown clock
 class Timer extends StatelessWidget {
   Timer({this.timerWidget});
   final timerWidget;
-  final textColor = Color(0xff027DC5);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -219,7 +196,8 @@ class Timer extends StatelessWidget {
       children: <Widget>[
         SizedBox(height: 15),
         Text('Time until next questionnaire',
-            style: TextStyle(fontSize: 22.0, color: textColor)),
+            style: TextStyle(
+                fontSize: 22.0, color: Theme.of(context).accentColor)),
         SizedBox(height: 10),
         timerWidget,
         SizedBox(height: 15),
@@ -230,9 +208,6 @@ class Timer extends StatelessWidget {
 
 // Widget card to display that user has a qeustionnaire
 class Questionnaire extends StatelessWidget {
-  final _blueColor = Color(0xff027DC5);
-  var _storageService = locator<LocalStorageService>();
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -240,7 +215,7 @@ class Questionnaire extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: 18),
-        Icon(Icons.assignment, size: 55, color: _blueColor),
+        Icon(Icons.assignment, size: 55, color: Theme.of(context).accentColor),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -250,7 +225,9 @@ class Questionnaire extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('You have a questionnaire',
-                      style: TextStyle(fontSize: 22.0, color: _blueColor)),
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          color: Theme.of(context).accentColor)),
                 ],
               ),
               SizedBox(height: 10),
@@ -260,9 +237,7 @@ class Questionnaire extends StatelessWidget {
                   RaisedButton(
                     child: const Text('Answer now',
                         style: TextStyle(fontSize: 18)),
-                    color: _blueColor,
                     textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).push(
                           MaterialPageRoute(
@@ -286,8 +261,6 @@ class Questionnaire extends StatelessWidget {
 
 // Widget card for contacting HR
 class ContactHR extends StatelessWidget {
-  final _blueColor = Color(0xff027DC5);
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -295,7 +268,7 @@ class ContactHR extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: 18),
-        Icon(Icons.help, size: 55, color: _blueColor),
+        Icon(Icons.help, size: 55, color: Theme.of(context).accentColor),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -305,7 +278,9 @@ class ContactHR extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('Need professional help?',
-                      style: TextStyle(fontSize: 22.0, color: _blueColor)),
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          color: Theme.of(context).accentColor)),
                 ],
               ),
               SizedBox(height: 10),
@@ -315,9 +290,7 @@ class ContactHR extends StatelessWidget {
                   RaisedButton(
                     child: const Text('Contact HR',
                         style: TextStyle(fontSize: 18)),
-                    color: _blueColor,
                     textColor: Colors.white,
-                    splashColor: Color(0xffD7E0EB),
                     onPressed: () {
                       // Opens pop up to give a phone number
                       showDialog(

@@ -40,7 +40,6 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Color(0xff027DC5);
     var _lastAnsQuest;
     _storageService = locator<LocalStorageService>();
 
@@ -85,7 +84,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
     }
 
     return Text(formattedRemaining,
-        style: TextStyle(fontSize: 36.0, color: textColor));
+        style: TextStyle(fontSize: 36.0, color: Theme.of(context).accentColor));
   }
 }
 
