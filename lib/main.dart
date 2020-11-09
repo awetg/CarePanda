@@ -101,7 +101,6 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Theme.of(context).accentIconTheme.color,
         selectedItemColor: Theme.of(context).accentColor,
-        backgroundColor: Theme.of(context).primaryColor,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

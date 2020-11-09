@@ -27,10 +27,11 @@ class ThemeChanger with ChangeNotifier {
   final lightTheme = ThemeData(
     brightness: Brightness.light,
 
+    canvasColor: Color(0xffF8F8F6),
     //primarySwatch: Colors.grey,
     primaryColor: Colors.white,
     primaryColorDark: Colors.black,
-    //backgroundColor: Colors.white,
+    //backgroundColor: Color(0xffF8F8F6),
     primaryColorLight: Colors.white,
     accentColor: Color(0xff027DC5),
     accentIconTheme: IconThemeData(color: Color.fromRGBO(2, 125, 197, 90)),

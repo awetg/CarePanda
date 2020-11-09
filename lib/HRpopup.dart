@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:developer';
-
 import 'package:flutter/services.dart';
 
 class HRPopup extends StatefulWidget {
