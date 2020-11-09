@@ -66,16 +66,17 @@ class _HomePageState extends State<HomePage> {
               // Changes logo depending on theme
               if (!_storageService.darkTheme)
                 Image.asset(
-                  'assets/images/carepandaLogo.png',
+                  'assets/images/caregarooLogo.png',
                   height: 150,
                   width: 250,
                 ),
               if (_storageService.darkTheme)
                 Image.asset(
-                  'assets/images/carepandaLogo_light.png',
+                  'assets/images/caregarooLogo_light.png',
                   height: 150,
                   width: 250,
                 ),
+
               AllCards(),
             ],
           ),
@@ -127,7 +128,7 @@ class _AllCards extends State<AllCards> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(height: 30),
+              SizedBox(height: 16),
 
               // Shows questionnaire card if shared preference boolean value is true
               if (snapshot.data)
@@ -152,11 +153,22 @@ class _AllCards extends State<AllCards> {
                     ),
                   ),
                 ),
-              SizedBox(height: 30),
+              SizedBox(height: 14),
+
+              // HR widget
               SizedBox(
                 width: double.infinity,
                 child: CardWidget(
                   widget: ContactHR(),
+                ),
+              ),
+
+              SizedBox(height: 14),
+
+              SizedBox(
+                width: double.infinity,
+                child: CardWidget(
+                  widget: SendMessage(),
                 ),
               ),
             ],
@@ -304,6 +316,54 @@ class ContactHR extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 18),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+// Widget card for sending a message for HR
+class SendMessage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        //Icon(Icons.help, size: 55, color: Theme.of(context).accentColor),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(width: 18),
+                  Expanded(
+                    child: Text('Send message for HR',
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            color: Theme.of(context).accentColor)),
+                  ),
+                  RaisedButton(
+                    child: Text('Send', style: TextStyle(fontSize: 18)),
+                    textColor: Colors.white,
+                    onPressed: () {
+                      // Opens pop up to give a phone number
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return HRPopup();
+                          });
+                    },
+                  ),
+                  SizedBox(width: 18),
+                ],
+              ),
+              SizedBox(height: 8),
             ],
           ),
         )

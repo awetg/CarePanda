@@ -1,7 +1,6 @@
 import 'package:carePanda/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 
 class ThemeChanger with ChangeNotifier {
   var _storageService = locator<LocalStorageService>();
