@@ -4,25 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:carePanda/ChartDataStructure.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-class LineChart extends StatefulWidget {
+class BarChart extends StatefulWidget {
   final data;
   final title;
-  LineChart({this.data, this.title});
+  BarChart({this.data, this.title});
 
   @override
-  _LineChartState createState() => _LineChartState();
+  _BarChartState createState() => _BarChartState();
 }
 
-class _LineChartState extends State<LineChart> {
-  // Sets data for the chart
+class _BarChartState extends State<BarChart> {
   _getWellbeingData() {
-    List<charts.Series<WellbeingData, DateTime>> wellbeing = [
+    List<charts.Series<WellbeingDataByBuilding, String>> wellbeing = [
       charts.Series(
           id: "Wellbeing",
           data: widget.data,
-          domainFn: (WellbeingData wellbeing, _) => wellbeing.date,
-          measureFn: (WellbeingData wellbeing, _) => wellbeing.wellbeing,
-          colorFn: (WellbeingData wellbeing, _) =>
+          domainFn: (WellbeingDataByBuilding wellbeing, _) =>
+              wellbeing.building,
+          measureFn: (WellbeingDataByBuilding wellbeing, _) =>
+              wellbeing.wellbeing,
+          colorFn: (WellbeingDataByBuilding wellbeing, _) =>
               charts.MaterialPalette.blue.shadeDefault)
     ];
     return wellbeing;
@@ -67,30 +68,17 @@ class _LineChartState extends State<LineChart> {
 
           Expanded(
             // Chart
-            child: new charts.TimeSeriesChart(
+            child: new charts.BarChart(
               _getWellbeingData(),
               animate: true,
               primaryMeasureAxis: axis,
-              behaviors: [
-                charts.LinePointHighlighter(
-                  drawFollowLinesAcrossChart: true,
-                  showHorizontalFollowLine:
-                      charts.LinePointHighlighterFollowLineType.all,
-                )
-              ],
-              domainAxis: charts.DateTimeAxisSpec(
+              domainAxis: charts.OrdinalAxisSpec(
                 renderSpec: charts.GridlineRendererSpec(
+                  labelRotation: 60,
                   labelStyle: charts.TextStyleSpec(color: _axisColor()),
                   lineStyle: charts.LineStyleSpec(
                       thickness: 0,
                       color: charts.MaterialPalette.gray.shadeDefault),
-                ),
-                //tickProviderSpec: charts.DayTickProviderSpec(increments: [1]),
-                tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
-                  day: charts.TimeFormatterSpec(
-                    format: 'dd-MM',
-                    transitionFormat: 'dd-MM',
-                  ),
                 ),
               ),
             ),

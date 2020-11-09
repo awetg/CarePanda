@@ -13,21 +13,23 @@ class PushNotificationHandler {
       // When the app is open and it receives a push notification
       onMessage: (Map<String, dynamic> message) async {
         log("onMessage: $message");
-        _storageService.hasQuestionnaire = true;
       },
 
       // When app is completely closed and launched again
       onLaunch: (Map<String, dynamic> message) async {
         log("onLaunch: $message");
-        _storageService.hasQuestionnaire = true;
       },
 
       // When the app is opened from the background from the push notification
       onResume: (Map<String, dynamic> message) async {
         log("onResume: $message");
-        _storageService.hasQuestionnaire = true;
       },
     );
+
+    if (_storageService.recievePushNotif == null) {
+      _storageService.recievePushNotif = true;
+      _fcm.subscribeToTopic('notifications');
+    }
 
     _fcm.getToken().then((String token) {
       assert(token != null);

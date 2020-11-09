@@ -5,7 +5,6 @@ class CardWidget extends StatelessWidget {
   final widget;
 
   //final cardColor = Color(0xffD7E0EB);
-  final cardColor = Colors.white;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,7 +13,7 @@ class CardWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
-        color: cardColor,
+        color: Theme.of(context).cardColor,
         child: widget,
       ),
     );

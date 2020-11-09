@@ -16,10 +16,16 @@ class LocalStorageService {
   }
 
   // Local storage key string
+  // App
   static const String HasQuestionnaireKey = 'hasQuestionnaire';
   static const String FirsTimeStartUp = 'firstTimeStartUp';
   static const String ShowBoarding = 'showBoarding';
   static const String LastAnsQuestionnaire = 'lastAnsQuestionnaire';
+
+  // Settings
+  static const String IsLoggedIn = 'isLoggedIn';
+  static const String RecievePushNotif = 'recievePushNotif';
+  static const String DarkTheme = 'darkTheme';
 
   // USER DATA
   static const String Name = 'name';
@@ -29,10 +35,16 @@ class LocalStorageService {
   static const String Building = 'building';
 
   // Gets value from local storage
+  // App
   bool get hasQuestionnaire => _getFromLocalStorage(HasQuestionnaireKey);
   bool get firstTimeStartUp => _getFromLocalStorage(FirsTimeStartUp);
   bool get showBoarding => _getFromLocalStorage(ShowBoarding);
   String get lastAnsQuestionnaire => _getFromLocalStorage(LastAnsQuestionnaire);
+
+  // Settings
+  bool get isLoggedIn => _getFromLocalStorage(IsLoggedIn);
+  bool get recievePushNotif => _getFromLocalStorage(RecievePushNotif);
+  bool get darkTheme => _getFromLocalStorage(DarkTheme);
 
   // USER DATA
   String get name => _getFromLocalStorage(Name);
@@ -42,6 +54,7 @@ class LocalStorageService {
   String get building => _getFromLocalStorage(Building);
 
   // Sets value to local storage
+  // App
   set hasQuestionnaire(bool value) =>
       _saveToLocalStorage(HasQuestionnaireKey, value);
   set firstTimeStartUp(bool value) =>
@@ -49,6 +62,12 @@ class LocalStorageService {
   set showBoarding(bool value) => _saveToLocalStorage(ShowBoarding, value);
   set lastAnsQuestionnaire(String value) =>
       _saveToLocalStorage(LastAnsQuestionnaire, value);
+
+  //Settings
+  set isLoggedIn(bool value) => _saveToLocalStorage(IsLoggedIn, value);
+  set recievePushNotif(bool value) =>
+      _saveToLocalStorage(RecievePushNotif, value);
+  set darkTheme(bool value) => _saveToLocalStorage(DarkTheme, value);
 
   // USER DATA
   set name(String value) => _saveToLocalStorage(Name, value);
@@ -58,6 +77,7 @@ class LocalStorageService {
   set building(String value) => _saveToLocalStorage(Building, value);
 
   // VVV Functions to save/load data below VVV
+
   // Function to get data from local storage
   dynamic _getFromLocalStorage(String key) {
     var value = _preferences.get(key);
@@ -65,7 +85,7 @@ class LocalStorageService {
     return value;
   }
 
-// Function to set data into local storage
+  // Function to set data into local storage
   void _saveToLocalStorage<T>(String key, T content) {
     //log('(TRACE) LocalStorageService:_saveToLocalStorage. key: $key value: $content');
     if (content is String) {

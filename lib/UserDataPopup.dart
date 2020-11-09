@@ -9,7 +9,6 @@ class UserDataPopup extends StatefulWidget {
 
 class _UserDataPopup extends State<UserDataPopup> {
   final _storageService = locator<LocalStorageService>();
-  final _blueColor = Color(0xff027DC5);
   var _name;
   var _lastName;
   var _birthday;
@@ -95,7 +94,7 @@ class _UserDataPopup extends State<UserDataPopup> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Please give us some info about yourself",
-          style: TextStyle(color: _blueColor)),
+          style: TextStyle(color: Theme.of(context).accentColor)),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,39 +105,52 @@ class _UserDataPopup extends State<UserDataPopup> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 15),
-                    child: TextFormField(
-                      onChanged: (name) {
-                        _name = name;
-                      },
-                      decoration: new InputDecoration(
-                        labelText: "Name",
-                        contentPadding: EdgeInsets.symmetric(vertical: 8),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 1.5),
+                    child: Theme(
+                      data: Theme.of(context)
+                          .copyWith(primaryColor: Color(0xff027DC5)),
+                      child: TextFormField(
+                        onChanged: (name) {
+                          _name = name;
+                        },
+                        decoration: new InputDecoration(
+                          labelText: "Name",
+                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).textTheme.bodyText1.color,
+                                width: 1.5),
+                          ),
                         ),
+                        initialValue: _name,
                       ),
-                      initialValue: _name,
                     ),
                   ),
                 ),
 
                 // Last name
                 Expanded(
-                  child: TextFormField(
-                    onChanged: (lastName) {
-                      _lastName = lastName;
-                    },
-                    decoration: new InputDecoration(
-                      labelText: "Last name",
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(primaryColor: Color(0xff027DC5)),
+                    child: TextFormField(
+                      onChanged: (lastName) {
+                        _lastName = lastName;
+                      },
+                      decoration: new InputDecoration(
+                        labelText: "Last name",
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).textTheme.bodyText1.color,
+                              width: 1.5),
+                        ),
                       ),
+                      initialValue: _lastName,
                     ),
-                    initialValue: _lastName,
                   ),
-                )
+                ),
               ],
             ),
             SizedBox(height: 14),
@@ -148,34 +160,17 @@ class _UserDataPopup extends State<UserDataPopup> {
               Expanded(
                 child: Text(
                   "Birthday",
-                  style: TextStyle(color: Colors.grey[700]),
                 ),
               ),
               OutlineButton(
                 onPressed: () => _selectDate(context),
                 child: Text(_dateFormatter(_birthday)),
-                textColor: _blueColor,
-                splashColor: Color(0xffD7E0EB),
+                textColor: Theme.of(context).accentColor,
                 borderSide: BorderSide(
-                  color: _blueColor,
+                  color: Theme.of(context).accentColor,
                 ),
               )
             ]),
-            // Choosing age via keyboard (numbers only) (OPTION 2)
-            /*
-            TextField(
-              onChanged: (newAge) {
-                _age = newAge;
-              },
-              decoration: new InputDecoration(
-                labelText: "Age",
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-            ),*/
             SizedBox(height: 4),
 
             // Gender
@@ -183,7 +178,6 @@ class _UserDataPopup extends State<UserDataPopup> {
               Expanded(
                 child: Text(
                   "Gender",
-                  style: TextStyle(color: Colors.grey[700]),
                 ),
               ),
               SizedBox(width: 80),
@@ -191,7 +185,6 @@ class _UserDataPopup extends State<UserDataPopup> {
                 value: _gender,
                 underline: Container(
                   height: 1,
-                  color: Colors.grey,
                 ),
                 items: <String>["Don't want to tell", 'Male', 'Female', 'Other']
                     .map((String value) {
@@ -214,14 +207,12 @@ class _UserDataPopup extends State<UserDataPopup> {
               Expanded(
                 child: Text(
                   "Work building",
-                  style: TextStyle(color: Colors.grey[700]),
                 ),
               ),
               DropdownButton(
                 value: _building,
                 underline: Container(
                   height: 1,
-                  color: Colors.grey,
                 ),
                 items: <String>[
                   "Don't want to tell",
@@ -249,7 +240,8 @@ class _UserDataPopup extends State<UserDataPopup> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text("* Giving personal data is optional",
-                    style: TextStyle(fontSize: 13.0, color: _blueColor)),
+                    style: TextStyle(
+                        fontSize: 13.0, color: Theme.of(context).accentColor)),
               ],
             ),
             Row(
@@ -258,7 +250,9 @@ class _UserDataPopup extends State<UserDataPopup> {
               children: [
                 if (_firstTimeStartUp == true || _firstTimeStartUp == null)
                   Text("* Personal data can be changed in settings",
-                      style: TextStyle(fontSize: 13.0, color: _blueColor)),
+                      style: TextStyle(
+                          fontSize: 13.0,
+                          color: Theme.of(context).accentColor)),
               ],
             )
           ],
@@ -269,17 +263,13 @@ class _UserDataPopup extends State<UserDataPopup> {
       actions: [
         FlatButton(
           child: Text(_cancelPopupText, style: TextStyle(fontSize: 18)),
-          textColor: _blueColor,
-          splashColor: Color(0xffD7E0EB),
+          textColor: Theme.of(context).accentColor,
           onPressed: () {
             skipSettingData();
           },
         ),
         RaisedButton(
           child: const Text('Submit', style: TextStyle(fontSize: 18)),
-          color: _blueColor,
-          textColor: Colors.white,
-          splashColor: Color(0xffD7E0EB),
           onPressed: () {
             setData();
           },
