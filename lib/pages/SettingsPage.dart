@@ -108,6 +108,9 @@ class _SettingsPage extends State<SettingsPage> {
                   ),
                   onPressed: () {
                     showDialog(
+                      barrierColor: _storageService.darkTheme
+                          ? Colors.black.withOpacity(0.4)
+                          : null,
                       barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) {
@@ -333,6 +336,9 @@ class _UserSettingsState extends State<UserSettings> {
                 ),
                 onPressed: () {
                   showDialog(
+                      barrierColor: _storageService.darkTheme
+                          ? Colors.black.withOpacity(0.4)
+                          : null,
                       barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) {

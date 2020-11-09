@@ -15,6 +15,7 @@ class ThemeChanger with ChangeNotifier {
     brightness: Brightness.dark,
     //backgroundColor: const Color(0xFF212121),
     accentColor: Color(0xff60cff4),
+    dialogTheme: DialogTheme(elevation: 0),
     accentIconTheme: IconThemeData(color: Color(0xff86B6E0)),
     toggleableActiveColor: Color(0xffA0C3E2),
     bottomNavigationBarTheme:

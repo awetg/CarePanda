@@ -66,15 +66,15 @@ class _HomePageState extends State<HomePage> {
               // Changes logo depending on theme
               if (!_storageService.darkTheme)
                 Image.asset(
-                  'assets/images/caregarooLogo.png',
-                  height: 150,
-                  width: 250,
+                  'assets/images/caregarooLogo_v2.png',
+                  height: 200,
+                  width: 400,
                 ),
               if (_storageService.darkTheme)
                 Image.asset(
-                  'assets/images/caregarooLogo_light.png',
-                  height: 150,
-                  width: 250,
+                  'assets/images/caregaroologo_v2_light.png',
+                  height: 200,
+                  width: 400,
                 ),
 
               AllCards(),
@@ -125,10 +125,10 @@ class _AllCards extends State<AllCards> {
         if (snapshot.hasData) {
           log("snapshot " + snapshot.data.toString());
           return Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(height: 16),
+              SizedBox(height: 20),
 
               // Shows questionnaire card if shared preference boolean value is true
               if (snapshot.data)
@@ -153,23 +153,88 @@ class _AllCards extends State<AllCards> {
                     ),
                   ),
                 ),
-              SizedBox(height: 14),
+              SizedBox(height: 8),
 
-              // HR widget
-              SizedBox(
-                width: double.infinity,
-                child: CardWidget(
-                  widget: ContactHR(),
-                ),
-              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // HR widget
 
-              SizedBox(height: 14),
+                  /* Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: CardWidget(
+                        widget: SendMessage(),
+                        noPadding: true,
+                      ),
+                    ),
+                  ),*/
 
-              SizedBox(
-                width: double.infinity,
-                child: CardWidget(
-                  widget: SendMessage(),
-                ),
+                  Expanded(
+                      child: Padding(
+                    padding: EdgeInsets.only(left: 12, right: 7),
+                    child: SizedBox(
+                      height: 154,
+                      child: RaisedButton(
+                        child: Text('Other services',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18)),
+                        color: Theme.of(context).cardColor,
+                        textColor: Theme.of(context).accentColor,
+                        onPressed: () {
+                          // Opens pop up to give a phone number
+                          showDialog(
+                              barrierColor: _storageService.darkTheme
+                                  ? Colors.black.withOpacity(0.4)
+                                  : null,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return HRPopup();
+                              });
+                        },
+                      ),
+                    ),
+                  )),
+                  Expanded(
+                      child: Padding(
+                    padding: EdgeInsets.only(right: 12, left: 7),
+                    child: SizedBox(
+                      height: 154,
+                      child: RaisedButton(
+                        child: Text('Send message for HR',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18)),
+                        color: Theme.of(context).cardColor,
+                        textColor: Theme.of(context).accentColor,
+                        onPressed: () {
+                          // Opens pop up to give a phone number
+                          showDialog(
+                              barrierColor: _storageService.darkTheme
+                                  ? Colors.black.withOpacity(0.4)
+                                  : null,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return HRPopup();
+                              });
+                        },
+                      ),
+                    ),
+                  ))
+
+                  /*Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(cardColor: Theme.of(context).accentColor),
+                        child: CardWidget(
+                          widget: SendMessage2(),
+                          noPadding: true,
+                        ),
+                      ),
+                    ),
+                  ),*/
+                ],
               ),
             ],
           );
@@ -224,17 +289,17 @@ class Questionnaire extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: 18),
-        Icon(Icons.assignment, size: 55, color: Theme.of(context).accentColor),
+        //Icon(Icons.assignment, size: 55, color: Theme.of(context).accentColor),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(height: 18),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('You have a questionnaire',
                       style: TextStyle(
@@ -244,7 +309,7 @@ class Questionnaire extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
                     child: const Text('Answer now',
@@ -329,44 +394,68 @@ class SendMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        //Icon(Icons.help, size: 55, color: Theme.of(context).accentColor),
+        SizedBox(width: 18),
         Expanded(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 18),
-                  Expanded(
-                    child: Text('Send message for HR',
-                        style: TextStyle(
-                            fontSize: 22.0,
-                            color: Theme.of(context).accentColor)),
-                  ),
-                  RaisedButton(
-                    child: Text('Send', style: TextStyle(fontSize: 18)),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Opens pop up to give a phone number
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return HRPopup();
-                          });
-                    },
-                  ),
-                  SizedBox(width: 18),
-                ],
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(height: 18),
+              Text('Send message for HR',
+                  style: TextStyle(
+                      fontSize: 22.0, color: Theme.of(context).accentColor)),
+              SizedBox(height: 18),
+              RaisedButton(
+                child: Text('Send', style: TextStyle(fontSize: 18)),
+                textColor: Colors.white,
+                onPressed: () {
+                  // Opens pop up to give a phone number
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return HRPopup();
+                      });
+                },
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 18),
             ],
           ),
-        )
+        ),
+        SizedBox(width: 18),
+      ],
+    );
+  }
+}
+
+// Widget card for sending a message for HR
+class SendMessage2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(width: 18),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(height: 50),
+              Text('Send message for HR',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+              SizedBox(height: 50),
+            ],
+          ),
+        ),
+        SizedBox(width: 18),
       ],
     );
   }

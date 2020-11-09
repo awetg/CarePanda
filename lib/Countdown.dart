@@ -63,11 +63,19 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
     var formattedRemaining;
 
+    var extra0;
+
+    if (seconds < 10) {
+      extra0 = "0";
+    } else {
+      extra0 = "";
+    }
+
     // Time formatting
     if (days != 0) {
-      formattedRemaining = '$days : $hours : $minutes : $seconds';
+      formattedRemaining = '$days : $hours : $minutes : $extra0$seconds';
     } else {
-      formattedRemaining = '$hours : $minutes : $seconds';
+      formattedRemaining = '$hours : $minutes : $extra0$seconds';
     }
 
     // When timer hits 0, changes boolean value to show questionnaire card
@@ -84,7 +92,12 @@ class _WeekCountdownState extends State<WeekCountdown> {
     }
 
     return Text(formattedRemaining,
-        style: TextStyle(fontSize: 36.0, color: Theme.of(context).accentColor));
+        style: TextStyle(
+            fontSize: 42.0,
+            fontWeight: FontWeight.bold,
+            color: _storageService.darkTheme
+                ? null
+                : Theme.of(context).accentColor));
   }
 }
 
