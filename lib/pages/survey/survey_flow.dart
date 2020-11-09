@@ -1,3 +1,4 @@
+import 'package:carePanda/main.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/question_page.dart';
 import 'package:carePanda/pages/survey/question_progress_indicator.dart';
@@ -36,7 +37,15 @@ class _SurveyFlowState extends State<SurveyFlow> {
       _pageController.nextPage(
           duration: animation_duration, curve: animation_type);
     else
-      Navigator.pop(context);
+      // Pushes to home and removes history, which makes it unable to move back with back button
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+          (Route<dynamic> route) => false).then(
+        (value) {
+          setState(() {});
+        },
+      );
   }
 
   //  pop SurveyFlow page
