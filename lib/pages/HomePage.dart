@@ -1,10 +1,11 @@
 import 'package:carePanda/CardWidget.dart';
+import 'package:carePanda/OtherServicesPopup.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/Countdown.dart';
 import 'dart:developer';
-import 'package:carePanda/HRpopup.dart';
+import 'package:carePanda/MsgForHRPopup.dart';
 import 'package:carePanda/ServiceLocator.dart';
 import 'package:carePanda/UserDataPopup.dart';
 
@@ -31,7 +32,6 @@ class _HomePageState extends State<HomePage> {
     var _storageService = locator<LocalStorageService>();
     _firstStartUp = _storageService.firstTimeStartUp ?? true;
     _userBoarding = _storageService.showBoarding ?? true;
-
     log("first start up " + _firstStartUp.toString());
     if (_firstStartUp && !_userBoarding && _userBoarding != null) {
       openStartUpPopUp();
@@ -155,87 +155,8 @@ class _AllCards extends State<AllCards> {
                 ),
               SizedBox(height: 8),
 
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // HR widget
-
-                  /* Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: CardWidget(
-                        widget: SendMessage(),
-                        noPadding: true,
-                      ),
-                    ),
-                  ),*/
-
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.only(left: 12, right: 7),
-                    child: SizedBox(
-                      height: 154,
-                      child: RaisedButton(
-                        child: Text('Other services',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18)),
-                        color: Theme.of(context).cardColor,
-                        textColor: Theme.of(context).accentColor,
-                        onPressed: () {
-                          // Opens pop up to give a phone number
-                          showDialog(
-                              barrierColor: _storageService.darkTheme
-                                  ? Colors.black.withOpacity(0.4)
-                                  : null,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return HRPopup();
-                              });
-                        },
-                      ),
-                    ),
-                  )),
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.only(right: 12, left: 7),
-                    child: SizedBox(
-                      height: 154,
-                      child: RaisedButton(
-                        child: Text('Send message for HR',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18)),
-                        color: Theme.of(context).cardColor,
-                        textColor: Theme.of(context).accentColor,
-                        onPressed: () {
-                          // Opens pop up to give a phone number
-                          showDialog(
-                              barrierColor: _storageService.darkTheme
-                                  ? Colors.black.withOpacity(0.4)
-                                  : null,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return HRPopup();
-                              });
-                        },
-                      ),
-                    ),
-                  ))
-
-                  /*Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: Theme(
-                        data: Theme.of(context)
-                            .copyWith(cardColor: Theme.of(context).accentColor),
-                        child: CardWidget(
-                          widget: SendMessage2(),
-                          noPadding: true,
-                        ),
-                      ),
-                    ),
-                  ),*/
-                ],
-              ),
+              // Shows big buttons for other services and sending msg for HR
+              BigButtons()
             ],
           );
 
@@ -248,12 +169,9 @@ class _AllCards extends State<AllCards> {
                 SizedBox(height: 30),
                 CircularProgressIndicator(),
                 SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  child: CardWidget(
-                    widget: ContactHR(),
-                  ),
-                ),
+
+                // Shows big buttons for other services and sending msg for HR
+                BigButtons()
               ],
             ),
           );
@@ -292,7 +210,6 @@ class Questionnaire extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: 18),
-        //Icon(Icons.assignment, size: 55, color: Theme.of(context).accentColor),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -336,127 +253,59 @@ class Questionnaire extends StatelessWidget {
   }
 }
 
-// Widget card for contacting HR
-class ContactHR extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(width: 18),
-        Icon(Icons.help, size: 55, color: Theme.of(context).accentColor),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('Need professional help?',
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          color: Theme.of(context).accentColor)),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  RaisedButton(
-                    child: const Text('Contact HR',
-                        style: TextStyle(fontSize: 18)),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Opens pop up to give a phone number
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return HRPopup();
-                          });
-                    },
-                  ),
-                  SizedBox(width: 18),
-                ],
-              ),
-              SizedBox(height: 18),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-
-// Widget card for sending a message for HR
-class SendMessage extends StatelessWidget {
+// Big buttons for other services and for sending a msg for HR
+class BigButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(width: 18),
+        // Button for other services
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(height: 18),
-              Text('Send message for HR',
-                  style: TextStyle(
-                      fontSize: 22.0, color: Theme.of(context).accentColor)),
-              SizedBox(height: 18),
-              RaisedButton(
-                child: Text('Send', style: TextStyle(fontSize: 18)),
-                textColor: Colors.white,
-                onPressed: () {
-                  // Opens pop up to give a phone number
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return HRPopup();
-                      });
-                },
-              ),
-              SizedBox(height: 18),
-            ],
-          ),
+            child: Padding(
+                padding: EdgeInsets.only(left: 12, right: 7),
+                child: BigButton(
+                    title: "Other services", dialog: OtherServicesPopup()))),
+
+        // Button for sending a msg to HR
+        Expanded(
+          child: Padding(
+              padding: EdgeInsets.only(right: 12, left: 7),
+              child: BigButton(
+                  title: "Send message for HR", dialog: MsgForHRPopup())),
         ),
-        SizedBox(width: 18),
       ],
     );
   }
 }
 
-// Widget card for sending a message for HR
-class SendMessage2 extends StatelessWidget {
+// Widget for big buttons (takes in a title and dialog)
+class BigButton extends StatelessWidget {
+  BigButton({this.title, this.dialog});
+  final title;
+  final dialog;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(width: 18),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(height: 50),
-              Text('Send message for HR',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 22.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(height: 50),
-            ],
-          ),
-        ),
-        SizedBox(width: 18),
-      ],
+    return SizedBox(
+      height: 154,
+      child: RaisedButton(
+        child: Text(title,
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+        color: Theme.of(context).cardColor,
+        textColor: Theme.of(context).accentColor,
+        onPressed: () {
+          showDialog(
+            barrierColor: _storageService.darkTheme
+                ? Colors.black.withOpacity(0.4)
+                : null,
+            context: context,
+            builder: (BuildContext context) {
+              return dialog;
+            },
+          );
+        },
+      ),
     );
   }
 }

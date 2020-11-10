@@ -10,38 +10,28 @@ class ThemeChanger with ChangeNotifier {
   ThemeChanger(this._themeData);
 
   final darkTheme = ThemeData(
-    //primarySwatch: Colors.grey,
-    //primaryColor: Colors.black,
     brightness: Brightness.dark,
-    //backgroundColor: const Color(0xFF212121),
+    dialogBackgroundColor: Color(0xff303030),
     accentColor: Color(0xff60cff4),
-    dialogTheme: DialogTheme(elevation: 0),
     accentIconTheme: IconThemeData(color: Color(0xff86B6E0)),
     toggleableActiveColor: Color(0xffA0C3E2),
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Color(0xff212121)),
-    //dividerColor: Colors.black12,
-    //cardColor: Colors.black,
   );
 
   final lightTheme = ThemeData(
     brightness: Brightness.light,
-
     canvasColor: Color(0xffF8F8F6),
-    //primarySwatch: Colors.grey,
     primaryColor: Colors.white,
     primaryColorDark: Colors.black,
-    //backgroundColor: Color(0xffF8F8F6),
     primaryColorLight: Colors.white,
     accentColor: Color(0xff027DC5),
     accentIconTheme: IconThemeData(color: Color.fromRGBO(2, 125, 197, 90)),
     toggleableActiveColor: Color(0xffA0C3E2),
-
-    dialogBackgroundColor: Colors.white,
+    dialogBackgroundColor: Color(0xffF8F8F6),
     buttonColor: Color(0xff027DC5),
     disabledColor: Color(0xffA0C3E2),
     cardColor: Colors.white,
-
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Colors.white),
   );

@@ -21,6 +21,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: EdgeInsets.only(top: 26, left: 10, right: 10, bottom: 14),
       title: Center(
           child: Text("HR Login",
               style: TextStyle(color: Theme.of(context).accentColor))),
@@ -36,10 +37,15 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                 onChanged: (username) {
                   _username = username;
                 },
-                decoration: new InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Username",
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                  enabledBorder: UnderlineInputBorder(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                        width: 1.5),
+                  ),
+                  border: OutlineInputBorder(
                     borderSide: BorderSide(
                         color: Theme.of(context).textTheme.bodyText1.color,
                         width: 1.5),
@@ -61,10 +67,16 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                 onChanged: (password) {
                   _password = password;
                 },
+                obscureText: true,
                 decoration: new InputDecoration(
                   labelText: "Password",
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                  enabledBorder: UnderlineInputBorder(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                        width: 1.5),
+                  ),
+                  border: OutlineInputBorder(
                     borderSide: BorderSide(
                         color: Theme.of(context).textTheme.bodyText1.color,
                         width: 1.5),

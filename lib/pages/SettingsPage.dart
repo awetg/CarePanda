@@ -68,8 +68,6 @@ class _SettingsPage extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    log(Theme.of(context).primaryColor.toString());
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
