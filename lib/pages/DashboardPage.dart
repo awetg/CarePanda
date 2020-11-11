@@ -1,3 +1,4 @@
+import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/LineChart.dart';
 import 'package:carePanda/ChartDataStructure.dart';
@@ -10,8 +11,6 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
-  final _blueColor = Color(0xff027DC5);
-  final _lightBlueColor = Color(0xffA0C3E2);
   bool _showMentalHealth = true;
   var _graphTitle = "Personal mental health";
   var _timePeriod = "Week";
@@ -169,7 +168,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -179,34 +177,21 @@ class _DashBoardPageState extends State<DashBoardPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Mental health button
-                RaisedButton(
-                  child: const Text('Mental health',
-                      style: TextStyle(fontSize: 18)),
-                  color: _showMentalHealth
-                      ? Theme.of(context).disabledColor
-                      : Theme.of(context).buttonColor,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    _showMentalGraph();
-                  },
+                TopButton(
+                  name: "Mental health",
+                  boolState: !_showMentalHealth,
+                  function: _showMentalGraph,
                 ),
-                SizedBox(width: 12),
 
                 // Physical health button
-                RaisedButton(
-                  child: const Text('Physical health',
-                      style: TextStyle(fontSize: 18)),
-                  color: _showMentalHealth
-                      ? Theme.of(context).buttonColor
-                      : Theme.of(context).disabledColor,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    _showPhysicalGraph();
-                  },
+                TopButton(
+                  name: "Physical health",
+                  boolState: _showMentalHealth,
+                  function: _showPhysicalGraph,
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
 
             // Graph which is built inside card widget
             CardWidget(

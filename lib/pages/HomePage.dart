@@ -227,19 +227,24 @@ class Questionnaire extends StatelessWidget {
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    child: const Text('Answer now',
-                        style: TextStyle(fontSize: 18)),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).push(
-                          MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (context) => SurveyFlow()));
-                      _storageService.hasQuestionnaire = false;
-                      log("Questionnaire button pressed");
-                    },
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: RaisedButton(
+                        child: const Text('Answer now',
+                            style: TextStyle(fontSize: 18)),
+                        textColor: Colors.white,
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => SurveyFlow()));
+                          _storageService.hasQuestionnaire = false;
+                          log("Questionnaire button pressed");
+                        },
+                      ),
+                    ),
                   ),
                   SizedBox(width: 18),
                 ],
