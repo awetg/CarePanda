@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
 
@@ -72,10 +70,19 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> {
   List<MsgDataStructure> msgData = [
-    new MsgDataStructure("Esko", "Aho", "building", 2, 23,
-        "I need help with with this application", false, "male", 1),
+    new MsgDataStructure(
+        "Esko",
+        "Aho",
+        "building",
+        2,
+        23,
+        "I need help with with this application",
+        false,
+        "male",
+        1,
+        "10.13.2020"),
     new MsgDataStructure("Seppo", "Aho", "building 1", 1, 22,
-        "adsdasdaadsadsadsdasads", false, "male", 2),
+        "adsdasdaadsadsadsdasads", false, "male", 2, "10.13.2020"),
     new MsgDataStructure(
         "Oskari",
         "Talvimaa",
@@ -85,11 +92,12 @@ class _MessagesState extends State<Messages> {
         "asdsadasdasdsadsadasdasdsadasdsadsaadasdasddasasddasdasadsadsadsads",
         null,
         "male",
-        5),
+        5,
+        "10.13.2020"),
     new MsgDataStructure("Joona", "Kumpu", "building 4", 40, 22,
-        "asdjasddfgdfgsdfhfgjhd", false, null, null),
+        "asdjasddfgdfgsdfhfgjhd", false, null, null, "10.13.2020"),
     new MsgDataStructure(null, "Kumpu", "Don't want to tell", null, 22,
-        "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1),
+        "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1, "10.13.2020"),
     new MsgDataStructure(
         "Jorma",
         null,
@@ -99,11 +107,21 @@ class _MessagesState extends State<Messages> {
         "asdjasdsadasdasdfhhadssasdadsssssssssssssssssssssssssssasd ad as as sadd sad asd s s dassda  dassd aad sad s ads a  adsa dss addasd as",
         false,
         "male",
-        1),
-    new MsgDataStructure("adsssssssssssssssssssssssssssssssssssssssasda", null,
-        null, null, null, "Something happened", false, "male", null),
-    new MsgDataStructure("asd ", null, "Building 13", null, null,
-        "Something happened", false, null, 1),
+        1,
+        "10.13.2020"),
+    new MsgDataStructure(
+        "adsssssssssssssssssssssssssssssssssssssssasda",
+        null,
+        null,
+        null,
+        null,
+        "Something happened",
+        false,
+        "male",
+        null,
+        "10.13.2020"),
+    new MsgDataStructure("asd ", null, null, null, null, "Something happened",
+        false, null, 1, "10.13.2020"),
     new MsgDataStructure(
         null,
         "asdads ada s ads addasad s adsads ads adsasasasdasd",
@@ -113,7 +131,8 @@ class _MessagesState extends State<Messages> {
         "Something happened",
         false,
         null,
-        null),
+        null,
+        "10.13.2020"),
   ];
 
   _expandItem(MsgDataStructure msgData) {
@@ -161,11 +180,19 @@ class _MessagesState extends State<Messages> {
                             maxLines:
                                 msgData[index].expanded ?? false ? null : 2,
                           ),
-                          SizedBox(height: 6),
+                          SizedBox(height: 12),
+
+                          // Date
+                          Text(msgData[index].date,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline2
+                                      .color)),
 
                           // Free space
                           msgData[index].expanded ?? false
-                              ? SizedBox(height: 14)
+                              ? SizedBox(height: 10)
                               : Container(),
 
                           // Building
@@ -218,8 +245,10 @@ class _MessagesState extends State<Messages> {
                             ),
 
                           // Free space
-                          if (msgData[index].gender != null ||
-                              msgData[index].age != null)
+                          if (msgData[index].age != null &&
+                                  msgData[index].building != null ||
+                              msgData[index].gender != null &&
+                                  msgData[index].building != null)
                             msgData[index].expanded ?? false
                                 ? SizedBox(height: 8)
                                 : Container(),
@@ -273,7 +302,12 @@ class _MessagesState extends State<Messages> {
                           ),
 
                           // Free space between
-                          if (msgData[index].yearsInNokia != null)
+                          if (msgData[index].yearsInNokia != null &&
+                                  msgData[index].building != null &&
+                                  msgData[index].age != null ||
+                              msgData[index].yearsInNokia != null &&
+                                  msgData[index].building != null &&
+                                  msgData[index].gender != null)
                             msgData[index].expanded ?? false
                                 ? SizedBox(height: 8)
                                 : Container(),
@@ -329,9 +363,19 @@ class MsgDataStructure {
   final String message;
   final String gender;
   final int yearsInNokia;
+  final String date;
 
   bool expanded;
 
-  MsgDataStructure(this.name, this.lastName, this.building, this.floor,
-      this.age, this.message, this.expanded, this.gender, this.yearsInNokia);
+  MsgDataStructure(
+      this.name,
+      this.lastName,
+      this.building,
+      this.floor,
+      this.age,
+      this.message,
+      this.expanded,
+      this.gender,
+      this.yearsInNokia,
+      this.date);
 }

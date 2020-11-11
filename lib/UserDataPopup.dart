@@ -1,4 +1,7 @@
+import 'dart:developer';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/widgets/PickerPopup.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/ServiceLocator.dart';
 
@@ -11,20 +14,40 @@ class _UserDataPopup extends State<UserDataPopup> {
   final _storageService = locator<LocalStorageService>();
   var _name;
   var _lastName;
-  var _birthday;
+  var _birthYear;
+  var _yearsInNokia;
   var _gender;
   var _building;
+  var _floor;
   var _cancelPopupText;
   var _firstTimeStartUp;
+  int _pickerDataBirthYear;
+  int _pickerDataYearsInNokia;
 
   @override
   void initState() {
     super.initState();
     _name = _storageService.name ?? "";
     _lastName = _storageService.lastName ?? "";
-    _birthday = _storageService.birthday;
+
+    _birthYear = _storageService.birthYear ?? "Not selected";
+    if (_birthYear == 0) {
+      _birthYear = "Not selected";
+    }
+
+    _yearsInNokia = _storageService.yearsInNokia ?? "Not selected";
+    if (_yearsInNokia == 0) {
+      _yearsInNokia = "Not selected";
+    }
+
     _gender = _storageService.gender ?? "Don't want to tell";
     _building = _storageService.building ?? "Don't want to tell";
+    _floor = _storageService.floor ?? "Don't want to tell";
+    log(_floor.toString());
+    if (_floor == 0) {
+      _floor = "Don't want to tell";
+    }
+
     _firstTimeStartUp = _storageService.firstTimeStartUp ?? true;
 
     // If popup is opened from settings, shows different button text
@@ -37,11 +60,30 @@ class _UserDataPopup extends State<UserDataPopup> {
 
   // Sets data to shared preferences
   setData() {
+    if (_yearsInNokia == "Not selected") {
+      _yearsInNokia = 0;
+    }
+    if (_birthYear == "Not selected") {
+      _birthYear = 0;
+    }
+
     _storageService.name = _name;
     _storageService.lastName = _lastName;
-    _storageService.birthday = _birthday.toString();
+    _storageService.birthYear = _birthYear;
+    _storageService.yearsInNokia = _yearsInNokia;
     _storageService.gender = _gender;
     _storageService.building = _building;
+
+    if (_building == "Don't want to tell") {
+      _floor = "Don't want to tell";
+    }
+
+    if (_floor == "Don't want to tell") {
+      _storageService.floor = 0;
+    } else {
+      _storageService.floor = int.parse(_floor);
+    }
+
     _storageService.firstTimeStartUp = false;
     Navigator.of(context).pop();
   }
@@ -52,42 +94,18 @@ class _UserDataPopup extends State<UserDataPopup> {
     Navigator.of(context).pop();
   }
 
-  // Formats date to show in UI, if no date is chosen previously, shows "no date chosen" message
-  _dateFormatter(date) {
-    if (date == null || date == "null") {
-      return "No date chosen";
-    } else {
-      // Parses date because birthday set to shared preference is saved as String
-      var parsedDate = DateTime.parse(date.toString());
-      var formattedDate =
-          "${parsedDate.day}-${parsedDate.month}-${parsedDate.year}";
-      return formattedDate;
-    }
+  _resetBirthYear() {
+    setState(() {
+      _storageService.birthYear = 0;
+      _birthYear = "Not selected";
+    });
   }
 
-  // Date time picker
-  _selectDate(BuildContext context) async {
-    // Start date of date time picker
-    var _startDate;
-
-    // If birthday is not set previously, shows predetermined date on datepicker when opened
-    if (_birthday == null || _birthday == "null") {
-      _startDate = DateTime.parse("2000-01-01 00:00:00");
-    } else {
-      // Parses date because birthday set to shared preference is saved as String
-      _startDate = DateTime.parse(_birthday.toString());
-    }
-
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _startDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2021),
-    );
-    if (picked != null && picked != _birthday)
-      setState(() {
-        _birthday = picked;
-      });
+  _resetYearsInNokia() {
+    setState(() {
+      _storageService.yearsInNokia = 0;
+      _yearsInNokia = "Not selected";
+    });
   }
 
   @override
@@ -159,18 +177,120 @@ class _UserDataPopup extends State<UserDataPopup> {
             Row(children: [
               Expanded(
                 child: Text(
-                  "Birthday",
+                  "Birth year",
                 ),
               ),
+
+              // Reset age
+              Container(
+                width: 68,
+                child: OutlineButton(
+                  child: Text(
+                    "Reset",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                  ),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    _resetBirthYear();
+                  },
+                ),
+              ),
+
+              SizedBox(width: 4),
+
+              // Set age
               OutlineButton(
-                onPressed: () => _selectDate(context),
-                child: Text(_dateFormatter(_birthday)),
+                onPressed: () async {
+                  _pickerDataBirthYear = await showDialog(
+                      barrierColor: _storageService.darkTheme
+                          ? Colors.black.withOpacity(0.4)
+                          : null,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PickerPopup(
+                            valueToChange: "birthYear", value: _birthYear);
+                      });
+                  setState(() {
+                    if (_pickerDataBirthYear != null) {
+                      _birthYear = _pickerDataBirthYear;
+                    }
+                  });
+                },
+                child: Text(_birthYear.toString(),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1.color)),
                 textColor: Theme.of(context).accentColor,
                 borderSide: BorderSide(
                   color: Theme.of(context).accentColor,
                 ),
-              )
+              ),
             ]),
+            SizedBox(height: 4),
+
+            // Years in Nokia
+            Row(children: [
+              Expanded(
+                child: Text(
+                  "Years worked in Nokia",
+                ),
+              ),
+
+              // Reset years in Nokia
+              Container(
+                width: 68,
+                child: OutlineButton(
+                  child: Text(
+                    "Reset",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                  ),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    _resetYearsInNokia();
+                  },
+                ),
+              ),
+
+              SizedBox(width: 4),
+
+              // Set years in Nokia
+              OutlineButton(
+                onPressed: () async {
+                  _pickerDataYearsInNokia = await showDialog(
+                      barrierColor: _storageService.darkTheme
+                          ? Colors.black.withOpacity(0.4)
+                          : null,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PickerPopup(
+                            valueToChange: "yearsInNokia",
+                            value: _yearsInNokia);
+                      });
+                  setState(() {
+                    if (_pickerDataYearsInNokia != null) {
+                      _yearsInNokia = _pickerDataYearsInNokia;
+                    }
+                  });
+                },
+                child: Text(_yearsInNokia.toString(),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1.color)),
+                textColor: Theme.of(context).accentColor,
+                borderSide: BorderSide(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ]),
+
             SizedBox(height: 4),
 
             // Gender
@@ -227,11 +347,41 @@ class _UserDataPopup extends State<UserDataPopup> {
                 }).toList(),
                 onChanged: (newValue) {
                   setState(() {
+                    _floor = "Don't want to tell";
                     _building = newValue;
                   });
                 },
               ),
             ]),
+            SizedBox(height: 8),
+
+            // Floor
+            if (_building != "Don't want to tell")
+              Row(children: [
+                Expanded(
+                  child: Text(
+                    "Floor",
+                  ),
+                ),
+                DropdownButton(
+                  value: _floor.toString(),
+                  underline: Container(
+                    height: 1,
+                  ),
+                  items: <String>["Don't want to tell", '1', '2', '3', '4', '5']
+                      .map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _floor = newValue;
+                    });
+                  },
+                ),
+              ]),
             SizedBox(height: 8),
 
             // Text to show that giving data is optional
