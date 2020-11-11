@@ -57,7 +57,6 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
             if (_showMessages) Messages()
           ],
         ),
