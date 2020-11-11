@@ -26,32 +26,35 @@ class _OtherServicesPopupState extends State<OtherServicesPopup> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: otherServices.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      onTap: () {
-                        setState(() {});
-                      },
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(otherServices[index]),
-                          Icon(
-                            Icons.navigate_next,
-                            size: 28,
-                          ),
-                        ],
-                      ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: otherServices.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    onTap: () {
+                      setState(() {});
+                    },
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(otherServices[index]),
+                        Icon(Icons.navigate_next, size: 28),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6, top: 4),
+              child: Text(
+                "* Links for other services are not implemented in test verison",
+                style: TextStyle(
+                    color: Theme.of(context).accentColor, fontSize: 13),
+              ),
+            )
           ],
         ),
       ),

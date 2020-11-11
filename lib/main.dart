@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:carePanda/pages/HRdashboardPage.dart';
+import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
         },
       ),
       HRdashboardPage(),
+      HRmanagementPage()
     ];
   }
 
@@ -111,6 +113,9 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
           if (_isLoggedIn)
             BottomNavigationBarItem(
                 icon: Icon(Icons.assessment), label: 'Statistics'),
+          if (_isLoggedIn)
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment), label: 'Admin'),
         ],
         showSelectedLabels: true,
         showUnselectedLabels: false,

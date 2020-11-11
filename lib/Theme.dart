@@ -15,6 +15,7 @@ class ThemeChanger with ChangeNotifier {
     accentColor: Color(0xff60cff4),
     accentIconTheme: IconThemeData(color: Color(0xff86B6E0)),
     toggleableActiveColor: Color(0xffA0C3E2),
+    dialogTheme: DialogTheme(elevation: 15),
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Color(0xff212121)),
   );

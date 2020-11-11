@@ -61,7 +61,16 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                 child: TextFormField(
                     maxLines: 3,
                     decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          ),
+                        ),
                         hintText: "Optional free text")),
               ),
             ),

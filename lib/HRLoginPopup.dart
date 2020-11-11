@@ -42,13 +42,13 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).textTheme.bodyText1.color,
-                        width: 1.5),
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).textTheme.bodyText1.color,
-                        width: 1.5),
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                 ),
               ),
@@ -73,13 +73,13 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).textTheme.bodyText1.color,
-                        width: 1.5),
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).textTheme.bodyText1.color,
-                        width: 1.5),
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                 ),
               ),
