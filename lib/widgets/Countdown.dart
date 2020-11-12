@@ -53,7 +53,19 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
     var parsedTime = DateTime.parse(_lastAnsQuest);
     var nextDay = calculateNextQuestionnaire(parsedTime);
-    final remaining = nextDay.difference(_currentTime);
+    var remaining = nextDay.difference(_currentTime);
+
+    var timeLeftToAnswer = _currentTime.difference(parsedTime);
+    var calculatingRemaining = false;
+
+    // If questionnaire is ready, calculates how much time is left to answer the questionnaire
+    if (timeLeftToAnswer.inHours <= 9 &&
+        _storageService.hasQuestionnaire == true) {
+      calculatingRemaining = true;
+      var timeToAnswer = calculateTimeLefToAnswer(parsedTime);
+      final remainingToAnswer = timeToAnswer.difference(_currentTime);
+      remaining = remainingToAnswer;
+    }
 
     final days = remaining.inDays;
     final hours = remaining.inHours - remaining.inDays * 24;
@@ -63,6 +75,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
     var formattedRemaining;
 
+    // Extra 0 to show in timer if seconds are under 10
     var extra0;
 
     if (seconds < 10) {
@@ -84,16 +97,26 @@ class _WeekCountdownState extends State<WeekCountdown> {
         minutes <= 0 &&
         seconds <= 0 &&
         millSec <= 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _storageService.hasQuestionnaire = true;
-        _storageService.lastAnsQuestionnaire = DateTime.now().toString();
-        widget.questionnaireStatusChanged();
-      });
+      // If timer of remaining time of answering questionnaire goes to 0, switches card
+      if (calculatingRemaining) {
+        calculatingRemaining = false;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _storageService.hasQuestionnaire = false;
+          widget.questionnaireStatusChanged();
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _storageService.hasQuestionnaire = true;
+          _storageService.lastAnsQuestionnaire = DateTime.now().toString();
+          widget.questionnaireStatusChanged();
+        });
+      }
     }
 
+    // Returns timer, if it shows time remaining to answer, uses smaller font size
     return Text(formattedRemaining,
         style: TextStyle(
-            fontSize: 42.0,
+            fontSize: calculatingRemaining ?? false ? 30 : 42.0,
             fontWeight: FontWeight.bold,
             color: _storageService.darkTheme
                 ? null
@@ -134,4 +157,11 @@ DateTime calculateNextQuestionnaire(DateTime time) {
   // Calculates time until next questionnaire if it's saturday
   timeUntilNextDay3pm = 8 - time.weekday;
   return DateTime(time.year, time.month, time.day + timeUntilNextDay3pm, 15);
+}
+
+DateTime calculateTimeLefToAnswer(DateTime time) {
+  var test2 = new DateTime(time.year, time.month, time.day, 23, 59, 59, 59, 0);
+
+  return DateTime(time.year, time.month, time.day, test2.hour, test2.minute,
+      test2.second, test2.millisecond);
 }

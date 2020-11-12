@@ -29,9 +29,11 @@ class LocalStorageService {
   // USER DATA
   static const String Name = 'name';
   static const String LastName = 'lastName';
-  static const String Birthday = 'birthday';
+  static const String BirthYear = 'birthYear';
   static const String Gender = 'gender';
   static const String Building = 'building';
+  static const String Floor = 'floor';
+  static const String YearsInNokia = 'yearsInNokia';
 
   // Gets value from local storage
   // App
@@ -48,9 +50,11 @@ class LocalStorageService {
   // USER DATA
   String get name => _getFromLocalStorage(Name);
   String get lastName => _getFromLocalStorage(LastName);
-  String get birthday => _getFromLocalStorage(Birthday);
+  int get birthYear => _getFromLocalStorage(BirthYear);
   String get gender => _getFromLocalStorage(Gender);
   String get building => _getFromLocalStorage(Building);
+  int get floor => _getFromLocalStorage(Floor);
+  int get yearsInNokia => _getFromLocalStorage(YearsInNokia);
 
   // Sets value to local storage
   // App
@@ -71,9 +75,11 @@ class LocalStorageService {
   // USER DATA
   set name(String value) => _saveToLocalStorage(Name, value);
   set lastName(String value) => _saveToLocalStorage(LastName, value);
-  set birthday(String value) => _saveToLocalStorage(Birthday, value);
+  set birthYear(int value) => _saveToLocalStorage(BirthYear, value);
   set gender(String value) => _saveToLocalStorage(Gender, value);
   set building(String value) => _saveToLocalStorage(Building, value);
+  set floor(int value) => _saveToLocalStorage(Floor, value);
+  set yearsInNokia(int value) => _saveToLocalStorage(YearsInNokia, value);
 
   // VVV Functions to save/load data below VVV
 
