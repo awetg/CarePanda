@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PickerPopup extends StatefulWidget {
+class UserDataPickerPopup extends StatefulWidget {
   final valueToChange;
   final value;
 
-  PickerPopup({this.valueToChange, this.value});
+  UserDataPickerPopup({this.valueToChange, this.value});
 
   @override
-  _PickerPopupState createState() => _PickerPopupState();
+  _UserDataPickerPopupState createState() => _UserDataPickerPopupState();
 }
 
-class _PickerPopupState extends State<PickerPopup> {
+class _UserDataPickerPopupState extends State<UserDataPickerPopup> {
   var _yearList = [for (var i = 1940; i < 2020; i += 1) i];
   var _yearsInNokiaList = [for (var i = 0; i < 80; i += 1) i];
   var _list;

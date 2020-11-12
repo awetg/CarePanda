@@ -1,6 +1,7 @@
-import 'dart:developer';
 import 'package:carePanda/services/LocalStorageService.dart';
-import 'package:carePanda/widgets/PickerPopup.dart';
+import 'package:carePanda/widgets/UserDataDropDownButton.dart';
+import 'package:carePanda/widgets/UserDataPickerPopup.dart';
+import 'package:carePanda/widgets/UserDataTextField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/ServiceLocator.dart';
@@ -24,6 +25,8 @@ class _UserDataPopup extends State<UserDataPopup> {
   int _pickerDataBirthYear;
   int _pickerDataYearsInNokia;
 
+  // Initialises variables and gives them default values if they are null
+  // If int variables are set to 0, set's variable to "Not selected" or "Don't want to tell" to display it instead of 0
   @override
   void initState() {
     super.initState();
@@ -43,7 +46,7 @@ class _UserDataPopup extends State<UserDataPopup> {
     _gender = _storageService.gender ?? "Don't want to tell";
     _building = _storageService.building ?? "Don't want to tell";
     _floor = _storageService.floor ?? "Don't want to tell";
-    log(_floor.toString());
+
     if (_floor == 0) {
       _floor = "Don't want to tell";
     }
@@ -60,6 +63,7 @@ class _UserDataPopup extends State<UserDataPopup> {
 
   // Sets data to shared preferences
   setData() {
+    // If no years selected, defaults it to 0 since they have to be int
     if (_yearsInNokia == "Not selected") {
       _yearsInNokia = 0;
     }
@@ -67,6 +71,7 @@ class _UserDataPopup extends State<UserDataPopup> {
       _birthYear = 0;
     }
 
+    // Sets data to shared preference
     _storageService.name = _name;
     _storageService.lastName = _lastName;
     _storageService.birthYear = _birthYear;
@@ -74,10 +79,13 @@ class _UserDataPopup extends State<UserDataPopup> {
     _storageService.gender = _gender;
     _storageService.building = _building;
 
+    // If user doesn't give building data, sets floor data to "Don't wan't to tell" aswell
     if (_building == "Don't want to tell") {
       _floor = "Don't want to tell";
     }
 
+    // If user don't want to give floor data, sets it to 0 (floor is stored as int)
+    // If user gives floor data, parses the String to int
     if (_floor == "Don't want to tell") {
       _storageService.floor = 0;
     } else {
@@ -94,6 +102,7 @@ class _UserDataPopup extends State<UserDataPopup> {
     Navigator.of(context).pop();
   }
 
+  // Resets birth year variable from shared preferences
   _resetBirthYear() {
     setState(() {
       _storageService.birthYear = 0;
@@ -101,6 +110,7 @@ class _UserDataPopup extends State<UserDataPopup> {
     });
   }
 
+  // Resets years in nokia variable from shared preferences
   _resetYearsInNokia() {
     setState(() {
       _storageService.yearsInNokia = 0;
@@ -111,6 +121,7 @@ class _UserDataPopup extends State<UserDataPopup> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: EdgeInsets.only(left: 14, right: 14),
       title: Text("Please give us some info about yourself",
           style: TextStyle(color: Theme.of(context).accentColor)),
       content: SingleChildScrollView(
@@ -122,50 +133,30 @@ class _UserDataPopup extends State<UserDataPopup> {
                 // Name
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(primaryColor: Color(0xff027DC5)),
-                      child: TextFormField(
-                        onChanged: (name) {
-                          _name = name;
-                        },
-                        decoration: new InputDecoration(
-                          labelText: "Name",
-                          contentPadding: EdgeInsets.symmetric(vertical: 8),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Theme.of(context).textTheme.bodyText1.color,
-                                width: 1.5),
-                          ),
-                        ),
-                        initialValue: _name,
-                      ),
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      top: 16,
+                    ),
+                    child: UserDataTextField(
+                      label: "Name",
+                      value: _name,
+                      onChange: (newValue) {
+                        _name = newValue;
+                      },
                     ),
                   ),
                 ),
 
                 // Last name
                 Expanded(
-                  child: Theme(
-                    data: Theme.of(context)
-                        .copyWith(primaryColor: Color(0xff027DC5)),
-                    child: TextFormField(
-                      onChanged: (lastName) {
-                        _lastName = lastName;
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: UserDataTextField(
+                      label: "Last name",
+                      value: _lastName,
+                      onChange: (newValue) {
+                        _lastName = newValue;
                       },
-                      decoration: new InputDecoration(
-                        labelText: "Last name",
-                        contentPadding: EdgeInsets.symmetric(vertical: 8),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1.color,
-                              width: 1.5),
-                        ),
-                      ),
-                      initialValue: _lastName,
                     ),
                   ),
                 ),
@@ -212,7 +203,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                           : null,
                       context: context,
                       builder: (BuildContext context) {
-                        return PickerPopup(
+                        return UserDataPickerPopup(
                             valueToChange: "birthYear", value: _birthYear);
                       });
                   setState(() {
@@ -271,9 +262,10 @@ class _UserDataPopup extends State<UserDataPopup> {
                           : null,
                       context: context,
                       builder: (BuildContext context) {
-                        return PickerPopup(
-                            valueToChange: "yearsInNokia",
-                            value: _yearsInNokia);
+                        return UserDataPickerPopup(
+                          valueToChange: "yearsInNokia",
+                          value: _yearsInNokia,
+                        );
                       });
                   setState(() {
                     if (_pickerDataYearsInNokia != null) {
@@ -294,94 +286,48 @@ class _UserDataPopup extends State<UserDataPopup> {
             SizedBox(height: 4),
 
             // Gender
-            Row(children: [
-              Expanded(
-                child: Text(
-                  "Gender",
-                ),
-              ),
-              SizedBox(width: 80),
-              DropdownButton(
+            UserDataDropDownButton(
+                settingName: "Gender",
                 value: _gender,
-                underline: Container(
-                  height: 1,
-                ),
-                items: <String>["Don't want to tell", 'Male', 'Female', 'Other']
-                    .map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
+                data: ["Don't want to tell", 'Male', 'Female', 'Other'],
+                onChange: (newValue) {
                   setState(() {
                     _gender = newValue;
                   });
-                },
-              ),
-            ]),
-            SizedBox(height: 0),
+                }),
+
+            SizedBox(height: 8),
 
             // Work building
-            Row(children: [
-              Expanded(
-                child: Text(
-                  "Work building",
-                ),
-              ),
-              DropdownButton(
+            UserDataDropDownButton(
+                settingName: "Work building",
                 value: _building,
-                underline: Container(
-                  height: 1,
-                ),
-                items: <String>[
+                data: [
                   "Don't want to tell",
                   'Building 1',
                   'Building 2',
-                  'Building 3'
-                ].map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
+                  'Building 3',
+                ],
+                onChange: (newValue) {
                   setState(() {
-                    _floor = "Don't want to tell";
                     _building = newValue;
+                    _floor = "Don't want to tell";
                   });
-                },
-              ),
-            ]),
+                }),
+
             SizedBox(height: 8),
 
             // Floor
             if (_building != "Don't want to tell")
-              Row(children: [
-                Expanded(
-                  child: Text(
-                    "Floor",
-                  ),
-                ),
-                DropdownButton(
-                  value: _floor.toString(),
-                  underline: Container(
-                    height: 1,
-                  ),
-                  items: <String>["Don't want to tell", '1', '2', '3', '4', '5']
-                      .map((String value) {
-                    return new DropdownMenuItem<String>(
-                      value: value,
-                      child: new Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
+              UserDataDropDownButton(
+                  settingName: "Floor",
+                  value: _floor,
+                  data: ["Don't want to tell", '1', '2', '3', '4', '5'],
+                  onChange: (newValue) {
                     setState(() {
                       _floor = newValue;
                     });
-                  },
-                ),
-              ]),
+                  }),
             SizedBox(height: 8),
 
             // Text to show that giving data is optional
@@ -394,6 +340,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                         fontSize: 13.0, color: Theme.of(context).accentColor)),
               ],
             ),
+            // Text to inform user that data can be changed later on in settings (only shows the message on first launch)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
