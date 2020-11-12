@@ -11,6 +11,7 @@ class QuestionPage extends StatelessWidget {
   final QuestionItem _questionItem;
   QuestionPage(this._questionItem);
 
+  // get response or input widget depending on the type of question
   Widget getSelectionWidget() {
     // range selection is a slide input with max value of rangeMax from question
     if (_questionItem.type == QuestionType.RangeSelection)
@@ -35,6 +36,7 @@ class QuestionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // if the question id is not equal to last instantiate response object
+    // after instantiating response object the value and free text will be updated per user input
     if (_questionItem.id != "last")
       locator<SurveyResponseService>().initResponseForQuestion(_questionItem);
 
@@ -62,7 +64,6 @@ class QuestionPage extends StatelessWidget {
                 ),
                 Row(children: [
                   Expanded(
-                    // setting Single selection for Range selection type questions
                     child: getSelectionWidget(),
                   )
                 ]),
@@ -70,19 +71,17 @@ class QuestionPage extends StatelessWidget {
                   height: 32.0,
                 ),
                 _questionItem.freeText
-                    ? Form(
-                        child: TextFormField(
-                            initialValue: locator<SurveyResponseService>()
-                                .getFreeTextById(_questionItem.id),
-                            onChanged: (text) {
-                              locator<SurveyResponseService>()
-                                  .updateFreeText(_questionItem.id, text);
-                            },
-                            maxLines: 3,
-                            decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: "Optional free text")),
-                      )
+                    ? TextFormField(
+                        initialValue: locator<SurveyResponseService>()
+                            .getFreeTextById(_questionItem.id),
+                        onChanged: (text) {
+                          locator<SurveyResponseService>()
+                              .updateFreeText(_questionItem.id, text);
+                        },
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            hintText: "Optional free text"))
                     : Container()
               ],
             ),

@@ -1,3 +1,4 @@
+// object model for userboarding items (sliding pages)
 class SliderItem {
   final String image;
   final String heading;

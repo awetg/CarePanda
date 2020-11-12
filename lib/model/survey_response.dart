@@ -1,7 +1,10 @@
 import 'package:carePanda/model/question_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
+// Question answer model
 class SurveyResponse {
+  @required
   final String questionId;
   final QuestionType type;
   String value;

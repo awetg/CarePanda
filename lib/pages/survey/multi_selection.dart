@@ -12,16 +12,17 @@ class CheckBoxMultiSelection extends StatefulWidget {
 }
 
 class _CheckBoxMultiSelectionState extends State<CheckBoxMultiSelection> {
+  // create a set of selected options from list of availabe options in the question
   Set<String> _selectedOptions = Set();
 
   @override
   void initState() {
+    // set initially selected options if the question was answered previously
     String _selected = locator<SurveyResponseService>()
         .getResponseValueById(widget._questionId);
     if (_selected.isNotEmpty) {
       _selectedOptions = Set<String>.from(jsonDecode(_selected));
     }
-    print(_selectedOptions.toString());
     super.initState();
   }
 

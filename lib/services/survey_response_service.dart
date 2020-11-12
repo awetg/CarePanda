@@ -29,9 +29,10 @@ class SurveyResponseService {
     }
   }
 
-  // get free text value of suvery response object using question id
+  // get freeText value of suvery response object using question id
   String getFreeTextById(String questionId) => _responses[questionId].freeText;
 
+  // get value of survey response object using question id
   String getResponseValueById(String questionId) =>
       _responses[questionId].value;
 
@@ -61,5 +62,6 @@ class SurveyResponseService {
     }
   }
 
+  // get all response object as a list
   List<SurveyResponse> getAllResponses() => _responses.values.toList();
 }

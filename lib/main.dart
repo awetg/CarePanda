@@ -32,7 +32,6 @@ Future<void> main() async {
       FirebaseAuth.instance.signInAnonymously();
     } catch (e) {}
   }
-  print("showBoarding = $showBoarding");
   runApp(MyApp());
 }
 

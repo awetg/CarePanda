@@ -24,6 +24,7 @@ class FirestoreService {
 
   FirestoreService._privateConstructor();
 
+  // get all answeres stored on Firestore
   Stream<List<SurveyResponse>> getSurveyResponses() {
     return _db
         .collection(_respnonses_sub_collection_path)
@@ -34,6 +35,7 @@ class FirestoreService {
             .toList());
   }
 
+  // save single response or answer to Firestore
   Future<void> saveSurveyResponse(SurveyResponse response) {
     return _db
         .collection(_survey_response_path)
@@ -43,6 +45,7 @@ class FirestoreService {
         .set(response.toMap());
   }
 
+  // save a list or collection of answeres at once to Firestore
   Future<void> saveAllSurveyResponse(List<SurveyResponse> responses) {
     WriteBatch batch = _db.batch();
     for (final res in responses) {

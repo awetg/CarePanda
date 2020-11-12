@@ -34,6 +34,7 @@ class _SurveyFlowState extends State<SurveyFlow> {
       options: [],
       freeText: false);
 
+  // a function for deciding if page controller should navigate to next page
   bool continueToNextPage() {
     if (currentIndex < (lastQusetionIndex - 1))
       return true;
@@ -109,17 +110,21 @@ class _SurveyFlowState extends State<SurveyFlow> {
     );
   }
 
+  // shows an alert if there are unanswered questions
   Widget unansweredQuestionsAlert() {
     return getAlertDialog(
         title: 'There are unanswered questions!',
         content: 'Please answere all questions before completing the survey.',
         positiveButtonTitle: "ANSWER",
         postiveOnPressed: () {
+          // naviagate to first question or page if user decide to answer question
           _pageController.jumpToPage(_pageController.initialPage);
           Navigator.of(context).pop(false);
         },
         negativeButtonTitle: "EXIT SURVEY",
         negativeOnPressed: () {
+          // exit survery flow or answering questions if user decide to exit,
+          // answered questions will not be submitted if all questions are not answered
           Navigator.of(context).pop(true);
           Navigator.of(context).pop(true);
         });

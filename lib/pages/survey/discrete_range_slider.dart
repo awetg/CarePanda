@@ -12,10 +12,14 @@ class DiscreteRangeSlider extends StatefulWidget {
 }
 
 class _DiscreteRangeSliderState extends State<DiscreteRangeSlider> {
+  // value of slider widget
   double _discreteValue = 0;
 
   @override
   void initState() {
+    /* set initial value of slider, initial value will only exist 
+    only if user navigate to previously answered question in survery flow, that is before submitting the answers
+    */
     String _initial = locator<SurveyResponseService>()
         .getResponseValueById(widget._questionId);
     try {
