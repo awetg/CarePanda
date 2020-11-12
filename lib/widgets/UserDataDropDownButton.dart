@@ -6,11 +6,12 @@ class UserDataDropDownButton extends StatelessWidget {
   final settingName;
   final value;
   final data;
+  final floorData;
   final onChange;
   final _storageService = locator<LocalStorageService>();
 
   UserDataDropDownButton(
-      {this.settingName, this.value, this.data, this.onChange});
+      {this.settingName, this.value, this.data, this.onChange, this.floorData});
 
   @override
   Widget build(BuildContext context) {

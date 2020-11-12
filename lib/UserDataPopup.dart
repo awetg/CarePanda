@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataPickerPopup.dart';
@@ -25,11 +27,28 @@ class _UserDataPopup extends State<UserDataPopup> {
   int _pickerDataBirthYear;
   int _pickerDataYearsInNokia;
 
+  final buildingData = [
+    "Don't want to tell",
+    "Working from home",
+    "Karaportti 8",
+    "Mid Point 7A",
+    "Mid Point 7B",
+    "Mid Point 7C",
+    "Karaportti 4",
+    "KaraEast (Building 12)"
+  ];
+
+  // Takes in building's index to know how many floor is there in the building
+  // This list is later used to create a list of floors depending on this list's values
+  final floorAmountPerBuilding = [2, 8, 6, 5, 6, 5];
+  var floorList;
+
   // Initialises variables and gives them default values if they are null
   // If int variables are set to 0, set's variable to "Not selected" or "Don't want to tell" to display it instead of 0
   @override
   void initState() {
     super.initState();
+
     _name = _storageService.name ?? "";
     _lastName = _storageService.lastName ?? "";
 
@@ -45,10 +64,21 @@ class _UserDataPopup extends State<UserDataPopup> {
 
     _gender = _storageService.gender ?? "Don't want to tell";
     _building = _storageService.building ?? "Don't want to tell";
-    _floor = _storageService.floor ?? "Don't want to tell";
+    _floor = _storageService.floor.toString() ?? "Don't want to tell";
 
-    if (_floor == 0) {
+    if (_floor == "0") {
       _floor = "Don't want to tell";
+    }
+
+    // If building value is chosen by the user, generates floorlist depending on floorAmountPerBuilding values using building list's index
+    if (_building != "Don't want to tell" && _building != "Working from home") {
+      floorList = [
+        for (var i = 1;
+            i < floorAmountPerBuilding[buildingData.indexOf(_building) - 2] + 1;
+            i += 1)
+          i.toString()
+      ];
+      floorList.insert(0, "Don't want to tell");
     }
 
     _firstTimeStartUp = _storageService.firstTimeStartUp ?? true;
@@ -302,27 +332,40 @@ class _UserDataPopup extends State<UserDataPopup> {
             UserDataDropDownButton(
                 settingName: "Work building",
                 value: _building,
-                data: [
-                  "Don't want to tell",
-                  'Building 1',
-                  'Building 2',
-                  'Building 3',
-                ],
+                data: buildingData,
                 onChange: (newValue) {
                   setState(() {
-                    _building = newValue;
-                    _floor = "Don't want to tell";
+                    // If value changes, changes floor to basic value, changes floor's list depending on building value
+                    if (newValue != _building) {
+                      _building = newValue;
+                      _floor = "Don't want to tell";
+                      if (_building != "Don't want to tell" &&
+                          _building != "Working from home") {
+                        // Creates floor list depending on building's index value
+                        floorList = [
+                          for (var i = 1;
+                              i <
+                                  floorAmountPerBuilding[
+                                          buildingData.indexOf(_building) - 2] +
+                                      1;
+                              i += 1)
+                            i.toString()
+                        ];
+                        floorList.insert(0, "Don't want to tell");
+                      }
+                    }
                   });
                 }),
 
             SizedBox(height: 14),
 
             // Floor
-            if (_building != "Don't want to tell")
+            if (_building != "Don't want to tell" &&
+                _building != "Working from home")
               UserDataDropDownButton(
                   settingName: "Floor",
                   value: _floor,
-                  data: ["Don't want to tell", '1', '2', '3', '4', '5'],
+                  data: floorList,
                   onChange: (newValue) {
                     setState(() {
                       _floor = newValue;
