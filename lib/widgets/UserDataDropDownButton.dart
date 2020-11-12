@@ -1,3 +1,5 @@
+import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 
 class UserDataDropDownButton extends StatelessWidget {
@@ -5,6 +7,7 @@ class UserDataDropDownButton extends StatelessWidget {
   final value;
   final data;
   final onChange;
+  final _storageService = locator<LocalStorageService>();
 
   UserDataDropDownButton(
       {this.settingName, this.value, this.data, this.onChange});
@@ -20,6 +23,16 @@ class UserDataDropDownButton extends StatelessWidget {
           padding: EdgeInsets.only(left: 6),
           height: 40,
           decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 0,
+                  blurRadius: 0,
+                  offset: _storageService.darkTheme
+                      ? Offset(0, 0)
+                      : Offset(0, 1), // changes position of shadow
+                ),
+              ],
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(4)),
           child: DropdownButton(

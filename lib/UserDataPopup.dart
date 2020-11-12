@@ -283,7 +283,7 @@ class _UserDataPopup extends State<UserDataPopup> {
               ),
             ]),
 
-            SizedBox(height: 4),
+            SizedBox(height: 8),
 
             // Gender
             UserDataDropDownButton(
@@ -296,7 +296,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                   });
                 }),
 
-            SizedBox(height: 8),
+            SizedBox(height: 14),
 
             // Work building
             UserDataDropDownButton(
@@ -315,7 +315,7 @@ class _UserDataPopup extends State<UserDataPopup> {
                   });
                 }),
 
-            SizedBox(height: 8),
+            SizedBox(height: 14),
 
             // Floor
             if (_building != "Don't want to tell")
