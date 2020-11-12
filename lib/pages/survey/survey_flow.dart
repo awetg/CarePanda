@@ -1,4 +1,4 @@
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/question_page.dart';
 import 'package:carePanda/pages/survey/question_progress_indicator.dart';
@@ -146,10 +146,10 @@ class _SurveyFlowState extends State<SurveyFlow> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //   statusBarIconBrightness: Brightness.dark,
+    // ));
     return StreamBuilder<List<QuestionItem>>(
         stream: locator<FirestoreService>().getSurveyQuestions(),
         builder: (context, snapshot) {

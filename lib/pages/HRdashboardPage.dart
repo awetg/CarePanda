@@ -1,19 +1,23 @@
+import 'package:carePanda/widgets/BarChart.dart';
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/widgets/LineChart.dart';
 import 'package:carePanda/model/ChartDataStructure.dart';
 import 'package:carePanda/widgets/CardWidget.dart';
 
-class DashBoardPage extends StatefulWidget {
+class HRdashboardPage extends StatefulWidget {
   @override
-  _DashBoardPageState createState() => _DashBoardPageState();
+  _HRdashboardPageState createState() => _HRdashboardPageState();
 }
 
-class _DashBoardPageState extends State<DashBoardPage> {
+class _HRdashboardPageState extends State<HRdashboardPage> {
   bool _showMentalHealth = true;
-  var _graphTitle = "Personal mental health";
+  bool _lineGraph = false;
+  var _graphTitle = "Mental health";
   var _timePeriod = "Week";
-  var _graphData;
+  var _sortBy = "Building";
+  var _lineGraphData;
+  var _barGraphData;
 
   // Fake data
   final weekData = [
@@ -34,6 +38,30 @@ class _DashBoardPageState extends State<DashBoardPage> {
     new WellbeingData(new DateTime(2020, 9, 16), 8),
     new WellbeingData(new DateTime(2020, 9, 15), 9),
     new WellbeingData(new DateTime(2020, 9, 14), 6),
+  ];
+
+  final buildingData = [
+    new WellbeingDataByBuilding("Building 1", 7),
+    new WellbeingDataByBuilding("Building 2", 6),
+    new WellbeingDataByBuilding("Building 3", 5),
+    new WellbeingDataByBuilding("Building 4", 4),
+    new WellbeingDataByBuilding("Building 5", 10),
+    new WellbeingDataByBuilding("Building 6", 2),
+  ];
+
+  final buildingDataPhysical = [
+    new WellbeingDataByBuilding("Building 1", 6),
+    new WellbeingDataByBuilding("Building 2", 5),
+    new WellbeingDataByBuilding("Building 3", 5),
+    new WellbeingDataByBuilding("Building 4", 8),
+    new WellbeingDataByBuilding("Building 5", 9),
+    new WellbeingDataByBuilding("Building 6", 2),
+    new WellbeingDataByBuilding("Building 7", 5),
+    new WellbeingDataByBuilding("Building 8", 3),
+    new WellbeingDataByBuilding("Building 9", 2),
+    new WellbeingDataByBuilding("Building 10", 7),
+    new WellbeingDataByBuilding("Building 11", 4),
+    new WellbeingDataByBuilding("Building 12", 2),
   ];
 
   final monthData = [
@@ -105,7 +133,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
   @override
   void initState() {
     // When page is opened, defaults time period to week
-    _graphData = weekData;
+    _lineGraphData = weekData;
+    _barGraphData = buildingData;
     super.initState();
   }
 
@@ -113,7 +142,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   _showPhysicalGraph() {
     if (_showMentalHealth) {
       setState(() {
-        _graphTitle = "Personal physical health";
+        _graphTitle = "Physical health";
         _showMentalHealth = false;
       });
       _dataToShow();
@@ -126,7 +155,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   _showMentalGraph() {
     if (!_showMentalHealth) {
       setState(() {
-        _graphTitle = "Personal mental health";
+        _graphTitle = "Mental health";
         _showMentalHealth = true;
       });
       _dataToShow();
@@ -143,19 +172,43 @@ class _DashBoardPageState extends State<DashBoardPage> {
     _dataToShow();
   }
 
+  // Changes chart / how to display data
+  _sortByFunction(newValue) {
+    setState(() {
+      _sortBy = newValue;
+      if (_sortBy != "Time") {
+        _lineGraph = false;
+      } else {
+        _lineGraph = true;
+      }
+    });
+    _dataToShow();
+  }
+
   // Function to know what data to show
   _dataToShow() {
+    if (_sortBy != "Time" && _showMentalHealth && !_lineGraph) {
+      _barGraphData = buildingData;
+    }
+
+    if (_sortBy != "Time" && !_showMentalHealth && !_lineGraph) {
+      _barGraphData = buildingDataPhysical;
+    }
+
     if (_timePeriod == "Week" && _showMentalHealth) {
-      _graphData = weekData;
+      _lineGraphData = weekData;
     }
+
     if (_timePeriod == "Week" && !_showMentalHealth) {
-      _graphData = weekPhysicalData;
+      _lineGraphData = weekPhysicalData;
     }
+
     if (_timePeriod == "Month" && _showMentalHealth) {
-      _graphData = monthPhysicalData;
+      _lineGraphData = monthPhysicalData;
     }
+
     if (_timePeriod == "Month" && !_showMentalHealth) {
-      _graphData = monthData;
+      _lineGraphData = monthData;
     }
   }
 
@@ -163,7 +216,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard',
+        title: Text('HR statistics',
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
       body: Container(
@@ -173,7 +226,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Mental health button
                 TopButton(
@@ -192,38 +244,81 @@ class _DashBoardPageState extends State<DashBoardPage> {
             ),
             SizedBox(height: 20),
 
-            // Graph which is built inside card widget
-            CardWidget(
-              widget: LineChart(data: _graphData, title: _graphTitle),
-            ),
+            // Line graph which is built inside card widget
+            if (_lineGraph)
+              CardWidget(
+                widget: LineChart(data: _lineGraphData, title: _graphTitle),
+              ),
+
+            // Bar graph is built inside card widget
+            if (!_lineGraph)
+              CardWidget(
+                widget: BarChart(data: _barGraphData, title: _graphTitle),
+              ),
+
             SizedBox(height: 10),
 
-            // Time period
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                "Personal data time period",
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(width: 18),
-              DropdownButton(
-                value: _timePeriod,
-                underline: Container(
-                  height: 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Time period
+                Text(
+                  "Data time period",
+                  style: TextStyle(fontSize: 18),
                 ),
-                items: <String>["Week", 'Month', 'All'].map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  _newTimePeriod(newValue);
-                },
-              ),
-            ]),
+                SizedBox(width: 18),
+                DropdownButton(
+                  value: _timePeriod,
+                  underline: Container(
+                    height: 1,
+                  ),
+                  items: <String>["Week", 'Month', 'All'].map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    _newTimePeriod(newValue);
+                  },
+                ),
+                SizedBox(width: 18),
+              ],
+            ),
+
+            // Sort by time/building
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Sort by",
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 18),
+                DropdownButton(
+                  value: _sortBy,
+                  underline: Container(
+                    height: 1,
+                  ),
+                  items:
+                      <String>["Building", 'Time', 'Age'].map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    _sortByFunction(newValue);
+                  },
+                ),
+              ],
+            )
           ],
         ),
       ),

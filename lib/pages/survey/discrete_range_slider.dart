@@ -1,6 +1,6 @@
 import 'package:carePanda/services/survey_response_service.dart';
 import 'package:flutter/material.dart';
-import '../../ServiceLocator.dart';
+import '../../services/ServiceLocator.dart';
 
 // Slider input for question answering, the slider uses discrete values instead of continuous values
 class DiscreteRangeSlider extends StatefulWidget {

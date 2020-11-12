@@ -1,4 +1,4 @@
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/survey_response_service.dart';
 import 'package:flutter/material.dart';
 

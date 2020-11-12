@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:carePanda/services/survey_response_service.dart';
 import 'package:flutter/material.dart';
-import '../../ServiceLocator.dart';
+import '../../services/ServiceLocator.dart';
 
 class CheckBoxMultiSelection extends StatefulWidget {
   final List<String> _options;

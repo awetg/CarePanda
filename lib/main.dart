@@ -1,3 +1,5 @@
+import 'package:carePanda/pages/HRdashboardPage.dart';
+import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +9,9 @@ import 'package:carePanda/pages/HomePage.dart';
 import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:provider/provider.dart';
+import 'services/Theme.dart';
 
 bool showBoarding;
 Future<void> main() async {
@@ -33,12 +37,29 @@ Future<void> main() async {
     } catch (e) {}
   }
   runApp(MyApp());
+  print("showBoarding = $showBoarding");
+
+  if (_storageService.darkTheme == null) {
+    _storageService.darkTheme = false;
+  }
+  runApp(Testing());
+}
+
+class Testing extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ThemeChanger>(
+      create: (_) => ThemeChanger(),
+      child: MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeChanger>(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -46,13 +67,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Care Panda',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: theme.getTheme(),
       initialRoute: showBoarding ? "/boarding" : "/",
       routes: {
         "/": (context) => MyStatefulWidget(),
@@ -70,22 +85,54 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
+  var _isLoggedIn;
+  var _storageService = locator<LocalStorageService>();
   int _selectedPage = 0;
-  final _pageOptions = [HomePage(), DashBoardPage(), SettingsPage()];
+  var _pageOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn = _storageService.isLoggedIn ?? false;
+
+    _pageOptions = [
+      HomePage(),
+      DashBoardPage(),
+      SettingsPage(
+        // Callback which refreshes bottom navigation bar to show new icon for HR
+        refreshNavBar: () {
+          setState(
+            () {
+              _isLoggedIn = _storageService.isLoggedIn ?? false;
+            },
+          );
+        },
+      ),
+      HRdashboardPage(),
+      HRmanagementPage()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        unselectedItemColor: Color.fromRGBO(2, 125, 197, 90),
-        selectedItemColor: Color(0xff027DC5),
+        unselectedItemColor: Theme.of(context).accentIconTheme.color,
+        selectedItemColor: Theme.of(context).accentColor,
+        type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), title: Text('Dashboard')),
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text('Settings'))
+              icon: Icon(Icons.settings), label: 'Settings'),
+          if (_isLoggedIn)
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assessment), label: 'Statistics'),
+          if (_isLoggedIn)
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment), label: 'Admin'),
         ],
         showSelectedLabels: true,
         showUnselectedLabels: false,

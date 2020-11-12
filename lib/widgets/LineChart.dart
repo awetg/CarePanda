@@ -1,3 +1,5 @@
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/model/ChartDataStructure.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -26,8 +28,26 @@ class _LineChartState extends State<LineChart> {
     return wellbeing;
   }
 
+  _axisColor() {
+    var _storageService = locator<LocalStorageService>();
+    if (_storageService.darkTheme) {
+      return charts.MaterialPalette.white;
+    } else {
+      return charts.MaterialPalette.black;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Color for axis
+    var axis = charts.NumericAxisSpec(
+      renderSpec: charts.GridlineRendererSpec(
+        labelStyle: charts.TextStyleSpec(color: _axisColor()),
+        lineStyle: charts.LineStyleSpec(
+            thickness: 0, color: charts.MaterialPalette.gray.shadeDefault),
+      ),
+    );
+
     return Container(
       height: 310,
       padding: EdgeInsets.only(left: 4.0),
@@ -43,13 +63,14 @@ class _LineChartState extends State<LineChart> {
             widget.title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
-
           SizedBox(height: 8),
+
           Expanded(
             // Chart
             child: new charts.TimeSeriesChart(
               _getWellbeingData(),
               animate: true,
+              primaryMeasureAxis: axis,
               behaviors: [
                 charts.LinePointHighlighter(
                   drawFollowLinesAcrossChart: true,
@@ -58,6 +79,13 @@ class _LineChartState extends State<LineChart> {
                 )
               ],
               domainAxis: charts.DateTimeAxisSpec(
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(color: _axisColor()),
+                  lineStyle: charts.LineStyleSpec(
+                      thickness: 0,
+                      color: charts.MaterialPalette.gray.shadeDefault),
+                ),
+                //tickProviderSpec: charts.DayTickProviderSpec(increments: [1]),
                 tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
                   day: charts.TimeFormatterSpec(
                     format: 'dd-MM',

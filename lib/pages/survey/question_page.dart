@@ -1,4 +1,4 @@
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/discrete_range_slider.dart';
 import 'package:carePanda/pages/survey/multi_selection.dart';

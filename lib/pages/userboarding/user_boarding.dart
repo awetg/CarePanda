@@ -4,7 +4,7 @@ import 'package:carePanda/pages/userboarding/slider_dot.dart';
 import 'package:carePanda/pages/userboarding/slider_page.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 
 class UserBoarding extends StatefulWidget {
   @override
@@ -40,14 +40,13 @@ class _UserBoardingState extends State<UserBoarding> {
           duration: animation_duration, curve: animation_type);
     else {
       _storageService.showBoarding = false;
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => MyStatefulWidget())).then(
+      // Pushes to home and removes history, which makes it unable to move back with back button
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+          (Route<dynamic> route) => false).then(
         (value) {
-          setState(
-            () {
-              // refresh state
-            },
-          );
+          setState(() {});
         },
       );
     }
@@ -56,14 +55,13 @@ class _UserBoardingState extends State<UserBoarding> {
   //  pop userboarding page
   skipAllPages() async {
     _storageService.showBoarding = false;
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => MyStatefulWidget())).then(
+    // Pushes to home and removes history, which makes it unable to move back with back button
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+        (Route<dynamic> route) => false).then(
       (value) {
-        setState(
-          () {
-            // refresh state
-          },
-        );
+        setState(() {});
       },
     );
   }
