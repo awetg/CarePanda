@@ -123,7 +123,6 @@ class _AllCards extends State<AllCards> {
       builder: (context, snapshot) {
         // Shows questionnaire/countdown card and HR card when receiving boolean value from shared preference
         if (snapshot.hasData) {
-          log("snapshot " + snapshot.data.toString());
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -135,7 +134,12 @@ class _AllCards extends State<AllCards> {
                 SizedBox(
                   width: double.infinity,
                   child: CardWidget(
-                    widget: Questionnaire(),
+                    widget: Questionnaire(
+                      countdownWidget:
+                          WeekCountdown(questionnaireStatusChanged: () {
+                        setState(() {});
+                      }),
+                    ),
                   ),
                 ),
 
@@ -203,6 +207,9 @@ class Timer extends StatelessWidget {
 
 // Widget card to display that user has a qeustionnaire
 class Questionnaire extends StatelessWidget {
+  Questionnaire({this.countdownWidget});
+  final countdownWidget;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -225,6 +232,10 @@ class Questionnaire extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
+              Text('Time to answer',
+                  style: TextStyle(
+                      fontSize: 16.0, color: Theme.of(context).accentColor)),
+              countdownWidget,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
