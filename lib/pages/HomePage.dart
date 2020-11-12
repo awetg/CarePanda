@@ -110,7 +110,7 @@ class _AllCards extends State<AllCards> {
       _hasQuestionnaire = false;
     }
 
-    return _hasQuestionnaire;
+    return true;
   }
 
   @override
@@ -119,7 +119,6 @@ class _AllCards extends State<AllCards> {
       builder: (context, snapshot) {
         // Shows questionnaire/countdown card and HR card when receiving boolean value from shared preference
         if (snapshot.hasData) {
-          log("snapshot " + snapshot.data.toString());
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

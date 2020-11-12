@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carePanda/Pages/HomePage.dart' as home;
+import 'package:carePanda/pages/HomePage.dart' as home;
 import 'package:carePanda/UserDataPopup.dart';
 
 final _lightColor = Color(0xffA0C3E2);
@@ -35,8 +35,8 @@ String themeValue = 'Light';
 bool isSwitched = true;
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final _lightColor = Color(0xffA0C3E2);
-  final _blueColor = Color(0xff027DC5);
+  // final _lightColor = Color(0xffA0C3E2);
+  // final _blueColor = Color(0xff027DC5);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,7 @@
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
 import 'package:carePanda/pages/DashboardPage.dart';
@@ -10,9 +12,26 @@ import 'package:carePanda/ServiceLocator.dart';
 bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // initiliaze core firebase
+  await Firebase.initializeApp();
   await setupLocator();
   var _storageService = locator<LocalStorageService>();
   showBoarding = _storageService.showBoarding ?? true;
+  User user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    if (user.isAnonymous) {
+      // show no anynoumous users menu items
+    }
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+    } catch (e) {
+      print(e);
+    }
+  } else {
+    try {
+      FirebaseAuth.instance.signInAnonymously();
+    } catch (e) {}
+  }
   print("showBoarding = $showBoarding");
   runApp(MyApp());
 }

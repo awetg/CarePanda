@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carePanda/ChartDataStructure.dart';
+import 'package:carePanda/model/ChartDataStructure.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class LineChart extends StatefulWidget {

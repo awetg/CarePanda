@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carePanda/LineChart.dart';
-import 'package:carePanda/ChartDataStructure.dart';
+import 'package:carePanda/model/ChartDataStructure.dart';
 import 'package:carePanda/CardWidget.dart';
-import 'dart:developer';
 
 class DashBoardPage extends StatefulWidget {
   @override
