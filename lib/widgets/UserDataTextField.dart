@@ -4,8 +4,13 @@ class UserDataTextField extends StatelessWidget {
   final label;
   final value;
   final onChange;
+  final controller;
 
-  UserDataTextField({this.label, this.value, this.onChange});
+  UserDataTextField(
+      {@required this.label,
+      this.value,
+      @required this.onChange,
+      this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +19,7 @@ class UserDataTextField extends StatelessWidget {
       child: Material(
         elevation: 3,
         child: TextFormField(
+          controller: controller,
           initialValue: value,
           decoration: new InputDecoration(
             labelText: label,

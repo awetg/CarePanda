@@ -58,20 +58,25 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
             Theme(
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
               child: FractionallySizedBox(
-                child: TextFormField(
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).textTheme.bodyText1.color,
+                child: Container(
+                  color: Theme.of(context).cardColor,
+                  child: TextFormField(
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).textTheme.bodyText1.color,
+                            ),
                           ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).textTheme.bodyText1.color,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).textTheme.bodyText1.color,
+                            ),
                           ),
-                        ),
-                        hintText: "Optional free text")),
+                          hintText: "Message for HR")),
+                ),
               ),
             ),
           ],

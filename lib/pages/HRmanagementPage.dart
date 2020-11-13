@@ -1,3 +1,6 @@
+import 'package:carePanda/DataStructures/MsgDataStructure.dart';
+import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
+import 'package:carePanda/pages/EditAddQuestionnaire.dart';
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +10,7 @@ class HRmanagementPage extends StatefulWidget {
 }
 
 class _HRmanagementPageState extends State<HRmanagementPage> {
-  var _showMessages = true;
+  var _showMessages = false;
 
   _showQuestionnairesFunction() {
     if (_showMessages) {
@@ -42,20 +45,192 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
               children: [
                 // Mental health button
                 TopButton(
-                  name: "Messages",
-                  boolState: !_showMessages,
-                  function: _showMessagesFunction,
-                ),
-
-                // Physical health button
-                TopButton(
                   name: "Questionnaire",
                   boolState: _showMessages,
                   function: _showQuestionnairesFunction,
                 ),
+
+                // Physical health button
+                TopButton(
+                  name: "Messages",
+                  boolState: !_showMessages,
+                  function: _showMessagesFunction,
+                ),
               ],
             ),
-            if (_showMessages) Messages()
+            if (_showMessages) Messages(),
+            if (!_showMessages) QuestionnaireModification()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class QuestionnaireModification extends StatefulWidget {
+  @override
+  _QuestionnaireModificationState createState() =>
+      _QuestionnaireModificationState();
+}
+
+class _QuestionnaireModificationState extends State<QuestionnaireModification> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Current questionnaires",
+              style:
+                  TextStyle(color: Theme.of(context).accentColor, fontSize: 20),
+            ),
+            SizedBox(height: 6),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: qstData.length,
+                physics: AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Card(
+                      child: ListTile(
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 6),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Question: ",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            qstData[index].question,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Free text: ",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        Text(
+                                          qstData[index].freeText.toString(),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Question type: ",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        Text(
+                                          qstData[index]
+                                              .questionType
+                                              .toString()
+                                              .toString()
+                                              .replaceAll("QuestionType.", "")
+                                              .replaceAll(
+                                                  "Selection", " selection"),
+                                        ),
+                                      ],
+                                    ),
+
+                                    // Free space
+                                    if (qstData[index].questionType ==
+                                        "QuestionType.RangeSelection")
+                                      SizedBox(height: 12),
+
+                                    // If range selection , show's max range
+                                    if (qstData[index].questionType ==
+                                        "QuestionType.RangeSelection")
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Max range: ",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                          Text(
+                                            qstData[index].maxRange.toString(),
+                                          ),
+                                        ],
+                                      ),
+
+                                    // Free space
+                                    if (qstData[index].questionType ==
+                                            "QuestionType.MultiSelection" ||
+                                        qstData[index].questionType ==
+                                            "QuestionType.SingleSelection")
+                                      SizedBox(height: 12),
+
+                                    // If multi or single selection, show's options
+                                    if (qstData[index].questionType ==
+                                            "QuestionType.MultiSelection" ||
+                                        qstData[index].questionType ==
+                                            "QuestionType.SingleSelection")
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Options: ",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                          Text(
+                                            qstData[index]
+                                                .options
+                                                .toString()
+                                                .replaceAll("[", "")
+                                                .replaceAll("]", "")
+                                                .replaceAll('"', "")
+                                                .replaceAll(',', ",  "),
+                                          ),
+                                        ],
+                                      ),
+                                    SizedBox(height: 6),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.navigate_next, size: 28)
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditAddQuestionnaire(
+                                        pageTitle: "Edit questionnaire",
+                                        questionnaireData: qstData[index],
+                                        callBackFunction: () {
+                                          setState(() {});
+                                        })));
+                          }),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -69,72 +244,6 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  List<MsgDataStructure> msgData = [
-    new MsgDataStructure(
-        "Esko",
-        "Aho",
-        "building",
-        2,
-        23,
-        "I need help with with this application",
-        false,
-        "male",
-        1,
-        "10.13.2020"),
-    new MsgDataStructure("Seppo", "Aho", "building 1", 1, 22,
-        "adsdasdaadsadsadsdasads", false, "male", 2, "10.13.2020"),
-    new MsgDataStructure(
-        "Oskari",
-        "Talvimaa",
-        "building 1",
-        3,
-        22,
-        "asdsadasdasdsadsadasdasdsadasdsadsaadasdasddasasddasdasadsadsadsads",
-        null,
-        "male",
-        5,
-        "10.13.2020"),
-    new MsgDataStructure("Joona", "Kumpu", "building 4", 40, 22,
-        "asdjasddfgdfgsdfhfgjhd", false, null, null, "10.13.2020"),
-    new MsgDataStructure(null, "Kumpu", "Don't want to tell", null, 22,
-        "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1, "10.13.2020"),
-    new MsgDataStructure(
-        "Jorma",
-        null,
-        "Don't want to tell",
-        null,
-        null,
-        "asdjasdsadasdasdfhhadssasdadsssssssssssssssssssssssssssasd ad as as sadd sad asd s s dassda  dassd aad sad s ads a  adsa dss addasd as",
-        false,
-        "male",
-        1,
-        "10.13.2020"),
-    new MsgDataStructure(
-        "adsssssssssssssssssssssssssssssssssssssssasda",
-        null,
-        null,
-        null,
-        null,
-        "Something happened",
-        false,
-        "male",
-        null,
-        "10.13.2020"),
-    new MsgDataStructure("asd ", null, null, null, null, "Something happened",
-        false, null, 1, "10.13.2020"),
-    new MsgDataStructure(
-        null,
-        "asdads ada s ads addasad s adsads ads adsasasasdasd",
-        null,
-        null,
-        null,
-        "Something happened",
-        false,
-        null,
-        null,
-        "10.13.2020"),
-  ];
-
   _expandItem(MsgDataStructure msgData) {
     setState(() {
       if (msgData.expanded == null) {
@@ -354,28 +463,74 @@ class _MessagesState extends State<Messages> {
   }
 }
 
-class MsgDataStructure {
-  final String name;
-  final String lastName;
-  final String building;
-  final int floor;
-  final int age;
-  final String message;
-  final String gender;
-  final int yearsInNokia;
-  final String date;
+List<QuestionnaireAddDataStructure> qstData = [
+  new QuestionnaireAddDataStructure(
+      true, "How's your day?", "QuestionType.RangeSelection", null, 10),
+  new QuestionnaireAddDataStructure(true, "How's your workload?",
+      "QuestionType.SingleSelection", '["Yes","No"]', null),
+  new QuestionnaireAddDataStructure(true, "How you feeling?",
+      "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
+  new QuestionnaireAddDataStructure(
+      true,
+      "How you feeling and how you doing and how you working and are you stressed?",
+      "QuestionType.MultiSelection",
+      '["Good","Bad","Can not say"]',
+      null),
+];
 
-  bool expanded;
-
-  MsgDataStructure(
-      this.name,
-      this.lastName,
-      this.building,
-      this.floor,
-      this.age,
-      this.message,
-      this.expanded,
-      this.gender,
-      this.yearsInNokia,
-      this.date);
-}
+List<MsgDataStructure> msgData = [
+  new MsgDataStructure("Esko", "Aho", "building", 2, 23,
+      "I need help with with this application", false, "male", 1, "10.13.2020"),
+  new MsgDataStructure("Seppo", "Aho", "building 1", 1, 22,
+      "adsdasdaadsadsadsdasads", false, "male", 2, "10.13.2020"),
+  new MsgDataStructure(
+      "Oskari",
+      "Talvimaa",
+      "building 1",
+      3,
+      22,
+      "asdsadasdasdsadsadasdasdsadasdsadsaadasdasddasasddasdasadsadsadsads",
+      null,
+      "male",
+      5,
+      "10.13.2020"),
+  new MsgDataStructure("Joona", "Kumpu", "building 4", 40, 22,
+      "asdjasddfgdfgsdfhfgjhd", false, null, null, "10.13.2020"),
+  new MsgDataStructure(null, "Kumpu", "Don't want to tell", null, 22,
+      "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1, "10.13.2020"),
+  new MsgDataStructure(
+      "Jorma",
+      null,
+      "Don't want to tell",
+      null,
+      null,
+      "asdjasdsadasdasdfhhadssasdadsssssssssssssssssssssssssssasd ad as as sadd sad asd s s dassda  dassd aad sad s ads a  adsa dss addasd as",
+      false,
+      "male",
+      1,
+      "10.13.2020"),
+  new MsgDataStructure(
+      "adsssssssssssssssssssssssssssssssssssssssasda",
+      null,
+      null,
+      null,
+      null,
+      "Something happened",
+      false,
+      "male",
+      null,
+      "10.13.2020"),
+  new MsgDataStructure("asd ", null, null, null, null, "Something happened",
+      false, null, 1, "10.13.2020"),
+  new MsgDataStructure(
+      null,
+      "asdads ada s ads addasad s adsads ads adsasasasdasd",
+      null,
+      null,
+      null,
+      "Something happened",
+      false,
+      null,
+      null,
+      "10.13.2020"),
+];

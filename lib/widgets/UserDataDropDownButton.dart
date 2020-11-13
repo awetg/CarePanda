@@ -6,19 +6,24 @@ class UserDataDropDownButton extends StatelessWidget {
   final settingName;
   final value;
   final data;
-  final floorData;
   final onChange;
+  final settingNameFont;
   final _storageService = locator<LocalStorageService>();
 
   UserDataDropDownButton(
-      {this.settingName, this.value, this.data, this.onChange, this.floorData});
+      {@required this.settingName,
+      @required this.value,
+      @required this.data,
+      @required this.onChange,
+      this.settingNameFont});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Row(children: [
         Expanded(
-          child: Text(settingName),
+          child: Text(settingName,
+              style: TextStyle(fontSize: settingNameFont ?? 14)),
         ),
         Container(
           padding: EdgeInsets.only(left: 6),
