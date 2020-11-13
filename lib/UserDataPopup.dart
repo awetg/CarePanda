@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataPickerPopup.dart';

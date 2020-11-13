@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
 import 'package:carePanda/pages/EditAddQuestionnaire.dart';
@@ -11,6 +13,7 @@ class HRmanagementPage extends StatefulWidget {
 
 class _HRmanagementPageState extends State<HRmanagementPage> {
   var _showMessages = false;
+  var _questionnaireData = qstData;
 
   _showQuestionnairesFunction() {
     if (_showMessages) {
@@ -26,6 +29,12 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
         _showMessages = true;
       });
     }
+  }
+
+  _onNewQuestionnaireBack(newQuestionnaire) {
+    setState(() {
+      _questionnaireData.add(newQuestionnaire);
+    });
   }
 
   @override
@@ -59,21 +68,63 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
               ],
             ),
             if (_showMessages) Messages(),
-            if (!_showMessages) QuestionnaireModification()
+            if (!_showMessages)
+              QuestionnaireModification(newData: _questionnaireData)
           ],
         ),
       ),
+      floatingActionButton: _showMessages
+          ? null
+          : FloatingActionButton(
+              backgroundColor: Theme.of(context).accentColor,
+              foregroundColor: Colors.white,
+              onPressed: () async {
+                final newQst = await Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => EditAddQuestionnaire(
+                              pageTitle: "Edit questionnaire",
+                              questionnaireData: QuestionnaireAddDataStructure(
+                                  null, null, null, null, null),
+                            )));
+                setState(() {
+                  if (newQst != null) {
+                    _onNewQuestionnaireBack(newQst);
+                  }
+                });
+              },
+              child: Icon(Icons.add),
+            ),
     );
   }
 }
 
 class QuestionnaireModification extends StatefulWidget {
+  final newData;
+
+  QuestionnaireModification({this.newData});
+
   @override
   _QuestionnaireModificationState createState() =>
       _QuestionnaireModificationState();
 }
 
 class _QuestionnaireModificationState extends State<QuestionnaireModification> {
+  var questionsData;
+
+  @override
+  void initState() {
+    questionsData = widget.newData;
+    super.initState();
+  }
+
+  // Function runs when comes back from edit questionnaire page
+  _onEditedQuestionnaireBack(editedQst, index) {
+    setState(() {
+      questionsData[index] = editedQst;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -92,11 +143,11 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: qstData.length,
+                itemCount: questionsData.length,
                 physics: AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
+                    padding: const EdgeInsets.only(top: 6.0),
                     child: Card(
                       child: ListTile(
                           title: Row(
@@ -115,7 +166,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                         ),
                                         Flexible(
                                           child: Text(
-                                            qstData[index].question,
+                                            questionsData[index].question ??
+                                                " ",
                                           ),
                                         ),
                                       ],
@@ -130,7 +182,10 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                                   .accentColor),
                                         ),
                                         Text(
-                                          qstData[index].freeText.toString(),
+                                          questionsData[index]
+                                                  .freeText
+                                                  .toString() ??
+                                              "",
                                         ),
                                       ],
                                     ),
@@ -144,24 +199,26 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                                   .accentColor),
                                         ),
                                         Text(
-                                          qstData[index]
-                                              .questionType
-                                              .toString()
-                                              .toString()
-                                              .replaceAll("QuestionType.", "")
-                                              .replaceAll(
-                                                  "Selection", " selection"),
+                                          questionsData[index]
+                                                  .questionType
+                                                  .toString()
+                                                  .toString()
+                                                  .replaceAll(
+                                                      "QuestionType.", "")
+                                                  .replaceAll("Selection",
+                                                      " selection") ??
+                                              "",
                                         ),
                                       ],
                                     ),
 
                                     // Free space
-                                    if (qstData[index].questionType ==
+                                    if (questionsData[index].questionType ==
                                         "QuestionType.RangeSelection")
                                       SizedBox(height: 12),
 
                                     // If range selection , show's max range
-                                    if (qstData[index].questionType ==
+                                    if (questionsData[index].questionType ==
                                         "QuestionType.RangeSelection")
                                       Row(
                                         children: [
@@ -172,22 +229,25 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                                     .accentColor),
                                           ),
                                           Text(
-                                            qstData[index].maxRange.toString(),
+                                            questionsData[index]
+                                                    .maxRange
+                                                    .toString() ??
+                                                "",
                                           ),
                                         ],
                                       ),
 
                                     // Free space
-                                    if (qstData[index].questionType ==
+                                    if (questionsData[index].questionType ==
                                             "QuestionType.MultiSelection" ||
-                                        qstData[index].questionType ==
+                                        questionsData[index].questionType ==
                                             "QuestionType.SingleSelection")
                                       SizedBox(height: 12),
 
                                     // If multi or single selection, show's options
-                                    if (qstData[index].questionType ==
+                                    if (questionsData[index].questionType ==
                                             "QuestionType.MultiSelection" ||
-                                        qstData[index].questionType ==
+                                        questionsData[index].questionType ==
                                             "QuestionType.SingleSelection")
                                       Row(
                                         children: [
@@ -198,7 +258,7 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                                     .accentColor),
                                           ),
                                           Text(
-                                            qstData[index]
+                                            questionsData[index]
                                                 .options
                                                 .toString()
                                                 .replaceAll("[", "")
@@ -215,16 +275,21 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                               Icon(Icons.navigate_next, size: 28)
                             ],
                           ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
+                          onTap: () async {
+                            final editedQst = await Navigator.of(context,
+                                    rootNavigator: true)
+                                .push(MaterialPageRoute(
+                                    fullscreenDialog: true,
                                     builder: (context) => EditAddQuestionnaire(
-                                        pageTitle: "Edit questionnaire",
-                                        questionnaireData: qstData[index],
-                                        callBackFunction: () {
-                                          setState(() {});
-                                        })));
+                                          pageTitle: "Edit questionnaire",
+                                          questionnaireData:
+                                              questionsData[index],
+                                        )));
+                            setState(() {
+                              if (editedQst != null) {
+                                _onEditedQuestionnaireBack(editedQst, index);
+                              }
+                            });
                           }),
                     ),
                   );
@@ -470,12 +535,8 @@ List<QuestionnaireAddDataStructure> qstData = [
       "QuestionType.SingleSelection", '["Yes","No"]', null),
   new QuestionnaireAddDataStructure(true, "How you feeling?",
       "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
-  new QuestionnaireAddDataStructure(
-      true,
-      "How you feeling and how you doing and how you working and are you stressed?",
-      "QuestionType.MultiSelection",
-      '["Good","Bad","Can not say"]',
-      null),
+  new QuestionnaireAddDataStructure(true, "How you tomorrow?",
+      "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
 ];
 
 List<MsgDataStructure> msgData = [

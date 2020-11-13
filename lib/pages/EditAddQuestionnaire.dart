@@ -1,20 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:carePanda/pages/HRmanagementPage.dart';
+import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataTextField.dart';
 import 'package:flutter/material.dart';
 
 class EditAddQuestionnaire extends StatefulWidget {
-  EditAddQuestionnaire(
-      {@required this.pageTitle,
-      @required this.questionnaireData,
-      @required this.callBackFunction});
+  EditAddQuestionnaire({
+    @required this.pageTitle,
+    this.questionnaireData,
+  });
 
   final pageTitle;
   final questionnaireData;
-  final callBackFunction;
 
   @override
   _EditAddQuestionnaireState createState() => _EditAddQuestionnaireState();
@@ -29,9 +28,12 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   final _optionAmountList = ["2", "3", "4", "5"];
 
   var _questionText;
+  var _freeTextBoxBool;
   var _questionType;
   var _optionAmount = "";
   var _listOfOptions;
+
+  var newQuestionList;
 
   // Text field controller so that resetting textfield's is possible
   var textFieldController = TextEditingController();
@@ -44,12 +46,18 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
     // Question text
     _questionText = widget.questionnaireData.question ?? "";
 
-    // Question type, repalcing characters to make it prettier for user
-    _questionType = widget.questionnaireData.questionType
-        .toString()
-        .replaceAll("QuestionType.", "")
-        .replaceAll("Selection", " selection");
+    // Free text box boolean
+    _freeTextBoxBool = widget.questionnaireData.freeText ?? true;
 
+    // Question type, repalcing characters to make it prettier for user
+    if (widget.questionnaireData.questionType == null) {
+      _questionType = "Range selection";
+    } else {
+      _questionType = widget.questionnaireData.questionType
+          .toString()
+          .replaceAll("QuestionType.", "")
+          .replaceAll("Selection", " selection");
+    }
     // Get's option amount for multi/single -selection questionnaire
     _optionAmount = widget.questionnaireData.options;
     if (_optionAmount != null) {
@@ -89,8 +97,6 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
 
   // Handles option text fields changing
   _optionOnChange(newValue, index) {
-    log(index.toString() + " " + _listOfOptions.length.toString());
-
     // If no previous data, adds empty spaces on list so replacing will be possible
     if (_listOfOptions.length <= index || _listOfOptions.length == 0) {
       var amountOfSpaces = index - _listOfOptions.length;
@@ -102,20 +108,69 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   }
 
   // Submits the questionnaire
-  _submitQuestionnaire() {
-    log(_questionText.toString());
-    log(_questionType.toString());
-    log(_listOfOptions.toString());
+  _submitQuestionnaire(context) {
+    var _questionTextNotEmpty = true;
+    var _optionNotEmpty = true;
+
+    // Removes spaces from question text and check's if it's empty
+    if (_questionText.replaceAll(new RegExp(r"\s+"), "") == "") {
+      _questionTextNotEmpty = false;
+    }
+
+    var _lengthDifference = int.parse(_optionAmount) - _listOfOptions.length;
+
+    if (_questionType == "Multi selection" ||
+        _questionType == "Single selection") {
+      if (_lengthDifference == 0) {
+        // If length difference is 0, we can go through the option list and check if there is empty spot
+        for (var i = 0; i < int.parse(_optionAmount); i++) {
+          if (_listOfOptions[i] == "") {
+            _optionNotEmpty = false;
+          }
+        }
+        // If lenght it different, it means there is atlest 1 empty space
+      } else {
+        _optionNotEmpty = false;
+      }
+    }
+
+    // Edits data to how it will be saved (not sure if needed)
+    // Uses the data structure to get into right form
+    newQuestionList = new QuestionnaireAddDataStructure(
+      _freeTextBoxBool,
+      _questionText.toString(),
+      _questionType
+          .toString()
+          .replaceAll(" selection", "Selection")
+          .replaceRange(0, 0, "QuestionType."),
+      _listOfOptions
+          .toString()
+          .replaceAll("[", '["')
+          .replaceAll("]", '"]')
+          .replaceAll(", ", '","'),
+      10,
+    );
 
     // Navigates back to HR management and removes history so going back is not possible
-    /*Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HRmanagementPage()),
-        (Route<dynamic> route) => false).then(
-      (value) {
-        setState(() {});
-      },
-    );*/
+    // If option or question text is empty, shows snackbar and doesn't submit
+    if (_questionTextNotEmpty) {
+      if (_optionNotEmpty) {
+        Navigator.pop(context, newQuestionList);
+      } else {
+        _createSnackBar("Option can not be empty", context);
+      }
+    } else {
+      _createSnackBar("Question text can not be empty", context);
+    }
+  }
+
+  // Creates snackbar to show error messages
+  _createSnackBar(String message, dcontext) {
+    final snackBar = new SnackBar(
+        content: new Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).errorColor);
+
+    Scaffold.of(dcontext).showSnackBar(snackBar);
   }
 
   @override
@@ -126,128 +181,150 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
       // Scroll view
-      body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 14,
-              top: 25,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Question text
-                    Expanded(
-                        child:
-                            Text("Question", style: TextStyle(fontSize: 20))),
-                    // Question text textfield, uses theme so that onclick border has color
-                    Theme(
-                      data: Theme.of(context)
-                          .copyWith(primaryColor: Color(0xff027DC5)),
-                      child: Container(
-                        width: 240,
-                        color: Theme.of(context).cardColor,
-                        child: TextFormField(
-                          initialValue: _questionText,
-                          maxLines: 2,
-                          decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .color,
+      body: Builder(
+        builder: (ctx) => SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 14,
+                top: 25,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Question text
+                      Expanded(
+                          child:
+                              Text("Question", style: TextStyle(fontSize: 20))),
+                      // Question text textfield, uses theme so that onclick border has color
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(primaryColor: Color(0xff027DC5)),
+                        child: Container(
+                          width: 240,
+                          color: Theme.of(context).cardColor,
+                          child: TextFormField(
+                            initialValue: _questionText,
+                            maxLines: 2,
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color,
+                                  ),
                                 ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .color,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color,
+                                  ),
                                 ),
-                              ),
-                              hintText: "Question text"),
-                          onChanged: (value) {
-                            setState(() {
-                              _questionText = value;
-                            });
-                          },
+                                hintText: "Question text"),
+                            onChanged: (value) {
+                              setState(() {
+                                _questionText = value;
+                              });
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                // Free space
-                SizedBox(height: 40),
+                  // Free space
+                  SizedBox(height: 12),
 
-                // Question type
-                UserDataDropDownButton(
-                    settingName: "Question type",
-                    data: questionTypeList,
-                    value: _questionType,
-                    settingNameFont: 18.00,
-                    onChange: (newValue) {
-                      _questionTypeOnChange(newValue);
-                    }),
+                  // Free text answer box
 
-                // Free space
-                SizedBox(height: 22),
-
-                // Options for ranged/single -selection
-                if (_questionType == "Multi selection")
-                  UserDataDropDownButton(
-                      settingName: "Options amount",
-                      data: _optionAmountList,
-                      value: _optionAmount.toString(),
-                      settingNameFont: 18.00,
-                      onChange: (newValue) {
-                        _optionAmountOnChange(newValue);
-                      }),
-
-                if (_questionType == "Multi selection") SizedBox(height: 4),
-
-                // Multi selection
-                if (_questionType == "Multi selection")
-                  TextFieldGenerator(
-                      amount: int.parse(_optionAmount),
-                      listOfOptions: _listOfOptions,
-                      controller: textFieldController,
-                      returnListFunction: (value, i) {
-                        _optionOnChange(value, i);
-                      }),
-
-                // Single selection
-                if (_questionType == "Single selection")
-                  TextFieldGenerator(
-                      amount: int.parse(_optionAmount),
-                      listOfOptions: _listOfOptions,
-                      controller: textFieldController,
-                      returnListFunction: (value, i) {
-                        _optionOnChange(value, i);
-                      }),
-
-                // Submit button
-                Padding(
-                  padding: const EdgeInsets.only(top: 14),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      child:
-                          const Text('Submit', style: TextStyle(fontSize: 18)),
-                      textColor: Colors.white,
-                      onPressed: () {
-                        _submitQuestionnaire();
+                  ListTileTheme(
+                    contentPadding: EdgeInsets.all(0),
+                    child: CheckboxListTile(
+                      title: Text("Free text box answer",
+                          style: TextStyle(fontSize: 20)),
+                      value: _freeTextBoxBool,
+                      activeColor: Theme.of(context).accentColor,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _freeTextBoxBool = newValue;
+                        });
                       },
+                      controlAffinity: ListTileControlAffinity.trailing,
                     ),
                   ),
-                ),
-              ],
+
+                  SizedBox(height: 12),
+
+                  // Question type
+                  UserDataDropDownButton(
+                      settingName: "Question type",
+                      data: questionTypeList,
+                      value: _questionType,
+                      settingNameFont: 18.00,
+                      onChange: (newValue) {
+                        _questionTypeOnChange(newValue);
+                      }),
+
+                  // Free space
+                  SizedBox(height: 22),
+
+                  // Options for ranged/single -selection
+                  if (_questionType == "Multi selection")
+                    UserDataDropDownButton(
+                        settingName: "Options amount",
+                        data: _optionAmountList,
+                        value: _optionAmount.toString(),
+                        settingNameFont: 18.00,
+                        onChange: (newValue) {
+                          _optionAmountOnChange(newValue);
+                        }),
+
+                  if (_questionType == "Multi selection") SizedBox(height: 4),
+
+                  // Multi selection
+                  if (_questionType == "Multi selection")
+                    TextFieldGenerator(
+                        amount: int.parse(_optionAmount),
+                        listOfOptions: _listOfOptions,
+                        controller: textFieldController,
+                        returnListFunction: (value, i) {
+                          _optionOnChange(value, i);
+                        }),
+
+                  // Single selection
+                  if (_questionType == "Single selection")
+                    TextFieldGenerator(
+                        amount: int.parse(_optionAmount),
+                        listOfOptions: _listOfOptions,
+                        controller: textFieldController,
+                        returnListFunction: (value, i) {
+                          _optionOnChange(value, i);
+                        }),
+
+                  // Submit button
+                  Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: RaisedButton(
+                        child: const Text('Submit',
+                            style: TextStyle(fontSize: 18)),
+                        textColor: Colors.white,
+                        onPressed: () {
+                          _submitQuestionnaire(ctx);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
