@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
@@ -10,6 +9,7 @@ import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:carePanda/ServiceLocator.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'Theme.dart';
@@ -38,8 +38,51 @@ class Testing extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  static void setLocale(context, locale) {
+    _MyAppState state = context.findRootAncestorStateOfType<_MyAppState>();
+    state.setLocale(locale);
+  }
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale;
+  var _storageService = locator<LocalStorageService>();
+
+  // Function to change language and saves language code to shared preferences
+  setLocale(locale) {
+    setState(() {
+      _locale = locale;
+      _storageService.language = locale.languageCode;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // Init -> if language is null (first start up), sets it to english
+    if (_storageService.language == null) {
+      _storageService.language = "en";
+    }
+    // Gets language code from shared preference and depending on the language code,
+    // chooses a language
+    var _languageCode = _storageService.language ?? "en";
+    switch (_languageCode) {
+      case "en":
+        _locale = Locale(_languageCode, '');
+        break;
+      case "fi":
+        _locale = Locale(_languageCode, '');
+        break;
+      default:
+        _locale = Locale("en", '');
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeChanger>(context);
@@ -51,6 +94,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Care Panda',
       theme: theme.getTheme(),
+      locale: _locale,
+      supportedLocales: [Locale('en', ''), Locale('fi', '')],
+      localizationsDelegates: [
+        Localization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeListResolutionCallback: (deviceLocale, supportedLocales) {
+        for (var locale in deviceLocale) {
+          if (locale != null) {
+            return locale;
+          }
+        }
+        return supportedLocales.first;
+      },
       initialRoute: showBoarding ? "/boarding" : "/",
       routes: {
         "/": (context) => MyStatefulWidget(),

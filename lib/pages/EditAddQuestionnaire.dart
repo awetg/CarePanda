@@ -305,7 +305,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                       settingName: "Question type",
                       data: questionTypeList,
                       value: _questionType,
-                      settingNameFont: 18.00,
+                      settingNameFontSize: 18.00,
                       onChange: (newValue) {
                         _questionTypeOnChange(newValue);
                       }),
@@ -319,7 +319,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                         settingName: "Options amount",
                         data: _optionAmountList,
                         value: _optionAmount.toString(),
-                        settingNameFont: 18.00,
+                        settingNameFontSize: 18.00,
                         onChange: (newValue) {
                           _optionAmountOnChange(newValue);
                         }),
@@ -366,7 +366,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                   // Delete button
                   if (_newQuestionnaire)
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: 2),
                       child: SizedBox(
                         width: double.infinity,
                         child: RaisedButton(

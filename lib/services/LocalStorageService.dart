@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
@@ -26,6 +27,7 @@ class LocalStorageService {
   static const String IsLoggedIn = 'isLoggedIn';
   static const String RecievePushNotif = 'recievePushNotif';
   static const String DarkTheme = 'darkTheme';
+  static const String Language = 'language';
 
   // USER DATA
   static const String Name = 'name';
@@ -47,13 +49,14 @@ class LocalStorageService {
   bool get isLoggedIn => _getFromLocalStorage(IsLoggedIn);
   bool get recievePushNotif => _getFromLocalStorage(RecievePushNotif);
   bool get darkTheme => _getFromLocalStorage(DarkTheme);
+  String get language => _getFromLocalStorage(Language);
 
   // USER DATA
   String get name => _getFromLocalStorage(Name);
   String get lastName => _getFromLocalStorage(LastName);
   int get birthYear => _getFromLocalStorage(BirthYear);
-  String get gender => _getFromLocalStorage(Gender);
-  String get building => _getFromLocalStorage(Building);
+  int get gender => _getFromLocalStorage(Gender);
+  int get building => _getFromLocalStorage(Building);
   int get floor => _getFromLocalStorage(Floor);
   int get yearsInNokia => _getFromLocalStorage(YearsInNokia);
 
@@ -72,13 +75,14 @@ class LocalStorageService {
   set recievePushNotif(bool value) =>
       _saveToLocalStorage(RecievePushNotif, value);
   set darkTheme(bool value) => _saveToLocalStorage(DarkTheme, value);
+  set language(String value) => _saveToLocalStorage(Language, value);
 
   // USER DATA
   set name(String value) => _saveToLocalStorage(Name, value);
   set lastName(String value) => _saveToLocalStorage(LastName, value);
   set birthYear(int value) => _saveToLocalStorage(BirthYear, value);
-  set gender(String value) => _saveToLocalStorage(Gender, value);
-  set building(String value) => _saveToLocalStorage(Building, value);
+  set gender(int value) => _saveToLocalStorage(Gender, value);
+  set building(int value) => _saveToLocalStorage(Building, value);
   set floor(int value) => _saveToLocalStorage(Floor, value);
   set yearsInNokia(int value) => _saveToLocalStorage(YearsInNokia, value);
 

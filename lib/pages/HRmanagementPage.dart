@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/EditAddQuestionnaire.dart';
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,7 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HR management',
+        title: Text(getTranslated(context, "hr_managementTitle"),
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
       body: Container(
@@ -59,14 +58,14 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
               children: [
                 // Mental health button
                 TopButton(
-                  name: "Questionnaire",
+                  name: getTranslated(context, "hr_questionnaireTopBtn"),
                   boolState: _showMessages,
                   function: _showQuestionnairesFunction,
                 ),
 
                 // Physical health button
                 TopButton(
-                  name: "Messages",
+                  name: getTranslated(context, "hr_MsgsTopeBtn"),
                   boolState: !_showMessages,
                   function: _showMessagesFunction,
                 ),
@@ -94,7 +93,8 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                     .push(MaterialPageRoute(
                         fullscreenDialog: true,
                         builder: (context) => EditAddQuestionnaire(
-                              pageTitle: "Add a new questionnaire",
+                              pageTitle:
+                                  getTranslated(context, "hr_addQstTitle"),
                               questionnaireData: QuestionnaireAddDataStructure(
                                   null, null, null, null, null),
                             )));
@@ -144,7 +144,6 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
       }
       // Handle questionnaire deleting
       if (editedQst == "Delete") {
-        log(index.toString());
         questionsData.removeAt(index);
       }
     });
@@ -160,7 +159,7 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Current questionnaires",
+              getTranslated(context, "hr_currentQst"),
               style:
                   TextStyle(color: Theme.of(context).accentColor, fontSize: 20),
             ),
@@ -191,7 +190,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Question: ",
+                                        getTranslated(
+                                            context, "hr_qstQuestion"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor),
@@ -211,7 +211,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Free text: ",
+                                        getTranslated(
+                                            context, "hr_qstFreeText"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor),
@@ -232,7 +233,7 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Question type: ",
+                                        getTranslated(context, "hr_qstQstType"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor),
@@ -261,7 +262,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Max range: ",
+                                          getTranslated(
+                                              context, "hr_qstMaxRange"),
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
@@ -290,19 +292,22 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Options: ",
+                                          getTranslated(
+                                              context, "hr_qstOptions"),
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
                                         ),
-                                        Text(
-                                          questionsData[index]
-                                              .options
-                                              .toString()
-                                              .replaceAll("[", "")
-                                              .replaceAll("]", "")
-                                              .replaceAll('"', "")
-                                              .replaceAll(',', ",  "),
+                                        Flexible(
+                                          child: Text(
+                                            questionsData[index]
+                                                .options
+                                                .toString()
+                                                .replaceAll("[", "")
+                                                .replaceAll("]", "")
+                                                .replaceAll('"', "")
+                                                .replaceAll(',', ",  "),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -327,7 +332,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                         fullscreenDialog: true,
                                         builder: (context) =>
                                             EditAddQuestionnaire(
-                                              pageTitle: "Edit questionnaire",
+                                              pageTitle: getTranslated(
+                                                  context, "hr_editQstTitle"),
                                               questionnaireData:
                                                   questionsData[index],
                                             )));
@@ -424,7 +430,9 @@ class _MessagesState extends State<Messages> {
                             Row(
                               children: [
                                 msgData[index].expanded ?? false
-                                    ? Text('Building: ',
+                                    ? Text(
+                                        getTranslated(
+                                            context, "hr_msgBuilding"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor))
@@ -452,7 +460,8 @@ class _MessagesState extends State<Messages> {
                             Row(
                               children: [
                                 msgData[index].expanded ?? false
-                                    ? Text('Floor: ',
+                                    ? Text(
+                                        getTranslated(context, "hr_msgFloor"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor))
@@ -482,7 +491,7 @@ class _MessagesState extends State<Messages> {
                             children: [
                               if (msgData[index].age != null)
                                 msgData[index].expanded ?? false
-                                    ? Text('Age: ',
+                                    ? Text(getTranslated(context, "hr_msgAge"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor))
@@ -507,7 +516,8 @@ class _MessagesState extends State<Messages> {
                               // gender
                               if (msgData[index].gender != null)
                                 msgData[index].expanded ?? false
-                                    ? Text('Gender: ',
+                                    ? Text(
+                                        getTranslated(context, "hr_msgGender"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor))
@@ -541,7 +551,9 @@ class _MessagesState extends State<Messages> {
                             Row(
                               children: [
                                 msgData[index].expanded ?? false
-                                    ? Text('Years worked in Nokia: ',
+                                    ? Text(
+                                        getTranslated(
+                                            context, "hr_msgYearsWorkedNokia"),
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).accentColor))
