@@ -40,30 +40,52 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
   @override
   Widget build(BuildContext context) {
-    var _lastAnsQuest;
+    var _lastQstRdy;
     _storageService = locator<LocalStorageService>();
 
     _currentTime = DateTime.now();
 
-    if (_storageService.lastAnsQuestionnaire == null) {
-      _storageService.lastAnsQuestionnaire = _currentTime.toString();
+    // If last answered questionnaire is null (is null when launched first time)
+    // Sets current time as last answered questionnaire
+    if (_storageService.lastQuestionnaireRdy == null) {
+      // If current time is over 3pm when application is opened first time, sets lastQuestionnaireRdy time to 2pm
+      // This allows person to answer the questionnaire the first day user starts up the application
+      if (_currentTime.hour > 15) {
+        final _newlastQstRdyTime = new DateTime(_currentTime.year,
+            _currentTime.month, _currentTime.day, 14, 0, 0, 0, 0);
+        _storageService.lastQuestionnaireRdy = _newlastQstRdyTime.toString();
+      } else {
+        _storageService.lastQuestionnaireRdy = _currentTime.toString();
+      }
     }
 
-    _lastAnsQuest = _storageService.lastAnsQuestionnaire;
+    _lastQstRdy = _storageService.lastQuestionnaireRdy;
 
-    var parsedTime = DateTime.parse(_lastAnsQuest);
+    // Parses lastAnsQuest to DateTime since it's saved as string in shared preferences
+    var parsedTime = DateTime.parse(_lastQstRdy);
+    // Calculates till next time questionnaire is ready
     var nextDay = calculateNextQuestionnaire(parsedTime);
+    // Calculates how much time is remaining to next questionnaire
     var remaining = nextDay.difference(_currentTime);
 
-    var timeLeftToAnswer = _currentTime.difference(parsedTime);
+    // Calculates time difference between current time and since questionnaire is available
+    var qstAvailableFor = _currentTime.difference(parsedTime);
     var calculatingRemaining = false;
 
-    // If questionnaire is ready, calculates how much time is left to answer the questionnaire
-    if (timeLeftToAnswer.inHours <= 9 &&
+    // If questionnaire is ready and questionnaire has been available for under 9 hours,
+    // calculates how much time is left to answer the questionnaire
+    if (qstAvailableFor.inHours <= 9 &&
         _storageService.hasQuestionnaire == true) {
+      // Sets boolean calculating remaining to true, so that widget returns
+      // how much time is reminaing to answer instead of how much time until next questionnaire
       calculatingRemaining = true;
+
+      // Calculates how much time is left to answer
       var timeToAnswer = calculateTimeLefToAnswer(parsedTime);
+
+      // Calculates remaining time
       final remainingToAnswer = timeToAnswer.difference(_currentTime);
+
       remaining = remainingToAnswer;
     }
 
@@ -77,7 +99,6 @@ class _WeekCountdownState extends State<WeekCountdown> {
 
     // Extra 0 to show in timer if seconds are under 10
     var extra0;
-
     if (seconds < 10) {
       extra0 = "0";
     } else {
@@ -97,7 +118,8 @@ class _WeekCountdownState extends State<WeekCountdown> {
         minutes <= 0 &&
         seconds <= 0 &&
         millSec <= 0) {
-      // If timer of remaining time of answering questionnaire goes to 0, switches card
+      // If timer of showing remaining time to answer questionnaire goes to 0, switches card
+      // to show time until next questionnaire
       if (calculatingRemaining) {
         calculatingRemaining = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -105,9 +127,12 @@ class _WeekCountdownState extends State<WeekCountdown> {
           widget.questionnaireStatusChanged();
         });
       } else {
+        // If timer of showing how much time until next questionnaire goes to 0,
+        // sets last time questionnaire is ready to current time
+        // also sets hasQuestionnaire to true, to show correct card in home
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _storageService.hasQuestionnaire = true;
-          _storageService.lastAnsQuestionnaire = DateTime.now().toString();
+          _storageService.lastQuestionnaireRdy = DateTime.now().toString();
           widget.questionnaireStatusChanged();
         });
       }
@@ -132,7 +157,7 @@ DateTime calculateNextQuestionnaire(DateTime time) {
       new DateTime(time.year, time.month, time.day, 15, 0, 0, 0, 0);
 
   // Calculates time until next questionnaire if it's not saturday
-  if (time.weekday != 6) {
+  if (time.weekday != 6 && time.weekday != 7) {
     // Calculates time until next questionnaire if it's not saturday and before 15:00
     if (time.isBefore(newTestTime)) {
       var timeUntilNext3pm = newTestTime.hour - time.hour;
@@ -159,9 +184,17 @@ DateTime calculateNextQuestionnaire(DateTime time) {
   return DateTime(time.year, time.month, time.day + timeUntilNextDay3pm, 15);
 }
 
+// Calculates how much time is left to answer the questionnaire
 DateTime calculateTimeLefToAnswer(DateTime time) {
-  var test2 = new DateTime(time.year, time.month, time.day, 23, 59, 59, 59, 0);
+  var _answerTimeUntil =
+      new DateTime(time.year, time.month, time.day, 23, 59, 59, 59, 0);
 
-  return DateTime(time.year, time.month, time.day, test2.hour, test2.minute,
-      test2.second, test2.millisecond);
+  return DateTime(
+      time.year,
+      time.month,
+      time.day,
+      _answerTimeUntil.hour,
+      _answerTimeUntil.minute,
+      _answerTimeUntil.second,
+      _answerTimeUntil.millisecond);
 }
