@@ -9,6 +9,8 @@ class MsgDataStructure {
   final int yearsInNokia;
   final String date;
 
+  // Bool to determine wheter the card is expanded in the UI
+  // When using real data, give all the msgs "Expnaded" as false
   bool expanded;
 
   MsgDataStructure(

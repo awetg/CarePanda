@@ -15,6 +15,7 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
   var _showMessages = false;
   var _questionnaireData = qstData;
 
+  // Shows questionnaires
   _showQuestionnairesFunction() {
     if (_showMessages) {
       setState(() {
@@ -23,6 +24,7 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
     }
   }
 
+  // Shows HR's messages
   _showMessagesFunction() {
     if (!_showMessages) {
       setState(() {
@@ -31,9 +33,12 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
     }
   }
 
+  // Handles questionnaire adding
   _onNewQuestionnaireBack(newQuestionnaire) {
     setState(() {
-      _questionnaireData.add(newQuestionnaire);
+      if (newQuestionnaire[1] == "Submit") {
+        _questionnaireData.add(newQuestionnaire[0]);
+      }
     });
   }
 
@@ -67,12 +72,18 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                 ),
               ],
             ),
+
+            // Shows messages or questionnaires
             if (_showMessages) Messages(),
             if (!_showMessages)
               QuestionnaireModification(newData: _questionnaireData)
           ],
         ),
       ),
+
+      // Floating button -> opens page to add new questionnaire
+      // When leaving the edit page, handles adding questionnaire
+      // Gives array with null values
       floatingActionButton: _showMessages
           ? null
           : FloatingActionButton(
@@ -83,7 +94,7 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                     .push(MaterialPageRoute(
                         fullscreenDialog: true,
                         builder: (context) => EditAddQuestionnaire(
-                              pageTitle: "Edit questionnaire",
+                              pageTitle: "Add a new questionnaire",
                               questionnaireData: QuestionnaireAddDataStructure(
                                   null, null, null, null, null),
                             )));
@@ -114,14 +125,28 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
 
   @override
   void initState() {
+    // Gets questionnaire data from parent and uses it to show questionnaires
+    // ( Gets from parent because questionnaire adding is handeled in parent )
     questionsData = widget.newData;
     super.initState();
   }
 
   // Function runs when comes back from edit questionnaire page
-  _onEditedQuestionnaireBack(editedQst, index) {
+  // Deletes or submmits questionnaire
+  _onEditedQuestionnaireBack(
+    editedQst,
+    index,
+  ) {
     setState(() {
-      questionsData[index] = editedQst;
+      // Handle questionnaire editing
+      if (editedQst[1] == "Submit") {
+        questionsData[index] = editedQst[0];
+      }
+      // Handle questionnaire deleting
+      if (editedQst == "Delete") {
+        log(index.toString());
+        questionsData.removeAt(index);
+      }
     });
   }
 
@@ -149,148 +174,172 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                   return Padding(
                     padding: const EdgeInsets.only(top: 6.0),
                     child: Card(
+                      // Different shade of color for first questionnaire since it can not be edited
+                      color: index < 1
+                          ? Theme.of(context).cardColor.withOpacity(0.65)
+                          : null,
                       child: ListTile(
-                          title: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 6),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Question: ",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .accentColor),
+                        title: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  // Free space
+                                  SizedBox(height: 6),
+
+                                  // Question text
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Question: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          questionsData[index].question ?? " ",
                                         ),
-                                        Flexible(
-                                          child: Text(
-                                            questionsData[index].question ??
-                                                " ",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  // Free space
+                                  SizedBox(height: 12),
+
+                                  // Free text boolean
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Free text: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor),
+                                      ),
+                                      Text(
+                                        questionsData[index]
+                                                .freeText
+                                                .toString() ??
+                                            "",
+                                      ),
+                                    ],
+                                  ),
+
+                                  // Free space
+                                  SizedBox(height: 12),
+
+                                  // Question type
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Question type: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor),
+                                      ),
+                                      Text(
+                                        questionsData[index]
+                                                .questionType
+                                                .toString()
+                                                .toString()
+                                                .replaceAll("QuestionType.", "")
+                                                .replaceAll("Selection",
+                                                    " selection") ??
+                                            "",
+                                      ),
+                                    ],
+                                  ),
+
+                                  // Free space
+                                  if (questionsData[index].questionType ==
+                                      "QuestionType.RangeSelection")
                                     SizedBox(height: 12),
+
+                                  // If range selection , show's max range
+                                  if (questionsData[index].questionType ==
+                                      "QuestionType.RangeSelection")
                                     Row(
                                       children: [
                                         Text(
-                                          "Free text: ",
+                                          "Max range: ",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
                                         ),
                                         Text(
                                           questionsData[index]
-                                                  .freeText
+                                                  .maxRange
                                                   .toString() ??
                                               "",
                                         ),
                                       ],
                                     ),
+
+                                  // Free space
+                                  if (questionsData[index].questionType ==
+                                          "QuestionType.MultiSelection" ||
+                                      questionsData[index].questionType ==
+                                          "QuestionType.SingleSelection")
                                     SizedBox(height: 12),
+
+                                  // If multi or single selection, show's options
+                                  if (questionsData[index].questionType ==
+                                          "QuestionType.MultiSelection" ||
+                                      questionsData[index].questionType ==
+                                          "QuestionType.SingleSelection")
                                     Row(
                                       children: [
                                         Text(
-                                          "Question type: ",
+                                          "Options: ",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
                                         ),
                                         Text(
                                           questionsData[index]
-                                                  .questionType
-                                                  .toString()
-                                                  .toString()
-                                                  .replaceAll(
-                                                      "QuestionType.", "")
-                                                  .replaceAll("Selection",
-                                                      " selection") ??
-                                              "",
+                                              .options
+                                              .toString()
+                                              .replaceAll("[", "")
+                                              .replaceAll("]", "")
+                                              .replaceAll('"', "")
+                                              .replaceAll(',', ",  "),
                                         ),
                                       ],
                                     ),
-
-                                    // Free space
-                                    if (questionsData[index].questionType ==
-                                        "QuestionType.RangeSelection")
-                                      SizedBox(height: 12),
-
-                                    // If range selection , show's max range
-                                    if (questionsData[index].questionType ==
-                                        "QuestionType.RangeSelection")
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Max range: ",
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .accentColor),
-                                          ),
-                                          Text(
-                                            questionsData[index]
-                                                    .maxRange
-                                                    .toString() ??
-                                                "",
-                                          ),
-                                        ],
-                                      ),
-
-                                    // Free space
-                                    if (questionsData[index].questionType ==
-                                            "QuestionType.MultiSelection" ||
-                                        questionsData[index].questionType ==
-                                            "QuestionType.SingleSelection")
-                                      SizedBox(height: 12),
-
-                                    // If multi or single selection, show's options
-                                    if (questionsData[index].questionType ==
-                                            "QuestionType.MultiSelection" ||
-                                        questionsData[index].questionType ==
-                                            "QuestionType.SingleSelection")
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Options: ",
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .accentColor),
-                                          ),
-                                          Text(
-                                            questionsData[index]
-                                                .options
-                                                .toString()
-                                                .replaceAll("[", "")
-                                                .replaceAll("]", "")
-                                                .replaceAll('"', "")
-                                                .replaceAll(',', ",  "),
-                                          ),
-                                        ],
-                                      ),
-                                    SizedBox(height: 6),
-                                  ],
-                                ),
+                                  SizedBox(height: 6),
+                                ],
                               ),
-                              Icon(Icons.navigate_next, size: 28)
-                            ],
-                          ),
-                          onTap: () async {
-                            final editedQst = await Navigator.of(context,
-                                    rootNavigator: true)
-                                .push(MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (context) => EditAddQuestionnaire(
-                                          pageTitle: "Edit questionnaire",
-                                          questionnaireData:
-                                              questionsData[index],
-                                        )));
-                            setState(() {
-                              if (editedQst != null) {
-                                _onEditedQuestionnaireBack(editedQst, index);
+                            ),
+                            // Icon for all but the first questionnaire
+                            index > 0
+                                ? Icon(Icons.navigate_next, size: 28)
+                                : Icon(null)
+                          ],
+                        ),
+
+                        // Ontap -> opens page to edit questionnaire
+                        // Handles questionnaire edititing/deleting when coming back from edit page
+                        onTap: index > 0
+                            ? () async {
+                                final editedQst = await Navigator.of(context,
+                                        rootNavigator: true)
+                                    .push(MaterialPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) =>
+                                            EditAddQuestionnaire(
+                                              pageTitle: "Edit questionnaire",
+                                              questionnaireData:
+                                                  questionsData[index],
+                                            )));
+                                setState(() {
+                                  if (editedQst != null) {
+                                    _onEditedQuestionnaireBack(
+                                        editedQst, index);
+                                  }
+                                });
                               }
-                            });
-                          }),
+                            : null,
+                      ),
                     ),
                   );
                 },
@@ -309,6 +358,7 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+  // Expanding card
   _expandItem(MsgDataStructure msgData) {
     setState(() {
       if (msgData.expanded == null) {
@@ -511,11 +561,15 @@ class _MessagesState extends State<Messages> {
                         ],
                       ),
                     ),
+
+                    // Icon
                     msgData[index].expanded ?? false
                         ? Icon(Icons.expand_less, size: 28)
                         : Icon(Icons.expand_more, size: 28),
                   ],
                 ),
+
+                // On tap expands card to show more data of message
                 onTap: () {
                   _expandItem(msgData[index]);
                 },

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
+import 'package:carePanda/widgets/SimplePopupTwoButtons.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataTextField.dart';
 import 'package:flutter/material.dart';
@@ -20,19 +21,27 @@ class EditAddQuestionnaire extends StatefulWidget {
 }
 
 class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
+  // List of question types
   final questionTypeList = [
     "Range selection",
     "Single selection",
     "Multi selection"
   ];
+
+  // Amount of options for multi selection questionnaire
   final _optionAmountList = ["2", "3", "4", "5"];
 
+  // Questionnaire variables
   var _questionText;
   var _freeTextBoxBool;
   var _questionType;
   var _optionAmount = "";
   var _listOfOptions;
 
+  // Bool to show or hide delete button
+  var _newQuestionnaire = true;
+
+  // New questionnaire list that is returned
   var newQuestionList;
 
   // Text field controller so that resetting textfield's is possible
@@ -44,6 +53,10 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   @override
   void initState() {
     // Question text
+    // If question text is free, it means user is adding new questionnaire. Doesn's show delete button for adding new questionnaire
+    if (widget.questionnaireData.question == null) {
+      _newQuestionnaire = false;
+    }
     _questionText = widget.questionnaireData.question ?? "";
 
     // Free text box boolean
@@ -137,30 +150,55 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
     // Edits data to how it will be saved (not sure if needed)
     // Uses the data structure to get into right form
     newQuestionList = new QuestionnaireAddDataStructure(
-      _freeTextBoxBool,
-      _questionText.toString(),
-      _questionType
-          .toString()
-          .replaceAll(" selection", "Selection")
-          .replaceRange(0, 0, "QuestionType."),
-      _listOfOptions
-          .toString()
-          .replaceAll("[", '["')
-          .replaceAll("]", '"]')
-          .replaceAll(", ", '","'),
-      10,
-    );
+        _freeTextBoxBool,
+        _questionText.toString(),
+        _questionType
+            .toString()
+            .replaceAll(" selection", "Selection")
+            .replaceRange(0, 0, "QuestionType."),
+        _listOfOptions
+            .toString()
+            .replaceAll("[", '["')
+            .replaceAll("]", '"]')
+            .replaceAll(", ", '","'),
+        10);
+
+    var arrayToParent = [];
+
+    // Array with variable submit so that parent knows wheter to delete or submit
+    arrayToParent.add(newQuestionList);
+    arrayToParent.add("Submit");
 
     // Navigates back to HR management and removes history so going back is not possible
     // If option or question text is empty, shows snackbar and doesn't submit
     if (_questionTextNotEmpty) {
       if (_optionNotEmpty) {
-        Navigator.pop(context, newQuestionList);
+        Navigator.pop(context, arrayToParent);
       } else {
         _createSnackBar("Option can not be empty", context);
       }
     } else {
       _createSnackBar("Question text can not be empty", context);
+    }
+  }
+
+  _deleteQuestionnaire() async {
+    // Sends String "Delete" to parent so it knows to delete the questionnaire
+    var variableForParent = "Delete";
+
+    // Opens dialog to make sure user wants to delete questionnaire
+    // Also prevents user from acidentally deleting questionnaire
+    final result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimplePopUp(
+            cancelBtnName: "Cancel",
+            confirmBtnName: "Confirm",
+            title: "Are you sure you want to delete a questionnaire?",
+          );
+        });
+    if (result ?? false) {
+      Navigator.pop(context, variableForParent);
     }
   }
 
@@ -286,6 +324,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                           _optionAmountOnChange(newValue);
                         }),
 
+                  // Free space
                   if (_questionType == "Multi selection") SizedBox(height: 4),
 
                   // Multi selection
@@ -323,6 +362,24 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                       ),
                     ),
                   ),
+
+                  // Delete button
+                  if (_newQuestionnaire)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: const Text('Delete',
+                              style: TextStyle(fontSize: 18)),
+                          color: Colors.red,
+                          textColor: Colors.white,
+                          onPressed: () {
+                            _deleteQuestionnaire();
+                          },
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
