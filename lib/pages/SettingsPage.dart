@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/widgets/UserDataPopup.dart';
 import 'package:carePanda/widgets/CardWidget.dart';
-import 'dart:developer';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -145,15 +144,6 @@ class AppSettings extends StatefulWidget {
 
 class _AppSettingsState extends State<AppSettings> {
   String _dropdownValue = 'English';
-  bool _darkTheme;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _darkTheme = locator<LocalStorageService>().darkTheme ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final _themeChanger = Provider.of<ThemeChanger>(context);
@@ -208,15 +198,13 @@ class _AppSettingsState extends State<AppSettings> {
                 style: TextStyle(fontSize: 20.0),
               ),
               Switch(
-                value: _darkTheme,
+                value: locator<LocalStorageService>().darkTheme ?? false,
                 onChanged: (value) {
-                  log(value.toString());
                   if (!value) {
                     _themeChanger.setTheme(ThemeType.Light);
                   } else {
                     _themeChanger.setTheme(ThemeType.Dark);
                   }
-                  _darkTheme = value;
                 },
                 activeTrackColor: Theme.of(context).toggleableActiveColor,
                 activeColor: Theme.of(context).accentColor,

@@ -16,7 +16,6 @@ class FirestoreService {
   // firestore collection path values
   static const String _survey_response_path = "survey_responses";
   static const String _survey_questions_path = "survey_questions";
-  static const String _respnonses_sub_collection_path = "responses";
 
   factory FirestoreService() {
     return _firestoreService;
@@ -24,11 +23,25 @@ class FirestoreService {
 
   FirestoreService._privateConstructor();
 
-  // get all answeres stored on Firestore
-  Stream<List<SurveyResponse>> getSurveyResponses() {
+  // get all responses or answeres submitted by all users
+  Stream<List<SurveyResponse>> getAllSurveyResponses() {
     return _db
-        .collection(_respnonses_sub_collection_path)
+        .collection(_survey_response_path)
         // .get() //future
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+            .map((doc) => SurveyResponse.fromMap(doc.data()))
+            .toList());
+  }
+
+  /* get all response values answered by current anonymous user
+    users data is stored under random ids and response don't contain identifying information
+    so user's anonymity and privacy is secured
+  */
+  Stream<List<SurveyResponse>> getCurrentUserSurveyResponses() {
+    return _db
+        .collection(_survey_response_path)
+        .where("userId", isEqualTo: _auth.currentUser.uid)
         .snapshots()
         .map((snapshots) => snapshots.docs
             .map((doc) => SurveyResponse.fromMap(doc.data()))
@@ -37,23 +50,14 @@ class FirestoreService {
 
   // save single response or answer to Firestore
   Future<void> saveSurveyResponse(SurveyResponse response) {
-    return _db
-        .collection(_survey_response_path)
-        .doc(_auth.currentUser.uid)
-        .collection(_respnonses_sub_collection_path)
-        .doc()
-        .set(response.toMap());
+    return _db.collection(_survey_response_path).doc().set(response.toMap());
   }
 
   // save a list or collection of answeres at once to Firestore
   Future<void> saveAllSurveyResponse(List<SurveyResponse> responses) {
     WriteBatch batch = _db.batch();
     for (final res in responses) {
-      DocumentReference _docRef = _db
-          .collection(_survey_response_path)
-          .doc(_auth.currentUser.uid)
-          .collection(_respnonses_sub_collection_path)
-          .doc();
+      DocumentReference _docRef = _db.collection(_survey_response_path).doc();
       batch.set(_docRef, res.toMap());
     }
 
@@ -61,7 +65,7 @@ class FirestoreService {
     return null;
   }
 
-  // get list of questions from firestore
+  // get list of questions from firestore, returns all questions from 'survey_questions' collections
   Stream<List<QuestionItem>> getSurveyQuestions() {
     /* the document id from each question is used as a question id when constructing 
       QuestionItem from map values
@@ -76,5 +80,17 @@ class FirestoreService {
                   ...{"id": doc.id}
                 }))
             .toList());
+  }
+
+  // get single question by id from survey_questions collection
+  Stream<QuestionItem> getQuestionById(String questionId) {
+    return _db
+        .collection(_survey_questions_path)
+        .doc(questionId)
+        .snapshots()
+        .map((snapshots) => QuestionItem.fromMap({
+              ...snapshots.data(),
+              ...{"id": snapshots.id}
+            }));
   }
 }

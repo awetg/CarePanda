@@ -3,10 +3,17 @@ import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 
 // TODO: fix outlined color of TextFormField changing to white on light theme
-// relevant widget/code can be found on question_page.dart
+// relevant widget/code can be found on question_page.dart line 74 TextFormField widget
 
 class ThemeChanger with ChangeNotifier {
-  final darkTheme = ThemeData(
+  // a singleton contructor
+  static final ThemeChanger _themeChanger = ThemeChanger._privateConstructor();
+  factory ThemeChanger() {
+    return _themeChanger;
+  }
+  ThemeChanger._privateConstructor();
+
+  final _darkTheme = ThemeData(
     brightness: Brightness.dark,
     dialogBackgroundColor: Color(0xff303030),
     accentColor: Color(0xff60cff4),
@@ -17,7 +24,7 @@ class ThemeChanger with ChangeNotifier {
         BottomNavigationBarThemeData(backgroundColor: Color(0xff212121)),
   );
 
-  final lightTheme = ThemeData(
+  final _lightTheme = ThemeData(
     brightness: Brightness.light,
     canvasColor: Color(0xffF8F8F6),
     primaryColor: Colors.white,
@@ -35,8 +42,8 @@ class ThemeChanger with ChangeNotifier {
   );
 
   getTheme() => locator<LocalStorageService>().darkTheme ?? false
-      ? darkTheme
-      : lightTheme;
+      ? _darkTheme
+      : _lightTheme;
 
   setTheme(ThemeType theme) {
     if (theme == ThemeType.Dark) {

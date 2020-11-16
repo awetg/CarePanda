@@ -36,30 +36,20 @@ Future<void> main() async {
       FirebaseAuth.instance.signInAnonymously();
     } catch (e) {}
   }
-  runApp(MyApp());
-  print("showBoarding = $showBoarding");
 
   if (_storageService.darkTheme == null) {
     _storageService.darkTheme = false;
   }
-  runApp(Testing());
-}
-
-class Testing extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeChanger>(
-      create: (_) => ThemeChanger(),
-      child: MyApp(),
-    );
-  }
+  runApp(ChangeNotifierProvider<ThemeChanger>(
+    create: (_) => ThemeChanger(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeChanger>(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -67,7 +57,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Care Panda',
-      theme: theme.getTheme(),
+      theme: Provider.of<ThemeChanger>(context).getTheme(),
       initialRoute: showBoarding ? "/boarding" : "/",
       routes: {
         "/": (context) => MyStatefulWidget(),
