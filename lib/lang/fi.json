@@ -58,6 +58,14 @@
     "hr_qstMaxRange":"Maksimi määrä: ",
     "hr_qstOptions":"Vaihtoehdot: ",
 
+    "hr_true":"Kyllä",
+    "hr_false":"Ei",
+    "hr_error":"Error: Jokin meni vikaan",
+
+    "hr_rangeSelection":"Liukusäädin",
+    "hr_singleSelection":"Yksi valintainen",
+    "hr_multiSelection":"Monivalinta",
+
     "hr_msgBuilding":"Rakennus: ",
     "hr_msgFloor":"Kerros: ",
     "hr_msgAge":"Ikä: ",
@@ -67,8 +75,21 @@
     "hr_addQstTitle":"Lisää uusi kysely",
     "hr_editQstTitle":"Muokkaa kyselyä",
 
+    "hr_editQuestion":"Kysymys",
+    "hr_editQuestonHint":"Kysymys",
+    "hr_editFreeTextBox":"Vapaa tekstikenttä",
+    "hr_editQuestionType":"Kysymyksen tyyppi",
+    "hr_editOptionsAmount":"Vaihtoehtojen määrä",
+    "hr_editOption":"Vaihtoehto",
+
+    "hr_editSnackbarOptionEmpty":"Valinta ei voi olla tyhjä",
+    "hr_editSnackbarQuestEmpty":"Kysymys ei voi olla tyhjä",
+
+    "hr_deletePopupTitle":"Oletko varma, että haluat poistaa kyselyn?",
 
     "skipBtn":"Ohita",
     "submitBtn":"Lähetä",
-    "cancelBtn":"Peruuta"
+    "cancelBtn":"Peruuta",
+    "deleteBtn":"Poista",
+    "confirmBtn":"Vahvista"
 }

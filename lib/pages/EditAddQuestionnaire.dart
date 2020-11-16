@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/widgets/SimplePopupTwoButtons.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataTextField.dart';
@@ -22,11 +21,7 @@ class EditAddQuestionnaire extends StatefulWidget {
 
 class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   // List of question types
-  final questionTypeList = [
-    "Range selection",
-    "Single selection",
-    "Multi selection"
-  ];
+  var _questionTypeList;
 
   // Amount of options for multi selection questionnaire
   final _optionAmountList = ["2", "3", "4", "5"];
@@ -35,7 +30,8 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   var _questionText;
   var _freeTextBoxBool;
   var _questionType;
-  var _optionAmount = "";
+  var _questionTypeIndex;
+  var _optionAmount;
   var _listOfOptions;
 
   // Bool to show or hide delete button
@@ -51,6 +47,16 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   var newListOfOptions = [];
 
   @override
+  void didChangeDependencies() {
+    _questionTypeList = [
+      getTranslated(context, "hr_rangeSelection"),
+      getTranslated(context, "hr_singleSelection"),
+      getTranslated(context, "hr_multiSelection"),
+    ];
+    super.didChangeDependencies();
+  }
+
+  @override
   void initState() {
     // Question text
     // If question text is free, it means user is adding new questionnaire. Doesn's show delete button for adding new questionnaire
@@ -64,12 +70,11 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
 
     // Question type, repalcing characters to make it prettier for user
     if (widget.questionnaireData.questionType == null) {
-      _questionType = "Range selection";
+      _questionType = "QuestionType.RangeSelection";
+      _questionTypeToIndex(_questionType);
     } else {
-      _questionType = widget.questionnaireData.questionType
-          .toString()
-          .replaceAll("QuestionType.", "")
-          .replaceAll("Selection", " selection");
+      _questionType = widget.questionnaireData.questionType;
+      _questionTypeToIndex(_questionType);
     }
     // Get's option amount for multi/single -selection questionnaire
     _optionAmount = widget.questionnaireData.options;
@@ -90,11 +95,43 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
     super.initState();
   }
 
+  // Gets index of question type to use the translated value in the dropdown menu
+  _questionTypeToIndex(qstType) {
+    switch (qstType) {
+      case "QuestionType.RangeSelection":
+        _questionTypeIndex = 0;
+        break;
+      case "QuestionType.SingleSelection":
+        _questionTypeIndex = 1;
+        break;
+      case "QuestionType.MultiSelection":
+        _questionTypeIndex = 2;
+        break;
+      default:
+        _questionTypeIndex = 0;
+        break;
+    }
+  }
+
+  // Changes question type's index back to value so it can be stored in firestore properly
+  _questionTypeIndexToString(qstTypeIndex) {
+    switch (qstTypeIndex) {
+      case 0:
+        return "QuestionType.RangeSelection";
+      case 1:
+        return "QuestionType.SingleSelection";
+      case 2:
+        return "QuestionType.MultiSelection";
+      default:
+        return "QuestionType.RangeSelection";
+    }
+  }
+
   // Changes the questionnaire type
   _questionTypeOnChange(newValue) {
     setState(() {
       _optionAmount = "2";
-      _questionType = newValue;
+      _questionTypeIndex = _questionTypeList.indexOf(newValue);
       _listOfOptions = [];
     });
   }
@@ -132,8 +169,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
 
     var _lengthDifference = int.parse(_optionAmount) - _listOfOptions.length;
 
-    if (_questionType == "Multi selection" ||
-        _questionType == "Single selection") {
+    if (_questionTypeIndex == 1 || _questionTypeIndex == 2) {
       if (_lengthDifference == 0) {
         // If length difference is 0, we can go through the option list and check if there is empty spot
         for (var i = 0; i < int.parse(_optionAmount); i++) {
@@ -152,10 +188,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
     newQuestionList = new QuestionnaireAddDataStructure(
         _freeTextBoxBool,
         _questionText.toString(),
-        _questionType
-            .toString()
-            .replaceAll(" selection", "Selection")
-            .replaceRange(0, 0, "QuestionType."),
+        _questionTypeIndexToString(_questionTypeIndex),
         _listOfOptions
             .toString()
             .replaceAll("[", '["')
@@ -175,10 +208,12 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
       if (_optionNotEmpty) {
         Navigator.pop(context, arrayToParent);
       } else {
-        _createSnackBar("Option can not be empty", context);
+        _createSnackBar(
+            getTranslated(context, "hr_editSnackbarOptionEmpty"), context);
       }
     } else {
-      _createSnackBar("Question text can not be empty", context);
+      _createSnackBar(
+          getTranslated(context, "hr_editSnackbarQuestEmpty"), context);
     }
   }
 
@@ -192,9 +227,9 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
         context: context,
         builder: (BuildContext context) {
           return SimplePopUp(
-            cancelBtnName: "Cancel",
-            confirmBtnName: "Confirm",
-            title: "Are you sure you want to delete a questionnaire?",
+            cancelBtnName: getTranslated(context, "cancelBtn"),
+            confirmBtnName: getTranslated(context, "confirmBtn"),
+            title: getTranslated(context, "hr_deletePopupTitle"),
           );
         });
     if (result ?? false) {
@@ -236,8 +271,8 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                     children: [
                       // Question text
                       Expanded(
-                          child:
-                              Text("Question", style: TextStyle(fontSize: 20))),
+                          child: Text(getTranslated(context, "hr_editQuestion"),
+                              style: TextStyle(fontSize: 20))),
                       // Question text textfield, uses theme so that onclick border has color
                       Theme(
                         data: Theme.of(context)
@@ -265,7 +300,8 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                                         .color,
                                   ),
                                 ),
-                                hintText: "Question text"),
+                                hintText: getTranslated(
+                                    context, "hr_editQuestonHint")),
                             onChanged: (value) {
                               setState(() {
                                 _questionText = value;
@@ -285,7 +321,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                   ListTileTheme(
                     contentPadding: EdgeInsets.all(0),
                     child: CheckboxListTile(
-                      title: Text("Free text box answer",
+                      title: Text(getTranslated(context, "hr_editFreeTextBox"),
                           style: TextStyle(fontSize: 20)),
                       value: _freeTextBoxBool,
                       activeColor: Theme.of(context).accentColor,
@@ -302,9 +338,10 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
 
                   // Question type
                   UserDataDropDownButton(
-                      settingName: "Question type",
-                      data: questionTypeList,
-                      value: _questionType,
+                      settingName:
+                          getTranslated(context, "hr_editQuestionType"),
+                      data: _questionTypeList,
+                      value: _questionTypeList[_questionTypeIndex],
                       settingNameFontSize: 18.00,
                       onChange: (newValue) {
                         _questionTypeOnChange(newValue);
@@ -314,9 +351,10 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                   SizedBox(height: 22),
 
                   // Options for ranged/single -selection
-                  if (_questionType == "Multi selection")
+                  if (_questionTypeIndex == 1 || _questionTypeIndex == 2)
                     UserDataDropDownButton(
-                        settingName: "Options amount",
+                        settingName:
+                            getTranslated(context, "hr_editOptionsAmount"),
                         data: _optionAmountList,
                         value: _optionAmount.toString(),
                         settingNameFontSize: 18.00,
@@ -325,10 +363,10 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                         }),
 
                   // Free space
-                  if (_questionType == "Multi selection") SizedBox(height: 4),
+                  if (_questionTypeIndex == 2) SizedBox(height: 4),
 
                   // Multi selection
-                  if (_questionType == "Multi selection")
+                  if (_questionTypeIndex == 2)
                     TextFieldGenerator(
                         amount: int.parse(_optionAmount),
                         listOfOptions: _listOfOptions,
@@ -338,7 +376,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                         }),
 
                   // Single selection
-                  if (_questionType == "Single selection")
+                  if (_questionTypeIndex == 1)
                     TextFieldGenerator(
                         amount: int.parse(_optionAmount),
                         listOfOptions: _listOfOptions,
@@ -353,7 +391,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                     child: SizedBox(
                       width: double.infinity,
                       child: RaisedButton(
-                        child: const Text('Submit',
+                        child: Text(getTranslated(context, "submitBtn"),
                             style: TextStyle(fontSize: 18)),
                         textColor: Colors.white,
                         onPressed: () {
@@ -370,7 +408,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                       child: SizedBox(
                         width: double.infinity,
                         child: RaisedButton(
-                          child: const Text('Delete',
+                          child: Text(getTranslated(context, "deleteBtn"),
                               style: TextStyle(fontSize: 18)),
                           color: Colors.red,
                           textColor: Colors.white,
@@ -423,7 +461,8 @@ class _TextFieldGeneratorState extends State<TextFieldGenerator> {
           child: Row(children: [
             // Setting name
             Expanded(
-              child: Text('Option ${(i + 1).toString()}',
+              child: Text(
+                  '${getTranslated(context, "hr_editOption")} ${(i + 1).toString()}',
                   style: TextStyle(fontSize: 18)),
             ),
 
@@ -437,7 +476,8 @@ class _TextFieldGeneratorState extends State<TextFieldGenerator> {
                         text: widget.listOfOptions.isNotEmpty
                             ? widget.listOfOptions[i]
                             : ""),
-                    label: "Option " + (i + 1).toString(),
+                    label: "${getTranslated(context, "hr_editOption")} " +
+                        (i + 1).toString(),
                     onChange: (value) {
                       // OnChange function uses widget's callback function to give data for parent where it is handled
                       widget.returnListFunction(value, i);

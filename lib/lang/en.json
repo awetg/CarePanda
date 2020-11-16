@@ -58,6 +58,14 @@
     "hr_qstMaxRange":"Max range: ",
     "hr_qstOptions":"Options: ",
 
+    "hr_true":"Yes",
+    "hr_false":"No",
+    "hr_error":"Error: Something went wrong",
+
+    "hr_rangeSelection":"Slider selection",
+    "hr_singleSelection":"Single selection",
+    "hr_multiSelection":"Multi selection",
+
     "hr_msgBuilding":"Building: ",
     "hr_msgFloor":"Floor: ",
     "hr_msgAge":"Age: ",
@@ -67,8 +75,22 @@
     "hr_addQstTitle":"Add a new questionnaire",
     "hr_editQstTitle":"Edit questionnaire",
 
+    "hr_editQuestion":"Question",
+    "hr_editQuestonHint":"Question text",
+    "hr_editFreeTextBox":"Free text box answer",
+    "hr_editQuestionType":"Question type",
+    "hr_editOptionsAmount":"Options amount",
+    "hr_editOption":"Option",
+
+    "hr_editSnackbarOptionEmpty":"Option can not be empty",
+    "hr_editSnackbarQuestEmpty":"Question text can not be empty",
+
+    "hr_deletePopupTitle":"Are you sure you want to delete a questionnaire?",
+
 
     "skipBtn":"Skip",
     "submitBtn":"Submit",
-    "cancelBtn":"Cancel"
+    "cancelBtn":"Cancel",
+    "deleteBtn":"Delete",
+    "confirmBtn":"Confirm"
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
 import 'package:carePanda/localization/localization.dart';
@@ -149,6 +151,31 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
     });
   }
 
+  // TRANSLATION FUNCTIONS
+  _trueOrFalseTranslation(value) {
+    switch (value) {
+      case true:
+        return getTranslated(context, "hr_true");
+      case false:
+        return getTranslated(context, "hr_false");
+      default:
+        return getTranslated(context, "hr_error");
+    }
+  }
+
+  _questionTypeTranslation(value) {
+    switch (value) {
+      case "QuestionType.RangeSelection":
+        return getTranslated(context, "hr_rangeSelection");
+      case "QuestionType.SingleSelection":
+        return getTranslated(context, "hr_singleSelection");
+      case "QuestionType.MultiSelection":
+        return getTranslated(context, "hr_multiSelection");
+      default:
+        return getTranslated(context, "hr_error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -217,12 +244,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                             color:
                                                 Theme.of(context).accentColor),
                                       ),
-                                      Text(
-                                        questionsData[index]
-                                                .freeText
-                                                .toString() ??
-                                            "",
-                                      ),
+                                      Text(_trueOrFalseTranslation(
+                                          questionsData[index].freeText)),
                                     ],
                                   ),
 
@@ -238,16 +261,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                                             color:
                                                 Theme.of(context).accentColor),
                                       ),
-                                      Text(
-                                        questionsData[index]
-                                                .questionType
-                                                .toString()
-                                                .toString()
-                                                .replaceAll("QuestionType.", "")
-                                                .replaceAll("Selection",
-                                                    " selection") ??
-                                            "",
-                                      ),
+                                      Text(_questionTypeTranslation(
+                                          questionsData[index].questionType)),
                                     ],
                                   ),
 
@@ -599,7 +614,7 @@ List<QuestionnaireAddDataStructure> qstData = [
       true, "How's your day?", "QuestionType.RangeSelection", null, 10),
   new QuestionnaireAddDataStructure(true, "How's your workload?",
       "QuestionType.SingleSelection", '["Yes","No"]', null),
-  new QuestionnaireAddDataStructure(true, "How you feeling?",
+  new QuestionnaireAddDataStructure(false, "How you feeling?",
       "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
   new QuestionnaireAddDataStructure(true, "How you tomorrow?",
       "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
