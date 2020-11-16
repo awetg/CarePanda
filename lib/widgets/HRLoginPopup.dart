@@ -1,4 +1,4 @@
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';

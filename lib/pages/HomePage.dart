@@ -1,13 +1,13 @@
-import 'package:carePanda/CardWidget.dart';
-import 'package:carePanda/OtherServicesPopup.dart';
+import 'package:carePanda/widgets/CardWidget.dart';
+import 'package:carePanda/widgets/OtherServicesPopup.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/Countdown.dart';
+import 'package:carePanda/widgets/Countdown.dart';
 import 'dart:developer';
-import 'package:carePanda/MsgForHRPopup.dart';
-import 'package:carePanda/ServiceLocator.dart';
-import 'package:carePanda/UserDataPopup.dart';
+import 'package:carePanda/widgets/MsgForHRPopup.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/widgets/UserDataPopup.dart';
 
 var _storageService = locator<LocalStorageService>();
 
@@ -114,7 +114,7 @@ class _AllCards extends State<AllCards> {
       _storageService.hasQuestionnaire = false;
       _hasQuestionnaire = false;
     }
-    return _hasQuestionnaire;
+    return true;
   }
 
   @override

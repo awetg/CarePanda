@@ -4,7 +4,7 @@ import 'package:carePanda/widgets/UserDataPickerPopup.dart';
 import 'package:carePanda/widgets/UserDataTextField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 
 class UserDataPopup extends StatefulWidget {
   @override

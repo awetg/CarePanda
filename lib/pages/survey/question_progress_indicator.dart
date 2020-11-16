@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// A dot widget for userboarding slides
+// A progress indicator for survey/questionnaire flow
 class QuestionProgressIndicator extends StatelessWidget {
   final int positionIndex, currentIndex;
   const QuestionProgressIndicator({this.currentIndex, this.positionIndex});

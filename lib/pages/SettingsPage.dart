@@ -1,16 +1,12 @@
-import 'package:carePanda/HRLoginPopup.dart';
-import 'package:carePanda/ServiceLocator.dart';
-import 'package:carePanda/Theme.dart';
+import 'package:carePanda/widgets/HRLoginPopup.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/services/Theme.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/UserDataPopup.dart';
-import 'package:carePanda/CardWidget.dart';
-import 'dart:developer';
-
+import 'package:carePanda/widgets/UserDataPopup.dart';
+import 'package:carePanda/widgets/CardWidget.dart';
 import 'package:provider/provider.dart';
-
-var _storageService = locator<LocalStorageService>();
 
 class SettingsPage extends StatefulWidget {
   //SettingsPage({Key key}) : super(key: key);
@@ -148,15 +144,6 @@ class AppSettings extends StatefulWidget {
 
 class _AppSettingsState extends State<AppSettings> {
   String _dropdownValue = 'English';
-  bool _darkTheme;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _darkTheme = _storageService.darkTheme ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final _themeChanger = Provider.of<ThemeChanger>(context);
@@ -211,15 +198,13 @@ class _AppSettingsState extends State<AppSettings> {
                 style: TextStyle(fontSize: 20.0),
               ),
               Switch(
-                value: _darkTheme,
+                value: locator<LocalStorageService>().darkTheme ?? false,
                 onChanged: (value) {
-                  log(value.toString());
                   if (!value) {
-                    _themeChanger.setTheme("Light");
+                    _themeChanger.setTheme(ThemeType.Light);
                   } else {
-                    _themeChanger.setTheme("Dark");
+                    _themeChanger.setTheme(ThemeType.Dark);
                   }
-                  _darkTheme = value;
                 },
                 activeTrackColor: Theme.of(context).toggleableActiveColor,
                 activeColor: Theme.of(context).accentColor,
@@ -240,6 +225,7 @@ class NotificationSettings extends StatefulWidget {
 class _NotificationSettingsState extends State<NotificationSettings> {
   final FirebaseMessaging _fcm = FirebaseMessaging();
   bool _isSwitched;
+  var _storageService = locator<LocalStorageService>();
 
   @override
   void initState() {
@@ -334,7 +320,7 @@ class _UserSettingsState extends State<UserSettings> {
                 ),
                 onPressed: () {
                   showDialog(
-                      barrierColor: _storageService.darkTheme
+                      barrierColor: locator<LocalStorageService>().darkTheme
                           ? Colors.black.withOpacity(0.4)
                           : null,
                       barrierDismissible: false,

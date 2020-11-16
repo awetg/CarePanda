@@ -1,15 +1,19 @@
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 
+// TODO: fix outlined color of TextFormField changing to white on light theme
+// relevant widget/code can be found on question_page.dart line 74 TextFormField widget
+
 class ThemeChanger with ChangeNotifier {
-  var _storageService = locator<LocalStorageService>();
+  // a singleton contructor
+  static final ThemeChanger _themeChanger = ThemeChanger._privateConstructor();
+  factory ThemeChanger() {
+    return _themeChanger;
+  }
+  ThemeChanger._privateConstructor();
 
-  ThemeData _themeData;
-
-  ThemeChanger(this._themeData);
-
-  final darkTheme = ThemeData(
+  final _darkTheme = ThemeData(
     brightness: Brightness.dark,
     dialogBackgroundColor: Color(0xff303030),
     accentColor: Color(0xff60cff4),
@@ -20,7 +24,7 @@ class ThemeChanger with ChangeNotifier {
         BottomNavigationBarThemeData(backgroundColor: Color(0xff212121)),
   );
 
-  final lightTheme = ThemeData(
+  final _lightTheme = ThemeData(
     brightness: Brightness.light,
     canvasColor: Color(0xffF8F8F6),
     primaryColor: Colors.white,
@@ -28,7 +32,7 @@ class ThemeChanger with ChangeNotifier {
     primaryColorLight: Colors.white,
     accentColor: Color(0xff027DC5),
     accentIconTheme: IconThemeData(color: Color.fromRGBO(2, 125, 197, 90)),
-    toggleableActiveColor: Color(0xffA0C3E2),
+    // toggleableActiveColor: Color(0xffA0C3E2),
     dialogBackgroundColor: Color(0xffF8F8F6),
     buttonColor: Color(0xff027DC5),
     disabledColor: Color(0xffA0C3E2),
@@ -37,16 +41,20 @@ class ThemeChanger with ChangeNotifier {
         BottomNavigationBarThemeData(backgroundColor: Colors.white),
   );
 
-  getTheme() => _themeData = _storageService.darkTheme ? darkTheme : lightTheme;
+  getTheme() => locator<LocalStorageService>().darkTheme ?? false
+      ? _darkTheme
+      : _lightTheme;
 
-  setTheme(String theme) {
-    if (theme == "Dark") {
-      _storageService.darkTheme = true;
-      _themeData = darkTheme;
+  setTheme(ThemeType theme) {
+    if (theme == ThemeType.Dark) {
+      locator<LocalStorageService>().darkTheme = true;
     } else {
-      _storageService.darkTheme = false;
-      _themeData = lightTheme;
+      locator<LocalStorageService>().darkTheme = false;
     }
     notifyListeners();
   }
 }
+
+// using enumeration type for dark and light theme names
+// becausing using non constant string will lead to errors
+enum ThemeType { Dark, Light }

@@ -1,48 +1,55 @@
-import 'dart:developer';
-
 import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
 import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:provider/provider.dart';
-
-import 'Theme.dart';
+import 'services/Theme.dart';
 
 bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // initiliaze core firebase
+  await Firebase.initializeApp();
   await setupLocator();
   var _storageService = locator<LocalStorageService>();
   showBoarding = _storageService.showBoarding ?? true;
-  print("showBoarding = $showBoarding");
+  User user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    if (user.isAnonymous) {
+      // show no anynoumous users menu items
+    }
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+    } catch (e) {
+      print(e);
+    }
+  } else {
+    try {
+      FirebaseAuth.instance.signInAnonymously();
+    } catch (e) {}
+  }
 
   if (_storageService.darkTheme == null) {
     _storageService.darkTheme = false;
   }
-  runApp(Testing());
-}
-
-class Testing extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeChanger>(
-      create: (_) => ThemeChanger(ThemeData.light()),
-      child: MyApp(),
-    );
-  }
+  runApp(ChangeNotifierProvider<ThemeChanger>(
+    create: (_) => ThemeChanger(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeChanger>(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -50,7 +57,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Care Panda',
-      theme: theme.getTheme(),
+      theme: Provider.of<ThemeChanger>(context).getTheme(),
       initialRoute: showBoarding ? "/boarding" : "/",
       routes: {
         "/": (context) => MyStatefulWidget(),

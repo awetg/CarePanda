@@ -1,7 +1,7 @@
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:developer';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 
 class PushNotificationHandler {
   final FirebaseMessaging _fcm = FirebaseMessaging();

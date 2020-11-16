@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
 
 class LocalStorageService {
   static LocalStorageService _instance;

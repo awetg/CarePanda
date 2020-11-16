@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:carePanda/ServiceLocator.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 
 class WeekCountdown extends StatefulWidget {
   final VoidCallback questionnaireStatusChanged;
