@@ -6,10 +6,13 @@ import 'package:carePanda/services/PushNotifHandler.dart';
 
 GetIt locator = GetIt.instance;
 
-Future setupLocator() async {
+Future startStorageService() async {
   // Shared preference
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
+}
+
+Future setupLocator() async {
   locator.registerSingleton<FirestoreService>(FirestoreService());
   locator.registerSingleton<SurveyResponseService>(SurveyResponseService());
 

@@ -1,14 +1,14 @@
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'LocalStorageService.dart';
+import 'ServiceLocator.dart';
 
 class SurveyResponseService {
   static final SurveyResponseService _surveyResponseService =
       SurveyResponseService._privateConstructor();
 
   final Map<String, SurveyResponse> _responses = {};
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   factory SurveyResponseService() {
     return _surveyResponseService;
@@ -28,7 +28,7 @@ class SurveyResponseService {
           value: "",
           freeText: "",
           time: Timestamp.now(),
-          userId: _auth.currentUser.uid);
+          userId: locator<LocalStorageService>().anonymousUserId);
     }
   }
 

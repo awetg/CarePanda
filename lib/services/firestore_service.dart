@@ -1,7 +1,8 @@
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'LocalStorageService.dart';
+import 'ServiceLocator.dart';
 
 /*
 Singleton Service for interacting with Cloud Firestore
@@ -11,7 +12,6 @@ class FirestoreService {
       FirestoreService._privateConstructor();
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // firestore collection path values
   static const String _survey_response_path = "survey_responses";
@@ -41,7 +41,8 @@ class FirestoreService {
   Stream<List<SurveyResponse>> getCurrentUserSurveyResponses() {
     return _db
         .collection(_survey_response_path)
-        .where("userId", isEqualTo: _auth.currentUser.uid)
+        .where("userId",
+            isEqualTo: locator<LocalStorageService>().anonymousUserId)
         .snapshots()
         .map((snapshots) => snapshots.docs
             .map((doc) => SurveyResponse.fromMap(doc.data()))

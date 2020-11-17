@@ -4,7 +4,6 @@ import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
@@ -15,34 +14,29 @@ import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'services/Theme.dart';
+import 'package:uuid/uuid.dart';
 
 bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // initiliaze core firebase
   await Firebase.initializeApp();
-  await setupLocator();
+  // start local storage service
+  await startStorageService();
   var _storageService = locator<LocalStorageService>();
   showBoarding = _storageService.showBoarding ?? true;
-  User user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    if (user.isAnonymous) {
-      // show no anynoumous users menu items
-    }
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-    } catch (e) {
-      print(e);
-    }
-  } else {
-    try {
-      FirebaseAuth.instance.signInAnonymously();
-    } catch (e) {}
+  final String userId = _storageService.anonymousUserId ?? null;
+  // set if userId not set
+  if (userId == null) {
+    _storageService.anonymousUserId = Uuid().v4();
   }
 
   if (_storageService.darkTheme == null) {
     _storageService.darkTheme = false;
   }
+  // start all other services
+  await setupLocator();
+
   runApp(ChangeNotifierProvider<ThemeChanger>(
     create: (_) => ThemeChanger(),
     child: MyApp(),
