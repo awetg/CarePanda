@@ -7,7 +7,7 @@ class UserDataDropDownButton extends StatelessWidget {
   final value;
   final data;
   final onChange;
-  final settingNameFont;
+  final settingNameFontSize;
   final _storageService = locator<LocalStorageService>();
 
   UserDataDropDownButton(
@@ -15,7 +15,7 @@ class UserDataDropDownButton extends StatelessWidget {
       @required this.value,
       @required this.data,
       @required this.onChange,
-      this.settingNameFont});
+      this.settingNameFontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class UserDataDropDownButton extends StatelessWidget {
       child: Row(children: [
         Expanded(
           child: Text(settingName,
-              style: TextStyle(fontSize: settingNameFont ?? 14)),
+              style: TextStyle(fontSize: settingNameFontSize ?? 14)),
         ),
         Container(
           padding: EdgeInsets.only(left: 6),
@@ -47,7 +47,7 @@ class UserDataDropDownButton extends StatelessWidget {
             underline: SizedBox(),
             items: [
               for (final values in data)
-                DropdownMenuItem<String>(
+                DropdownMenuItem(
                   key: ValueKey(values),
                   value: values,
                   child: Text(values),

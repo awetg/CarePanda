@@ -1,3 +1,5 @@
+import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/main.dart';
 import 'package:carePanda/widgets/HRLoginPopup.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/Theme.dart';
@@ -36,7 +38,7 @@ class _SettingsPage extends State<SettingsPage> {
       },
     );
     if (_isLoggedIn) {
-      _createSnackBar("Successfully logged in");
+      _createSnackBar(getTranslated(context, "settings_successfulLogin"));
       widget.refreshNavBar();
     }
   }
@@ -49,7 +51,7 @@ class _SettingsPage extends State<SettingsPage> {
         _isLoggedIn = _storageService.isLoggedIn;
       },
     );
-    _createSnackBar("Successfully logged out");
+    _createSnackBar(getTranslated(context, "settings_successfulLogout"));
     widget.refreshNavBar();
   }
 
@@ -68,7 +70,7 @@ class _SettingsPage extends State<SettingsPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          'Settings',
+          getTranslated(context, "settings_title"),
           style: TextStyle(color: Theme.of(context).accentColor),
         ),
       ),
@@ -95,7 +97,8 @@ class _SettingsPage extends State<SettingsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 14.0),
                 child: OutlineButton(
-                  child: const Text('HR', style: TextStyle(fontSize: 18)),
+                  child: Text(getTranslated(context, "settings_loginBtn"),
+                      style: TextStyle(fontSize: 18)),
                   textColor: Theme.of(context).accentColor,
                   borderSide: BorderSide(
                     color: Theme.of(context).accentColor,
@@ -120,7 +123,8 @@ class _SettingsPage extends State<SettingsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 14.0),
                 child: OutlineButton(
-                  child: const Text('Logout', style: TextStyle(fontSize: 18)),
+                  child: Text(getTranslated(context, "settings_logoutBtn"),
+                      style: TextStyle(fontSize: 18)),
                   textColor: Theme.of(context).accentColor,
                   borderSide: BorderSide(
                     color: Theme.of(context).accentColor,
@@ -143,7 +147,53 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
-  String _dropdownValue = 'English';
+  var _dropdownValueLanguage;
+  List<Language> languagesList;
+  var _storageService = locator<LocalStorageService>();
+
+  @override
+  didChangeDependencies() {
+    languagesList = <Language>[
+      new Language(1, getTranslated(context, "settings_languageEn"), "en"),
+      new Language(2, getTranslated(context, "settings_languageFi"), "fi")
+    ];
+    _getCurrentLanguage();
+    super.didChangeDependencies();
+  }
+
+  _getCurrentLanguage() {
+    var _languageCode = _storageService.language ?? "en";
+    switch (_languageCode) {
+      case "en":
+        _dropdownValueLanguage = languagesList[0];
+        break;
+      case "fi":
+        _dropdownValueLanguage = languagesList[1];
+        break;
+      default:
+        _dropdownValueLanguage = languagesList[0];
+    }
+  }
+
+  _changeLanguage(newLanguage) {
+    Locale _newLocale;
+    switch (newLanguage.countryCode) {
+      case "en":
+        _newLocale = Locale('en', '');
+        break;
+      case "fi":
+        _newLocale = Locale('fi', '');
+        break;
+      default:
+        _newLocale = Locale('en', '');
+        break;
+    }
+    setState(() {
+      _dropdownValueLanguage = newLanguage;
+    });
+    MyApp.setLocale(context, _newLocale);
+  }
+
   @override
   Widget build(BuildContext context) {
     final _themeChanger = Provider.of<ThemeChanger>(context);
@@ -152,7 +202,7 @@ class _AppSettingsState extends State<AppSettings> {
       child: Column(
         children: [
           Text(
-            'App Settings',
+            getTranslated(context, 'settings_appSettings'),
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -163,25 +213,22 @@ class _AppSettingsState extends State<AppSettings> {
           // Language
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              'Language',
+              getTranslated(context, "settings_language"),
               style: TextStyle(fontSize: 20.0),
             ),
-            DropdownButton<String>(
-              value: _dropdownValue,
+            DropdownButton<Language>(
+              value: _dropdownValueLanguage,
               underline: Container(
                 height: 1.5,
               ),
-              onChanged: (String newValue) {
-                setState(() {
-                  _dropdownValue = newValue;
-                });
+              onChanged: (Language newValue) {
+                _changeLanguage(newValue);
               },
-              items: <String>['English', 'Swedish', 'Finnish']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
+              items: languagesList.map((Language language) {
+                return new DropdownMenuItem<Language>(
+                  value: language,
                   child: Text(
-                    value,
+                    language.name,
                     style: TextStyle(fontSize: 18.0),
                   ),
                 );
@@ -194,7 +241,7 @@ class _AppSettingsState extends State<AppSettings> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Dark theme',
+                getTranslated(context, "settings_darkTheme"),
                 style: TextStyle(fontSize: 20.0),
               ),
               Switch(
@@ -255,7 +302,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       child: Column(
         children: [
           Text(
-            'Notification Settings',
+            getTranslated(context, "settings_notifSettings"),
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -266,7 +313,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Notifications',
+                getTranslated(context, "settings_notif"),
                 style: TextStyle(fontSize: 20.0),
               ),
               Switch(
@@ -298,7 +345,7 @@ class _UserSettingsState extends State<UserSettings> {
       child: Column(
         children: [
           Text(
-            'User Settings',
+            getTranslated(context, "settings_userSettings"),
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -309,25 +356,21 @@ class _UserSettingsState extends State<UserSettings> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Personal data',
+                getTranslated(context, "settings_personalData"),
                 style: TextStyle(fontSize: 20.0),
               ),
               OutlineButton(
-                child: const Text('Modify', style: TextStyle(fontSize: 18)),
+                child: Text(getTranslated(context, "settings_modifyBtn"),
+                    style: TextStyle(fontSize: 18)),
                 textColor: Theme.of(context).accentColor,
                 borderSide: BorderSide(
                   color: Theme.of(context).accentColor,
                 ),
                 onPressed: () {
-                  showDialog(
-                      barrierColor: locator<LocalStorageService>().darkTheme
-                          ? Colors.black.withOpacity(0.4)
-                          : null,
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return UserDataPopup();
-                      });
+                  Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => UserDataPopup()));
                 },
               ),
             ],
@@ -336,4 +379,12 @@ class _UserSettingsState extends State<UserSettings> {
       ),
     );
   }
+}
+
+class Language {
+  final int id;
+  final String name;
+  final String countryCode;
+
+  Language(this.id, this.name, this.countryCode);
 }

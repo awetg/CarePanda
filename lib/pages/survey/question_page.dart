@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/discrete_range_slider.dart';
@@ -81,7 +82,8 @@ class QuestionPage extends StatelessWidget {
                         maxLines: 3,
                         decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            hintText: "Optional free text"))
+                            hintText:
+                                getTranslated(context, "qst_freeTextHint")))
                     : Container()
               ],
             ),

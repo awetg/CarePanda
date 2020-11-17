@@ -1,7 +1,7 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 
 class HRLoginPopup extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
     return AlertDialog(
       contentPadding: EdgeInsets.only(top: 26, left: 10, right: 10, bottom: 14),
       title: Center(
-          child: Text("HR Login",
+          child: Text(getTranslated(context, "hrLogin_title"),
               style: TextStyle(color: Theme.of(context).accentColor))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,7 +38,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                   _username = username;
                 },
                 decoration: InputDecoration(
-                  labelText: "Username",
+                  labelText: getTranslated(context, "hrLogin_usernameTxtfield"),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -69,7 +69,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                 },
                 obscureText: true,
                 decoration: new InputDecoration(
-                  labelText: "Password",
+                  labelText: getTranslated(context, "hrLogin_passwordTxtfield"),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -91,7 +91,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
       // Buttons
       actions: [
         FlatButton(
-          child: Text("Cancel",
+          child: Text(getTranslated(context, "cancelBtn"),
               style: TextStyle(
                   fontSize: 18, color: Theme.of(context).accentColor)),
           onPressed: () {
@@ -99,7 +99,8 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
           },
         ),
         RaisedButton(
-          child: const Text('Login', style: TextStyle(fontSize: 18)),
+          child: Text(getTranslated(context, "hrLogin_loginBtn"),
+              style: TextStyle(fontSize: 18)),
           onPressed: () {
             login();
           },

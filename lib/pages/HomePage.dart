@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/widgets/CardWidget.dart';
 import 'package:carePanda/widgets/OtherServicesPopup.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
@@ -41,12 +42,8 @@ class _HomePageState extends State<HomePage> {
 // If application is started for the first time, opens up a popup
   openStartUpPopUp() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return UserDataPopup();
-          });
+      Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+          fullscreenDialog: true, builder: (context) => UserDataPopup()));
     });
   }
 
@@ -54,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Home',
+        title: Text(getTranslated(context, 'home_title'),
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
       body: SingleChildScrollView(
@@ -194,7 +191,7 @@ class Timer extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(height: 15),
-        Text('Time until next questionnaire',
+        Text(getTranslated(context, "home_nextQst"),
             style: TextStyle(
                 fontSize: 22.0, color: Theme.of(context).accentColor)),
         SizedBox(height: 10),
@@ -225,14 +222,14 @@ class Questionnaire extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('You have a questionnaire',
+                  Text(getTranslated(context, "home_userHasQst"),
                       style: TextStyle(
                           fontSize: 22.0,
                           color: Theme.of(context).accentColor)),
                 ],
               ),
               SizedBox(height: 10),
-              Text('Time to answer',
+              Text(getTranslated(context, "home_remainingQst"),
                   style: TextStyle(
                       fontSize: 16.0, color: Theme.of(context).accentColor)),
               countdownWidget,
@@ -243,7 +240,7 @@ class Questionnaire extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: RaisedButton(
-                        child: const Text('Answer now',
+                        child: Text(getTranslated(context, "home_answerBtn"),
                             style: TextStyle(fontSize: 18)),
                         textColor: Colors.white,
                         onPressed: () {
@@ -252,7 +249,6 @@ class Questionnaire extends StatelessWidget {
                                   fullscreenDialog: true,
                                   builder: (context) => SurveyFlow()));
                           _storageService.hasQuestionnaire = false;
-                          log("Questionnaire button pressed");
                         },
                       ),
                     ),
@@ -281,14 +277,16 @@ class BigButtons extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.only(left: 12, right: 7),
                 child: BigButton(
-                    title: "Other services", dialog: OtherServicesPopup()))),
+                    title: getTranslated(context, "home_otherServicesBtn"),
+                    dialog: OtherServicesPopup()))),
 
         // Button for sending a msg to HR
         Expanded(
           child: Padding(
               padding: EdgeInsets.only(right: 12, left: 7),
               child: BigButton(
-                  title: "Send message for HR", dialog: MsgForHRPopup())),
+                  title: getTranslated(context, "home_msgForHrBtn"),
+                  dialog: MsgForHRPopup())),
         ),
       ],
     );

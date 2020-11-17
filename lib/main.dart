@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
@@ -10,6 +12,7 @@ import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'services/Theme.dart';
 
@@ -46,8 +49,59 @@ Future<void> main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  static void setLocale(context, locale) {
+    _MyAppState state = context.findRootAncestorStateOfType<_MyAppState>();
+    state.setLocale(locale);
+  }
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale;
+  var _storageService = locator<LocalStorageService>();
+
+  // Function to change language and saves language code to shared preferences
+  setLocale(locale) {
+    setState(() {
+      _locale = locale;
+      _storageService.language = locale.languageCode;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // If user has not set language before (first start), uses user's phones language if it's either finnish or english
+    // Defaults to english if users language is not supported
+    if (_storageService.language == null) {
+      var _usersLanguageOption = Platform.localeName;
+      var _usersLanguageCode = _usersLanguageOption.substring(0, 2);
+      if (Localization.delegate.isSupported(Locale(_usersLanguageCode, ''))) {
+        _storageService.language = _usersLanguageCode;
+      } else {
+        _storageService.language = "en";
+      }
+    }
+
+    // Gets language code from shared preference and depending on the language code,
+    // chooses a language
+    var _languageCode = _storageService.language;
+    switch (_languageCode) {
+      case "en":
+        _locale = Locale(_languageCode, '');
+        break;
+      case "fi":
+        _locale = Locale(_languageCode, '');
+        break;
+      default:
+        _locale = Locale("en", '');
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -58,6 +112,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Care Panda',
       theme: Provider.of<ThemeChanger>(context).getTheme(),
+      locale: _locale,
+      supportedLocales: [Locale('en', ''), Locale('fi', '')],
+      localizationsDelegates: [
+        Localization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeListResolutionCallback: (deviceLocale, supportedLocales) {
+        for (var locale in deviceLocale) {
+          if (locale != null) {
+            return locale;
+          }
+        }
+        return supportedLocales.first;
+      },
       initialRoute: showBoarding ? "/boarding" : "/",
       routes: {
         "/": (context) => MyStatefulWidget(),
@@ -112,17 +182,23 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
         selectedItemColor: Theme.of(context).accentColor,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), label: 'Dashboard'),
+              icon: Icon(Icons.home),
+              label: getTranslated(context, "bottomNavBar_home")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.dashboard),
+              label: getTranslated(context, "bottomNavBar_dashboard")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: getTranslated(context, "bottomNavBar_settings")),
           if (_isLoggedIn)
             BottomNavigationBarItem(
-                icon: Icon(Icons.assessment), label: 'Statistics'),
+                icon: Icon(Icons.assessment),
+                label: getTranslated(context, "bottomNavBar_statistics")),
           if (_isLoggedIn)
             BottomNavigationBarItem(
-                icon: Icon(Icons.assignment), label: 'Admin'),
+                icon: Icon(Icons.assignment),
+                label: getTranslated(context, "bottomNavBar_admin")),
         ],
         showSelectedLabels: true,
         showUnselectedLabels: false,

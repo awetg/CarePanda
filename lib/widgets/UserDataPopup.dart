@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataPickerPopup.dart';
@@ -25,77 +26,97 @@ class _UserDataPopup extends State<UserDataPopup> {
   int _pickerDataBirthYear;
   int _pickerDataYearsInNokia;
 
-  final buildingData = [
-    "Don't want to tell",
-    "Working from home",
-    "Karaportti 8",
-    "Mid Point 7A",
-    "Mid Point 7B",
-    "Mid Point 7C",
-    "Karaportti 4",
-    "KaraEast (Building 12)"
-  ];
+  var _genderList;
+  var buildingData;
 
   // Takes in building's index to know how many floor is there in the building
   // This list is later used to create a list of floors depending on this list's values
-  final floorAmountPerBuilding = [2, 8, 6, 5, 6, 5];
+  final floorAmountPerBuilding = [6, 2, 5, 8, 6, 5];
   var floorList;
 
   // Initialises variables and gives them default values if they are null
-  // If int variables are set to 0, set's variable to "Not selected" or "Don't want to tell" to display it instead of 0
+  // If int variables are set to 0, set's variable to "Not selected" or Don't want to tell" to display it instead of 0
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _genderList = [
+      getTranslated(context, "userData_dontWnaTell"),
+      getTranslated(context, "userData_male"),
+      getTranslated(context, "userData_female"),
+      getTranslated(context, "userData_other")
+    ];
+
+    // Building data
+    buildingData = [
+      getTranslated(context, "userData_dontWnaTell"),
+      getTranslated(context, "userData_workFromHome"),
+      "Karaportti 4",
+      "Karaportti 8",
+      "KaraEast (Building 12)",
+      "Mid Point 7A",
+      "Mid Point 7B",
+      "Mid Point 7C"
+    ];
 
     _name = _storageService.name ?? "";
     _lastName = _storageService.lastName ?? "";
 
-    _birthYear = _storageService.birthYear ?? "Not selected";
+    // Birth year and years worked in nokia, if 0, sets it to not selected
+    _birthYear = _storageService.birthYear ??
+        getTranslated(context, "userData_notSelected");
     if (_birthYear == 0) {
-      _birthYear = "Not selected";
+      _birthYear = getTranslated(context, "userData_notSelected");
     }
 
-    _yearsInNokia = _storageService.yearsInNokia ?? "Not selected";
+    _yearsInNokia = _storageService.yearsInNokia ??
+        getTranslated(context, "userData_notSelected");
     if (_yearsInNokia == 0) {
-      _yearsInNokia = "Not selected";
+      _yearsInNokia = getTranslated(context, "userData_notSelected");
     }
 
-    _gender = _storageService.gender ?? "Don't want to tell";
-    _building = _storageService.building ?? "Don't want to tell";
-    _floor = _storageService.floor.toString() ?? "Don't want to tell";
+    // Gender and building uses lists index to identify which the user has chosen
+    // Index is stored in shared preference and this way localization is easier.
+    _gender = _genderList[_storageService.gender ?? 0];
 
+    _building = buildingData[_storageService.building ?? 0];
+
+    // Gets floors data from shared preference, if it's 0, sets it to "Don't want to tell"
+    _floor = _storageService.floor.toString() ??
+        getTranslated(context, "userData_dontWnaTell");
     if (_floor == "0") {
-      _floor = "Don't want to tell";
+      _floor = getTranslated(context, "userData_dontWnaTell");
     }
 
     // If building value is chosen by the user, generates floorlist depending on floorAmountPerBuilding values using building list's index
-    if (_building != "Don't want to tell" && _building != "Working from home") {
+    if (buildingData.indexOf(_building) != 0 &&
+        buildingData.indexOf(_building) != 1) {
       floorList = [
         for (var i = 1;
             i < floorAmountPerBuilding[buildingData.indexOf(_building) - 2] + 1;
             i += 1)
           i.toString()
       ];
-      floorList.insert(0, "Don't want to tell");
+      floorList.insert(0, getTranslated(context, "userData_dontWnaTell"));
     }
 
     _firstTimeStartUp = _storageService.firstTimeStartUp ?? true;
 
     // If popup is opened from settings, shows different button text
     if (_firstTimeStartUp == true || _firstTimeStartUp == null) {
-      _cancelPopupText = "Skip";
+      _cancelPopupText = getTranslated(context, "skipBtn");
     } else {
-      _cancelPopupText = "Cancel";
+      _cancelPopupText = getTranslated(context, "cancelBtn");
     }
   }
 
   // Sets data to shared preferences
   setData() {
     // If no years selected, defaults it to 0 since they have to be int
-    if (_yearsInNokia == "Not selected") {
+    if (_yearsInNokia == getTranslated(context, "userData_notSelected")) {
       _yearsInNokia = 0;
     }
-    if (_birthYear == "Not selected") {
+    if (_birthYear == getTranslated(context, "userData_notSelected")) {
       _birthYear = 0;
     }
 
@@ -104,17 +125,17 @@ class _UserDataPopup extends State<UserDataPopup> {
     _storageService.lastName = _lastName;
     _storageService.birthYear = _birthYear;
     _storageService.yearsInNokia = _yearsInNokia;
-    _storageService.gender = _gender;
-    _storageService.building = _building;
+    _storageService.gender = _genderList.indexOf(_gender);
+    _storageService.building = buildingData.indexOf(_building);
 
     // If user doesn't give building data, sets floor data to "Don't wan't to tell" aswell
-    if (_building == "Don't want to tell") {
-      _floor = "Don't want to tell";
+    if (buildingData.indexOf(_building) == 0) {
+      _floor = getTranslated(context, "userData_dontWnaTell");
     }
 
     // If user don't want to give floor data, sets it to 0 (floor is stored as int)
     // If user gives floor data, parses the String to int
-    if (_floor == "Don't want to tell") {
+    if (_floor == getTranslated(context, "userData_dontWnaTell")) {
       _storageService.floor = 0;
     } else {
       _storageService.floor = int.parse(_floor);
@@ -134,7 +155,7 @@ class _UserDataPopup extends State<UserDataPopup> {
   _resetBirthYear() {
     setState(() {
       _storageService.birthYear = 0;
-      _birthYear = "Not selected";
+      _birthYear = getTranslated(context, "userData_notSelected");
     });
   }
 
@@ -142,70 +163,75 @@ class _UserDataPopup extends State<UserDataPopup> {
   _resetYearsInNokia() {
     setState(() {
       _storageService.yearsInNokia = 0;
-      _yearsInNokia = "Not selected";
+      _yearsInNokia = getTranslated(context, "userData_notSelected");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: EdgeInsets.only(left: 14, right: 14),
-      title: Text("Please give us some info about yourself",
-          style: TextStyle(color: Theme.of(context).accentColor)),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                // Name
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 15,
-                      top: 16,
-                    ),
-                    child: UserDataTextField(
-                      label: "Name",
-                      value: _name,
-                      onChange: (newValue) {
-                        _name = newValue;
-                      },
-                    ),
-                  ),
-                ),
-
-                // Last name
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: UserDataTextField(
-                      label: "Last name",
-                      value: _lastName,
-                      onChange: (newValue) {
-                        _lastName = newValue;
-                      },
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading:
+            _storageService.firstTimeStartUp ?? true ? false : true,
+        title: Text(getTranslated(context, 'userData_title'),
+            style: TextStyle(color: Theme.of(context).accentColor)),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 18, top: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  // Name
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 15,
+                        top: 16,
+                      ),
+                      child: UserDataTextField(
+                        label: getTranslated(context, "userData_nameTxtfield"),
+                        value: _name,
+                        onChange: (newValue) {
+                          _name = newValue;
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 14),
 
-            // Age
-            Row(children: [
-              Expanded(
-                child: Text(
-                  "Birth year",
-                ),
+                  // Last name
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: UserDataTextField(
+                        label:
+                            getTranslated(context, "userData_lastNameTxtfield"),
+                        value: _lastName,
+                        onChange: (newValue) {
+                          _lastName = newValue;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
-              // Reset age
-              Container(
-                width: 68,
-                child: OutlineButton(
+              SizedBox(height: 22),
+
+              // Age
+              Row(children: [
+                Expanded(
+                  child: Text(getTranslated(context, "userData_birthYear"),
+                      style: TextStyle(fontSize: 18)),
+                ),
+
+                // Reset age
+
+                OutlineButton(
                   child: Text(
-                    "Reset",
+                    getTranslated(context, "userData_reset"),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
@@ -218,53 +244,53 @@ class _UserDataPopup extends State<UserDataPopup> {
                     _resetBirthYear();
                   },
                 ),
-              ),
 
-              SizedBox(width: 4),
+                SizedBox(width: 4),
 
-              // Set age
-              OutlineButton(
-                onPressed: () async {
-                  _pickerDataBirthYear = await showDialog(
-                      barrierColor: _storageService.darkTheme
-                          ? Colors.black.withOpacity(0.4)
-                          : null,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return UserDataPickerPopup(
-                            valueToChange: "birthYear", value: _birthYear);
-                      });
-                  setState(() {
-                    if (_pickerDataBirthYear != null) {
-                      _birthYear = _pickerDataBirthYear;
-                    }
-                  });
-                },
-                child: Text(_birthYear.toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyText1.color)),
-                textColor: Theme.of(context).accentColor,
-                borderSide: BorderSide(
-                  color: Theme.of(context).accentColor,
+                // Set age
+                OutlineButton(
+                  onPressed: () async {
+                    _pickerDataBirthYear = await showDialog(
+                        barrierColor: _storageService.darkTheme
+                            ? Colors.black.withOpacity(0.4)
+                            : null,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return UserDataPickerPopup(
+                              title:
+                                  getTranslated(context, "userData_birthYear"),
+                              valueToChange: "birthYear",
+                              value: _birthYear);
+                        });
+                    setState(() {
+                      if (_pickerDataBirthYear != null) {
+                        _birthYear = _pickerDataBirthYear;
+                      }
+                    });
+                  },
+                  child: Text(_birthYear.toString(),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyText1.color)),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
+                  ),
                 ),
-              ),
-            ]),
-            SizedBox(height: 4),
+              ]),
 
-            // Years in Nokia
-            Row(children: [
-              Expanded(
-                child: Text(
-                  "Years worked in Nokia",
+              SizedBox(height: 10),
+
+              // Years in Nokia
+              Row(children: [
+                Expanded(
+                  child: Text(getTranslated(context, "userData_yearsInNokia"),
+                      style: TextStyle(fontSize: 18)),
                 ),
-              ),
 
-              // Reset years in Nokia
-              Container(
-                width: 68,
-                child: OutlineButton(
+                // Reset years in Nokia
+                OutlineButton(
                   child: Text(
-                    "Reset",
+                    getTranslated(context, "userData_reset"),
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
@@ -277,142 +303,165 @@ class _UserDataPopup extends State<UserDataPopup> {
                     _resetYearsInNokia();
                   },
                 ),
-              ),
 
-              SizedBox(width: 4),
+                SizedBox(width: 4),
 
-              // Set years in Nokia
-              OutlineButton(
-                onPressed: () async {
-                  _pickerDataYearsInNokia = await showDialog(
-                      barrierColor: _storageService.darkTheme
-                          ? Colors.black.withOpacity(0.4)
-                          : null,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return UserDataPickerPopup(
-                          valueToChange: "yearsInNokia",
-                          value: _yearsInNokia,
-                        );
-                      });
-                  setState(() {
-                    if (_pickerDataYearsInNokia != null) {
-                      _yearsInNokia = _pickerDataYearsInNokia;
-                    }
-                  });
-                },
-                child: Text(_yearsInNokia.toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyText1.color)),
-                textColor: Theme.of(context).accentColor,
-                borderSide: BorderSide(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ]),
-
-            SizedBox(height: 8),
-
-            // Gender
-            UserDataDropDownButton(
-                settingName: "Gender",
-                value: _gender,
-                data: ["Don't want to tell", 'Male', 'Female', 'Other'],
-                onChange: (newValue) {
-                  setState(() {
-                    _gender = newValue;
-                  });
-                }),
-
-            SizedBox(height: 14),
-
-            // Work building
-            UserDataDropDownButton(
-                settingName: "Work building",
-                value: _building,
-                data: buildingData,
-                onChange: (newValue) {
-                  setState(() {
-                    // If value changes, changes floor to basic value, changes floor's list depending on building value
-                    if (newValue != _building) {
-                      _building = newValue;
-                      _floor = "Don't want to tell";
-                      if (_building != "Don't want to tell" &&
-                          _building != "Working from home") {
-                        // Creates floor list depending on building's index value
-                        floorList = [
-                          for (var i = 1;
-                              i <
-                                  floorAmountPerBuilding[
-                                          buildingData.indexOf(_building) - 2] +
-                                      1;
-                              i += 1)
-                            i.toString()
-                        ];
-                        floorList.insert(0, "Don't want to tell");
+                // Set years in Nokia
+                OutlineButton(
+                  onPressed: () async {
+                    _pickerDataYearsInNokia = await showDialog(
+                        barrierColor: _storageService.darkTheme
+                            ? Colors.black.withOpacity(0.4)
+                            : null,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return UserDataPickerPopup(
+                            title:
+                                getTranslated(context, "userData_yearsInNokia"),
+                            valueToChange: "yearsInNokia",
+                            value: _yearsInNokia,
+                          );
+                        });
+                    setState(() {
+                      if (_pickerDataYearsInNokia != null) {
+                        _yearsInNokia = _pickerDataYearsInNokia;
                       }
-                    }
-                  });
-                }),
+                    });
+                  },
+                  child: Text(_yearsInNokia.toString(),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyText1.color)),
+                  textColor: Theme.of(context).accentColor,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ]),
 
-            SizedBox(height: 14),
+              SizedBox(height: 14),
 
-            // Floor
-            if (_building != "Don't want to tell" &&
-                _building != "Working from home")
+              // Gender
               UserDataDropDownButton(
-                  settingName: "Floor",
-                  value: _floor,
-                  data: floorList,
+                  settingName: getTranslated(context, "userData_gender"),
+                  settingNameFontSize: 18.0,
+                  value: _gender,
+                  data: _genderList,
                   onChange: (newValue) {
                     setState(() {
-                      _floor = newValue;
+                      _gender = newValue;
                     });
                   }),
-            SizedBox(height: 8),
 
-            // Text to show that giving data is optional
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("* Giving personal data is optional",
-                    style: TextStyle(
-                        fontSize: 13.0, color: Theme.of(context).accentColor)),
-              ],
-            ),
-            // Text to inform user that data can be changed later on in settings (only shows the message on first launch)
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                if (_firstTimeStartUp == true || _firstTimeStartUp == null)
-                  Text("* Personal data can be changed in settings",
-                      style: TextStyle(
-                          fontSize: 13.0,
-                          color: Theme.of(context).accentColor)),
-              ],
-            )
-          ],
+              SizedBox(height: 22),
+
+              // Work building
+              UserDataDropDownButton(
+                  settingName: getTranslated(context, "userData_workBuilding"),
+                  settingNameFontSize: 18.0,
+                  value: _building,
+                  data: buildingData,
+                  onChange: (newValue) {
+                    setState(() {
+                      // If value changes, changes floor to basic value, changes floor's list depending on building value
+                      if (newValue != _building) {
+                        _building = newValue;
+                        _floor = getTranslated(context, "userData_dontWnaTell");
+                        if (buildingData.indexOf(_building) != 0 &&
+                            buildingData.indexOf(_building) != 1) {
+                          // Creates floor list depending on building's index value
+                          floorList = [
+                            for (var i = 1;
+                                i <
+                                    floorAmountPerBuilding[
+                                            buildingData.indexOf(_building) -
+                                                2] +
+                                        1;
+                                i += 1)
+                              i.toString()
+                          ];
+                          floorList.insert(0,
+                              getTranslated(context, "userData_dontWnaTell"));
+                        }
+                      }
+                    });
+                  }),
+
+              SizedBox(height: 22),
+
+              // Floor
+              if (buildingData.indexOf(_building) != 0 &&
+                  buildingData.indexOf(_building) != 1)
+                UserDataDropDownButton(
+                    settingName: getTranslated(context, "userData_floor"),
+                    settingNameFontSize: 18.0,
+                    value: _floor,
+                    data: floorList,
+                    onChange: (newValue) {
+                      setState(() {
+                        _floor = newValue;
+                      });
+                    }),
+              SizedBox(height: 20),
+
+              // Text to show that giving data is optional
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                        getTranslated(context, "userData_personalInfoOptional"),
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            color: Theme.of(context).accentColor)),
+                  ),
+                ],
+              ),
+              // Text to inform user that data can be changed later on in settings (only shows the message on first launch)
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (_firstTimeStartUp == true || _firstTimeStartUp == null)
+                    Flexible(
+                      child: Text(
+                          getTranslated(
+                              context, "userData_personalChangedInSettings"),
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              color: Theme.of(context).accentColor)),
+                    ),
+                ],
+              ),
+
+              SizedBox(height: 10),
+
+              // Submit and skip buttons
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  child: Text(getTranslated(context, "submitBtn"),
+                      style: TextStyle(fontSize: 18)),
+                  textColor: Colors.white,
+                  onPressed: () {
+                    setData();
+                  },
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: FlatButton(
+                  child: Text(_cancelPopupText, style: TextStyle(fontSize: 18)),
+                  textColor: Theme.of(context).accentColor,
+                  onPressed: () {
+                    skipSettingData();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-
-      // Skip and submit buttons
-      actions: [
-        FlatButton(
-          child: Text(_cancelPopupText, style: TextStyle(fontSize: 18)),
-          textColor: Theme.of(context).accentColor,
-          onPressed: () {
-            skipSettingData();
-          },
-        ),
-        RaisedButton(
-          child: const Text('Submit', style: TextStyle(fontSize: 18)),
-          onPressed: () {
-            setData();
-          },
-        ),
-      ],
     );
   }
 }

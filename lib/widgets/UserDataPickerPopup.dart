@@ -1,11 +1,13 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserDataPickerPopup extends StatefulWidget {
   final valueToChange;
   final value;
+  final title;
 
-  UserDataPickerPopup({this.valueToChange, this.value});
+  UserDataPickerPopup({this.valueToChange, this.value, this.title});
 
   @override
   _UserDataPickerPopupState createState() => _UserDataPickerPopupState();
@@ -16,35 +18,38 @@ class _UserDataPickerPopupState extends State<UserDataPickerPopup> {
   var _yearsInNokiaList = [for (var i = 0; i < 80; i += 1) i];
   var _list;
   var _initialItem;
-  var title;
 
   @override
   void initState() {
     if (widget.valueToChange == "birthYear") {
       _list = _yearList;
-      title = "Birth year";
     } else {
       _list = _yearsInNokiaList;
-      title = "Years worked in Nokia";
     }
+    super.initState();
+  }
 
+  @override
+  void didChangeDependencies() {
     // Gets initial value for picker depending on which variable is the user changing (Birth year or years worked in nokia)
     // If there is no value set before for the years, sets initial value to 50 (will show 1990 in the picker)
     if (widget.valueToChange == "birthYear") {
-      if (widget.value != null && widget.value != "Not selected") {
+      if (widget.value != null &&
+          widget.value != getTranslated(context, "userData_notSelected")) {
         _initialItem = _list.indexOf(widget.value);
       } else {
         _initialItem = 50;
       }
     } else {
-      if (widget.value != null && widget.value != "Not selected") {
+      if (widget.value != null &&
+          widget.value != getTranslated(context, "userData_notSelected")) {
         _initialItem = _list.indexOf(widget.value);
       } else {
         _initialItem = 5;
       }
     }
 
-    super.initState();
+    super.didChangeDependencies();
   }
 
   var _selectedYear;
@@ -54,7 +59,7 @@ class _UserDataPickerPopupState extends State<UserDataPickerPopup> {
     return AlertDialog(
       contentPadding: EdgeInsets.all(0),
       title: Center(
-          child: Text(title,
+          child: Text(widget.title,
               style: TextStyle(color: Theme.of(context).accentColor))),
       content: Container(
         height: 250,
@@ -84,14 +89,16 @@ class _UserDataPickerPopupState extends State<UserDataPickerPopup> {
       // Buttons
       actions: [
         FlatButton(
-          child: Text("Cancel", style: TextStyle(fontSize: 18)),
+          child: Text(getTranslated(context, "cancelBtn"),
+              style: TextStyle(fontSize: 18)),
           textColor: Theme.of(context).accentColor,
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         RaisedButton(
-          child: const Text('Submit', style: TextStyle(fontSize: 18)),
+          child: Text(getTranslated(context, "submitBtn"),
+              style: TextStyle(fontSize: 18)),
           textColor: Colors.white,
           onPressed: () {
             // If user picks no value and presses submit, defaults to initial value
