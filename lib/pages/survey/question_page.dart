@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/multi_selection.dart';
 import 'package:carePanda/pages/survey/question_thankyou_page.dart';
@@ -57,7 +58,8 @@ class QuestionPage extends StatelessWidget {
                             maxLines: 3,
                             decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
-                                hintText: "Optional free text")),
+                                hintText: getTranslated(
+                                    context, "qst_freeTextHint"))),
                       )
                     : Container()
               ],

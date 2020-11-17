@@ -1,4 +1,17 @@
 {
+    "bottomNavBar_home":"Koti",
+    "bottomNavBar_dashboard":"Dashboard",
+    "bottomNavBar_settings":"Asetukset",
+    "bottomNavBar_statistics":"Tilastot",
+    "bottomNavBar_admin":"Ylläpitäjä",
+
+    "boarding1_title":"Turvallinnen ja Yksityinen!",
+    "boarding1_text":"Henkilökohtaiset tietosi tallennetaan turvallisesti laitteesesi. Vain tunnistamatonta tietoa lähetetään eteenpäin, ellet itse toisin valitse",       
+    "boarding2_title":"Seuraa omaa hyvinvointiasi!",
+    "boarding2_text":"Seuraa miten hyvinvointisi muuttuu aikanaan.",
+    "boarding3_title":"Anna palautetta tuntemattomana!",
+    "boarding3_text":"Anna palautetta yleisestä hyvinvoinnistasi tuntemattomana, parantaaksesi työtilojasi.",
+
     "home_title":"Kotisivu",
     "home_nextQst":"Aikaa seuraavaan kyselyyn",
     "home_remainingQst":"Aikaa jäljellä vastata kyselyyn",
@@ -22,6 +35,10 @@
     "settings_logoutBtn":"Kirjaudu ulos",
     "settings_successfulLogin":"Kirjauduit sisään onnistuneesti",
     "settings_successfulLogout":"Kirjauduit ulos onnistuneesti",
+
+    "user_dashboardTitle":"Dashboard",
+
+    "hr_statisticsTitle":"HR tilastot",
 
     "hrLogin_title":"HR kirjautuminen",
     "hrLogin_usernameTxtfield":"Käyttäjänimi",
@@ -87,9 +104,16 @@
 
     "hr_deletePopupTitle":"Oletko varma, että haluat poistaa kyselyn?",
 
+    "qst_freeTextHint":"Valinnainen lisä kommentti",
+    "qst_tyTitle":"Kittos, että vastasit kyselyyn!",
+    "qst_tyText":"Vaustaustasi käytetään vain tavoin, joilla sinua ei voida tunnistaa. Käytämme palautettasi ymmärtääksemme työtilojanne paremmin.",
+    
     "skipBtn":"Ohita",
     "submitBtn":"Lähetä",
     "cancelBtn":"Peruuta",
     "deleteBtn":"Poista",
-    "confirmBtn":"Vahvista"
+    "confirmBtn":"Vahvista",
+    "nextBtn":"Seuraava",
+    "doneBtn":"Valmis",
+    "previousBtn":"Edellinen"
 }

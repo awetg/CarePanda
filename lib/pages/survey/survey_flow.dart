@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/main.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/question_page.dart';
@@ -117,7 +118,7 @@ class _SurveyFlowState extends State<SurveyFlow> {
                         padding: EdgeInsets.only(bottom: 96.0),
                         child: ElevatedButton(
                           onPressed: nextPage,
-                          child: Text("DONE"),
+                          child: Text(getTranslated(context, "doneBtn")),
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(128, 36),
                               shape: const RoundedRectangleBorder(
@@ -157,7 +158,7 @@ class _SurveyFlowState extends State<SurveyFlow> {
                         padding: EdgeInsets.only(right: 16.0, bottom: 32.0),
                         child: ElevatedButton(
                           onPressed: nextPage,
-                          child: Text("NEXT"),
+                          child: Text(getTranslated(context, "nextBtn")),
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(128, 36),
                               shape: const RoundedRectangleBorder(
@@ -172,7 +173,7 @@ class _SurveyFlowState extends State<SurveyFlow> {
                         padding: EdgeInsets.only(left: 16.0, bottom: 32.0),
                         child: OutlinedButton(
                           onPressed: currentIndex == 0 ? null : previousPage,
-                          child: Text("PREVIOUS"),
+                          child: Text(getTranslated(context, "previousBtn")),
                           style: OutlinedButton.styleFrom(
                               minimumSize: Size(128, 36),
                               side: currentIndex == 0

@@ -1,4 +1,17 @@
 {
+    "bottomNavBar_home":"Home",
+    "bottomNavBar_dashboard":"Dashboard",
+    "bottomNavBar_settings":"Settings",
+    "bottomNavBar_statistics":"Statistics",
+    "bottomNavBar_admin":"Admin",
+
+    "boarding1_title":"Secure And Private!",
+    "boarding1_text":"Your personal data is securely stored on your device. Only none identifying data information is sent, unless you expelectly choose otherwise.",
+    "boarding2_title":"Track Your Wellbeing!",
+    "boarding2_text":"Track your wellbeing state over time.",
+    "boarding3_title":"Give Anonymous Feedback!",
+    "boarding3_text":"Give anonymous feedback on your general wellbeing to improve your workspace.",
+
     "home_title":"Home",
     "home_nextQst":"Time until next questionnaire",
     "home_remainingQst":"Time remaining to answer",
@@ -22,6 +35,10 @@
     "settings_logoutBtn":"logout",
     "settings_successfulLogin":"Successfully logged in",
     "settings_successfulLogout":"Successfully logged out",
+
+    "user_dashboardTitle":"Dashboard",
+
+    "hr_statisticsTitle":"HR statistics",
 
     "hrLogin_title":"HR login",
     "hrLogin_usernameTxtfield":"Username",
@@ -87,10 +104,16 @@
 
     "hr_deletePopupTitle":"Are you sure you want to delete a questionnaire?",
 
+    "qst_freeTextHint":"Optional extra comment",
+    "qst_tyTitle":"Thank you for completing the suvey!",
+    "qst_tyText":"Your response will only be used in ways that does not identify you. We will use your feedback to understand your workspace better.",
 
     "skipBtn":"Skip",
     "submitBtn":"Submit",
     "cancelBtn":"Cancel",
     "deleteBtn":"Delete",
-    "confirmBtn":"Confirm"
+    "confirmBtn":"Confirm",
+    "nextBtn":"Next",
+    "doneBtn":"Done",
+    "previousBtn":"Previous"
 }

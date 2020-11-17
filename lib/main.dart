@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
@@ -63,13 +66,24 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void didChangeDependencies() {
-    // Init -> if language is null (first start up), sets it to english
+    // If user has not set language before (first start), uses user's phones language if it's either finnish or english
+    // Defaults to english if users language is not supported
     if (_storageService.language == null) {
-      _storageService.language = "en";
+      var _usersLanguageOption = Platform.localeName;
+      var _usersLanguageCode = _usersLanguageOption.substring(0, 2);
+      log(_usersLanguageCode.toString());
+      if (Localization.delegate.isSupported(Locale(_usersLanguageCode, ''))) {
+        log("true");
+        _storageService.language = _usersLanguageCode;
+      } else {
+        log("false");
+        _storageService.language = "en";
+      }
     }
+
     // Gets language code from shared preference and depending on the language code,
     // chooses a language
-    var _languageCode = _storageService.language ?? "en";
+    var _languageCode = _storageService.language;
     switch (_languageCode) {
       case "en":
         _locale = Locale(_languageCode, '');
@@ -164,17 +178,23 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
         selectedItemColor: Theme.of(context).accentColor,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), label: 'Dashboard'),
+              icon: Icon(Icons.home),
+              label: getTranslated(context, "bottomNavBar_home")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.dashboard),
+              label: getTranslated(context, "bottomNavBar_dashboard")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: getTranslated(context, "bottomNavBar_settings")),
           if (_isLoggedIn)
             BottomNavigationBarItem(
-                icon: Icon(Icons.assessment), label: 'Statistics'),
+                icon: Icon(Icons.assessment),
+                label: getTranslated(context, "bottomNavBar_statistics")),
           if (_isLoggedIn)
             BottomNavigationBarItem(
-                icon: Icon(Icons.assignment), label: 'Admin'),
+                icon: Icon(Icons.assignment),
+                label: getTranslated(context, "bottomNavBar_admin")),
         ],
         showSelectedLabels: true,
         showUnselectedLabels: false,

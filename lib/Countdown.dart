@@ -17,6 +17,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
   Timer _timer;
   DateTime _currentTime;
   var _storageService;
+  var _showLoading = false;
 
   @override
   void initState() {
@@ -118,6 +119,8 @@ class _WeekCountdownState extends State<WeekCountdown> {
         minutes <= 0 &&
         seconds <= 0 &&
         millSec <= 0) {
+      // Shows loading circle instead of showing negative numbers even for split second
+      _showLoading = true;
       // If timer of showing remaining time to answer questionnaire goes to 0, switches card
       // to show time until next questionnaire
       if (calculatingRemaining) {
@@ -125,6 +128,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _storageService.hasQuestionnaire = false;
           widget.questionnaireStatusChanged();
+          _showLoading = false;
         });
       } else {
         // If timer of showing how much time until next questionnaire goes to 0,
@@ -134,18 +138,23 @@ class _WeekCountdownState extends State<WeekCountdown> {
           _storageService.hasQuestionnaire = true;
           _storageService.lastQuestionnaireRdy = DateTime.now().toString();
           widget.questionnaireStatusChanged();
+          _showLoading = false;
         });
       }
     }
 
     // Returns timer, if it shows time remaining to answer, uses smaller font size
-    return Text(formattedRemaining,
-        style: TextStyle(
-            fontSize: calculatingRemaining ?? false ? 30 : 42.0,
-            fontWeight: FontWeight.bold,
-            color: _storageService.darkTheme
-                ? null
-                : Theme.of(context).accentColor));
+    return _showLoading
+        ? CircularProgressIndicator()
+        : Text(
+            formattedRemaining,
+            style: TextStyle(
+                fontSize: calculatingRemaining ?? false ? 30 : 42.0,
+                fontWeight: FontWeight.bold,
+                color: _storageService.darkTheme
+                    ? null
+                    : Theme.of(context).accentColor),
+          );
   }
 }
 

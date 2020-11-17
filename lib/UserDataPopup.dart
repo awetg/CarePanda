@@ -171,6 +171,8 @@ class _UserDataPopup extends State<UserDataPopup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading:
+            _storageService.firstTimeStartUp ?? true ? false : true,
         title: Text(getTranslated(context, 'userData_title'),
             style: TextStyle(color: Theme.of(context).accentColor)),
       ),
@@ -406,10 +408,13 @@ class _UserDataPopup extends State<UserDataPopup> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(getTranslated(context, "userData_personalInfoOptional"),
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          color: Theme.of(context).accentColor)),
+                  Flexible(
+                    child: Text(
+                        getTranslated(context, "userData_personalInfoOptional"),
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            color: Theme.of(context).accentColor)),
+                  ),
                 ],
               ),
               // Text to inform user that data can be changed later on in settings (only shows the message on first launch)
@@ -418,12 +423,14 @@ class _UserDataPopup extends State<UserDataPopup> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   if (_firstTimeStartUp == true || _firstTimeStartUp == null)
-                    Text(
-                        getTranslated(
-                            context, "userData_personalChangedInSettings"),
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            color: Theme.of(context).accentColor)),
+                    Flexible(
+                      child: Text(
+                          getTranslated(
+                              context, "userData_personalChangedInSettings"),
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              color: Theme.of(context).accentColor)),
+                    ),
                 ],
               ),
 

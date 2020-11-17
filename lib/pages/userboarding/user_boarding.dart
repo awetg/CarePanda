@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/main.dart';
 import 'package:carePanda/model/slider_item.dart';
 import 'package:carePanda/pages/userboarding/slider_dot.dart';
@@ -22,14 +23,26 @@ class _UserBoardingState extends State<UserBoarding> {
   static const animation_type = Curves.ease;
 
   // Slider items to be shown each slide page, containing image, heading and bodytext
-  static const _sliderItems = [
-    SliderItem("assets/images/safe.png", "Secure And Private!",
-        "Your personal data is securely stored on your device. Only none identifying data information is sent, unless you expelectly choose otherwise."),
-    SliderItem("assets/images/yoga.png", "Track Your Wellbeing!",
-        "Track your wellbeing state over time."),
-    SliderItem("assets/images/anonymous.png", "Give Anonymous Feedback!",
-        "Give anonymous feedback on your general wellbeing to improve your workspace.")
-  ];
+  static var _sliderItems;
+
+  @override
+  void didChangeDependencies() {
+    _sliderItems = [
+      SliderItem(
+          "assets/images/safe.png",
+          getTranslated(context, "boarding1_title"),
+          getTranslated(context, "boarding1_text")),
+      SliderItem(
+          "assets/images/yoga.png",
+          getTranslated(context, "boarding2_title"),
+          getTranslated(context, "boarding2_text")),
+      SliderItem(
+          "assets/images/anonymous.png",
+          getTranslated(context, "boarding3_title"),
+          getTranslated(context, "boarding3_text"))
+    ];
+    super.didChangeDependencies();
+  }
 
   var _storageService = locator<LocalStorageService>();
 
@@ -108,7 +121,7 @@ class _UserBoardingState extends State<UserBoarding> {
                 child: InkWell(
                   onTap: () => nextPage(),
                   child: Text(
-                    "Next",
+                    getTranslated(context, "nextBtn"),
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0,
@@ -124,7 +137,7 @@ class _UserBoardingState extends State<UserBoarding> {
                 child: InkWell(
                   onTap: () => skipAllPages(),
                   child: Text(
-                    "Skip",
+                    getTranslated(context, "skipBtn"),
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0,

@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:flutter/material.dart';
 
 class ThankYouPage extends StatelessWidget {
@@ -17,8 +18,8 @@ class ThankYouPage extends StatelessWidget {
         SizedBox(
           height: 60.0,
         ),
-        const Text(
-          "Thank you for completing the suvey!",
+        Text(
+          getTranslated(context, "qst_tyTitle"),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22.0,
@@ -30,8 +31,8 @@ class ThankYouPage extends StatelessWidget {
         Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 40.0),
-            child: const Text(
-              "Your response will only be used in ways that does not identify you. We will use your feedback to understand your workplace better.",
+            child: Text(
+              getTranslated(context, "qst_tyText"),
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: Colors.grey,
