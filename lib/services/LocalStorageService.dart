@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
@@ -36,6 +35,7 @@ class LocalStorageService {
   static const String Building = 'building';
   static const String Floor = 'floor';
   static const String YearsInNokia = 'yearsInNokia';
+  static const String AnonymousUserId = "uniqueId";
 
   // Gets value from local storage
   // App
@@ -58,6 +58,7 @@ class LocalStorageService {
   int get building => _getFromLocalStorage(Building);
   int get floor => _getFromLocalStorage(Floor);
   int get yearsInNokia => _getFromLocalStorage(YearsInNokia);
+  String get anonymousUserId => _getFromLocalStorage(AnonymousUserId);
 
   // Sets value to local storage
   // App
@@ -84,6 +85,8 @@ class LocalStorageService {
   set building(int value) => _saveToLocalStorage(Building, value);
   set floor(int value) => _saveToLocalStorage(Floor, value);
   set yearsInNokia(int value) => _saveToLocalStorage(YearsInNokia, value);
+  set anonymousUserId(String value) =>
+      _saveToLocalStorage(AnonymousUserId, value);
 
   // VVV Functions to save/load data below VVV
 
