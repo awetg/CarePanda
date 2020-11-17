@@ -96,7 +96,7 @@
     "hr_editQuestonHint":"Question text",
     "hr_editFreeTextBox":"Free text box answer",
     "hr_editQuestionType":"Question type",
-    "hr_editOptionsAmount":"Options amount",
+    "hr_editOptionsAmount":"Amount of options",
     "hr_editOption":"Option",
 
     "hr_editSnackbarOptionEmpty":"Option can not be empty",

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
 import 'package:carePanda/localization/localization.dart';
@@ -389,6 +387,32 @@ class _MessagesState extends State<Messages> {
     });
   }
 
+  _genderLanguageTranslate(value) {
+    switch (value) {
+      case "Don't want to tell":
+        return getTranslated(context, "userData_dontWnaTell");
+      case "Male":
+        return getTranslated(context, "userData_male");
+      case "Female":
+        return getTranslated(context, "userData_female");
+      case "Other":
+        return getTranslated(context, "userData_other");
+      default:
+        return getTranslated(context, "hr_error");
+    }
+  }
+
+  _buildingLanguageTranslate(value) {
+    switch (value) {
+      case "Don't want to tell":
+        return getTranslated(context, "userData_dontWnaTell");
+      case "Working from home":
+        return getTranslated(context, "userData_workFromHome");
+      default:
+        return value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -455,7 +479,8 @@ class _MessagesState extends State<Messages> {
                                 Expanded(
                                   child: msgData[index].expanded ?? false
                                       ? Text(
-                                          '${msgData[index].building ?? "Don't want to tell"}',
+                                          _buildingLanguageTranslate(
+                                              msgData[index].building),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
                                         )
@@ -484,7 +509,10 @@ class _MessagesState extends State<Messages> {
                                 Expanded(
                                   child: msgData[index].expanded ?? false
                                       ? Text(
-                                          '${msgData[index].floor ?? ""}',
+                                          (msgData[index].floor == 0)
+                                              ? getTranslated(context,
+                                                  "userData_dontWnaTell")
+                                              : msgData[index].floor.toString(),
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       : Container(),
@@ -516,7 +544,10 @@ class _MessagesState extends State<Messages> {
                                 Flexible(
                                   child: msgData[index].expanded ?? false
                                       ? Text(
-                                          '${msgData[index].age ?? "Don't want to tell"}',
+                                          (msgData[index].age == 0)
+                                              ? getTranslated(context,
+                                                  "userData_notSelected")
+                                              : msgData[index].age.toString(),
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       : Container(),
@@ -542,8 +573,10 @@ class _MessagesState extends State<Messages> {
                                 Expanded(
                                   child: msgData[index].expanded ?? false
                                       ? Text(
-                                          '${msgData[index].gender ?? "Don't want to tell"}',
+                                          _genderLanguageTranslate(
+                                              msgData[index].gender),
                                           overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
                                         )
                                       : Container(),
                                 ),
@@ -576,7 +609,12 @@ class _MessagesState extends State<Messages> {
                                 Expanded(
                                   child: msgData[index].expanded ?? false
                                       ? Text(
-                                          '${msgData[index].yearsInNokia ?? ""}',
+                                          (msgData[index].yearsInNokia == 0)
+                                              ? getTranslated(context,
+                                                  "userData_notSelected")
+                                              : msgData[index]
+                                                  .yearsInNokia
+                                                  .toString(),
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       : Container(),
@@ -621,22 +659,22 @@ List<QuestionnaireAddDataStructure> qstData = [
 ];
 
 List<MsgDataStructure> msgData = [
-  new MsgDataStructure("Esko", "Aho", "building", 2, 23,
-      "I need help with with this application", false, "male", 1, "10.13.2020"),
-  new MsgDataStructure("Seppo", "Aho", "building 1", 1, 22,
-      "adsdasdaadsadsadsdasads", false, "male", 2, "10.13.2020"),
+  new MsgDataStructure("Esko", "Aho", "Working from home", 2, 23,
+      "I need help with with this application", false, "Male", 1, "10.13.2020"),
+  new MsgDataStructure("Seppo", "Aho", "Karaportti 4", 0, 0,
+      "adsdasdaadsadsadsdasads", false, "Male", 0, "10.13.2020"),
   new MsgDataStructure(
       "Oskari",
       "Talvimaa",
-      "building 1",
+      "KaraEast (Building 12)",
       3,
       22,
       "asdsadasdasdsadsadasdasdsadasdsadsaadasdasddasasddasdasadsadsadsads",
       null,
-      "male",
+      "Male",
       5,
       "10.13.2020"),
-  new MsgDataStructure("Joona", "Kumpu", "building 4", 40, 22,
+  new MsgDataStructure("Joona", "Kumpu", "Mid Point 7A", 40, 22,
       "asdjasddfgdfgsdfhfgjhd", false, null, null, "10.13.2020"),
   new MsgDataStructure(null, "Kumpu", "Don't want to tell", null, 22,
       "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1, "10.13.2020"),
@@ -648,7 +686,7 @@ List<MsgDataStructure> msgData = [
       null,
       "asdjasdsadasdasdfhhadssasdadsssssssssssssssssssssssssssasd ad as as sadd sad asd s s dassda  dassd aad sad s ads a  adsa dss addasd as",
       false,
-      "male",
+      "Female",
       1,
       "10.13.2020"),
   new MsgDataStructure(
@@ -659,7 +697,7 @@ List<MsgDataStructure> msgData = [
       null,
       "Something happened",
       false,
-      "male",
+      "Other",
       null,
       "10.13.2020"),
   new MsgDataStructure("asd ", null, null, null, null, "Something happened",
