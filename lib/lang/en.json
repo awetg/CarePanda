@@ -41,8 +41,13 @@
     "hr_statisticsTitle":"HR statistics",
 
     "hrLogin_title":"HR login",
-    "hrLogin_usernameTxtfield":"Username",
+    "hrLogin_emailTxtfield":"Email",
     "hrLogin_passwordTxtfield":"Password",
+    "hrLogin_emptyEmail":"Email can't be empty",
+    "hrLogin_invalidEmail":"Invalid email format",
+    "hrLogin_emptyPass":"Password can't be empty",
+    "hrLogin_wrongEmailPass":"Wrong email or password",
+    "hrLogin_tooManyRequests":"Something went wrong, try again later",
     "hrLogin_loginBtn":"Login",
 
     "userData_title":"Please give us some info about yourself",

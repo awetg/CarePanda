@@ -4,6 +4,7 @@ import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
@@ -139,15 +140,13 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
-  var _isLoggedIn;
-  var _storageService = locator<LocalStorageService>();
   int _selectedPage = 0;
   var _pageOptions;
+  User user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
-    _isLoggedIn = _storageService.isLoggedIn ?? false;
 
     _pageOptions = [
       HomePage(),
@@ -157,7 +156,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
         refreshNavBar: () {
           setState(
             () {
-              _isLoggedIn = _storageService.isLoggedIn ?? false;
+              user = FirebaseAuth.instance.currentUser;
             },
           );
         },
@@ -185,11 +184,11 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: getTranslated(context, "bottomNavBar_settings")),
-          if (_isLoggedIn)
+          if (!(user == null))
             BottomNavigationBarItem(
                 icon: Icon(Icons.assessment),
                 label: getTranslated(context, "bottomNavBar_statistics")),
-          if (_isLoggedIn)
+          if (!(user == null))
             BottomNavigationBarItem(
                 icon: Icon(Icons.assignment),
                 label: getTranslated(context, "bottomNavBar_admin")),

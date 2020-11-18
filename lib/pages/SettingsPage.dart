@@ -4,6 +4,7 @@ import 'package:carePanda/widgets/HRLoginPopup.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/Theme.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/widgets/UserDataPopup.dart';
@@ -21,38 +22,36 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPage extends State<SettingsPage> {
-  var _isLoggedIn;
   var _storageService = locator<LocalStorageService>();
+  User user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
-    _isLoggedIn = _storageService.isLoggedIn ?? false;
   }
 
   // When user closes popup, changes layout and shows snackbar if user logged in successfully
   _loginPopupClosed() {
     setState(
       () {
-        _isLoggedIn = _storageService.isLoggedIn ?? false;
+        user = FirebaseAuth.instance.currentUser;
+        if (!(user == null)) {
+          _createSnackBar(getTranslated(context, "settings_successfulLogin"));
+          widget.refreshNavBar();
+        }
       },
     );
-    if (_isLoggedIn) {
-      _createSnackBar(getTranslated(context, "settings_successfulLogin"));
-      widget.refreshNavBar();
-    }
   }
 
   // Changes layout and displays snackbar as user logs out
-  _logout() {
-    setState(
-      () {
-        _storageService.isLoggedIn = false;
-        _isLoggedIn = _storageService.isLoggedIn;
-      },
-    );
-    _createSnackBar(getTranslated(context, "settings_successfulLogout"));
-    widget.refreshNavBar();
+  _logout() async {
+    await FirebaseAuth.instance.signOut().then((value) => {
+          setState(() {
+            user = FirebaseAuth.instance.currentUser;
+          }),
+          _createSnackBar(getTranslated(context, "settings_successfulLogout")),
+          widget.refreshNavBar(),
+        });
   }
 
   // Creates snackbar with given message
@@ -93,7 +92,7 @@ class _SettingsPage extends State<SettingsPage> {
             SizedBox(height: 18),
 
             // HR login button
-            if (!_isLoggedIn)
+            if ((user == null))
               Padding(
                 padding: const EdgeInsets.only(right: 14.0),
                 child: OutlineButton(
@@ -119,7 +118,7 @@ class _SettingsPage extends State<SettingsPage> {
               ),
 
             // HR logout button
-            if (_isLoggedIn)
+            if (!(user == null))
               Padding(
                 padding: const EdgeInsets.only(right: 14.0),
                 child: OutlineButton(

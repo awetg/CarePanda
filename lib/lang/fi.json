@@ -41,8 +41,13 @@
     "hr_statisticsTitle":"HR tilastot",
 
     "hrLogin_title":"HR kirjautuminen",
-    "hrLogin_usernameTxtfield":"Käyttäjänimi",
+    "hrLogin_emailTxtfield":"Sähköposti",
     "hrLogin_passwordTxtfield":"Salasana",
+    "hrLogin_emptyEmail":"Sähköposti ei voi olla tyhjä",
+    "hrLogin_invalidEmail":"Virheellinen sähköposti",
+    "hrLogin_emptyPass":"Salasana ei voi olla tyhjä",
+    "hrLogin_wrongEmailPass":"Väärä sähköposti tai salasana",
+    "hrLogin_tooManyRequests":"Jotain meni vikaan, yritä myöhemmin uudelleen",
     "hrLogin_loginBtn":"Kirjaudu",
 
     "userData_title":"Antaisitko tietoa itsestäsi",
