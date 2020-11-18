@@ -1,3 +1,8 @@
+import 'package:carePanda/DataStructures/MsgDataStructure.dart';
+import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
@@ -8,6 +13,9 @@ class MsgForHRPopup extends StatefulWidget {
 
 class _MsgForHRPopup extends State<MsgForHRPopup> {
   var _anonymousMsg = false;
+  var data;
+  var _storageService = locator<LocalStorageService>();
+  var _msg;
 
   _onAnonymousCheckBoxChange(bool value) {
     setState(() {
@@ -18,10 +26,34 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
   _sendMessage() {
     // Send message to firebase (if not anonymous, sends userdata with the msg)
     if (!_anonymousMsg) {
+      data = new MsgDataStructure(
+          name: _storageService.name,
+          lastName: _storageService.lastName,
+          building: _storageService.building,
+          floor: _storageService.floor,
+          age: _storageService.birthYear,
+          message: _msg,
+          expanded: false,
+          gender: _storageService.gender,
+          yearsInNokia: _storageService.yearsInNokia,
+          date: DateTime.now().toString());
       log("isAnonymous: " + _anonymousMsg.toString());
     } else {
+      data = new MsgDataStructure(
+          name: "",
+          lastName: "",
+          building: 0,
+          floor: 0,
+          age: 0,
+          message: _msg,
+          expanded: false,
+          gender: 0,
+          yearsInNokia: 0,
+          date: DateTime.now().toString());
       log("isAnonymous: " + _anonymousMsg.toString());
     }
+
+    locator<FirestoreService>().saveHrMessage(data);
 
     Navigator.of(context).pop();
   }
@@ -32,7 +64,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
 
     return AlertDialog(
       contentPadding: EdgeInsets.only(left: 25, right: 25, top: 5, bottom: 5),
-      title: Text("Send a message for HR",
+      title: Text(getTranslated(context, "msgForHR_title"),
           style: TextStyle(color: Theme.of(context).accentColor)),
 
       // Container with fixed width to make dialog wider
@@ -44,7 +76,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
             ListTileTheme(
               contentPadding: EdgeInsets.all(0),
               child: CheckboxListTile(
-                title: Text("Send message anonymously"),
+                title: Text(getTranslated(context, "msgForHR_sendMsgAnon")),
                 value: _anonymousMsg,
                 activeColor: Theme.of(context).accentColor,
                 onChanged: _onAnonymousCheckBoxChange,
@@ -61,6 +93,9 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                 child: Container(
                   color: Theme.of(context).cardColor,
                   child: TextFormField(
+                      onChanged: (value) {
+                        _msg = value;
+                      },
                       maxLines: 3,
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -75,7 +110,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                                   Theme.of(context).textTheme.bodyText1.color,
                             ),
                           ),
-                          hintText: "Message for HR")),
+                          hintText: getTranslated(context, "msgForHR_hint"))),
                 ),
               ),
             ),
@@ -86,14 +121,16 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
       // Buttons
       actions: [
         FlatButton(
-          child: Text("Cancel", style: TextStyle(fontSize: 18)),
+          child: Text(getTranslated(context, "cancelBtn"),
+              style: TextStyle(fontSize: 18)),
           textColor: Theme.of(context).accentColor,
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         RaisedButton(
-          child: const Text('Send', style: TextStyle(fontSize: 18)),
+          child: Text(getTranslated(context, "submitBtn"),
+              style: TextStyle(fontSize: 18)),
           textColor: Colors.white,
           onPressed: () {
             _sendMessage();

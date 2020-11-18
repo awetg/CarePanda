@@ -1,3 +1,4 @@
+import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,7 @@ class FirestoreService {
   // firestore collection path values
   static const String _survey_response_path = "survey_responses";
   static const String _survey_questions_path = "survey_questions";
+  static const String _hrMessages_path = "hr_messages";
 
   factory FirestoreService() {
     return _firestoreService;
@@ -93,5 +95,19 @@ class FirestoreService {
               ...snapshots.data(),
               ...{"id": snapshots.id}
             }));
+  }
+
+  Future<void> saveHrMessage(MsgDataStructure response) {
+    return _db.collection(_hrMessages_path).doc().set(response.toMap());
+  }
+
+  Stream<List<MsgDataStructure>> getAllHrMessages() {
+    return _db
+        .collection(_hrMessages_path)
+        // .get() //future
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+            .map((doc) => MsgDataStructure.fromMap(doc.data()))
+            .toList());
   }
 }

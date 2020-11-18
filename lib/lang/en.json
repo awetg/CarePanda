@@ -20,6 +20,10 @@
     "home_otherServicesBtn":"Other services",
     "home_msgForHrBtn":"Send message for HR",
 
+    "msgForHR_title":"Send a message for HR",
+    "msgForHR_sendMsgAnon":"Send message anonymously",
+    "msgForHR_hint":"Message for HR",
+
     "settings_title":"Settings",
     "settings_appSettings": "App settings",
     "settings_language":"Language",

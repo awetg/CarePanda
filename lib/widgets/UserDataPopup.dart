@@ -27,12 +27,31 @@ class _UserDataPopup extends State<UserDataPopup> {
   int _pickerDataYearsInNokia;
 
   var _genderList;
-  var buildingData;
+  var _buildingList;
 
   // Takes in building's index to know how many floor is there in the building
   // This list is later used to create a list of floors depending on this list's values
   final floorAmountPerBuilding = [6, 2, 5, 8, 6, 5];
   var floorList;
+
+  @override
+  void initState() {
+    if (_storageService.firstTimeStartUp ?? true) {
+      _setUpVariables();
+    }
+    super.initState();
+  }
+
+  // Sets up variables to default values on first start up
+  _setUpVariables() {
+    _storageService.name = "";
+    _storageService.lastName = "";
+    _storageService.birthYear = 0;
+    _storageService.yearsInNokia = 0;
+    _storageService.gender = 0;
+    _storageService.building = 0;
+    _storageService.floor = 0;
+  }
 
   // Initialises variables and gives them default values if they are null
   // If int variables are set to 0, set's variable to "Not selected" or Don't want to tell" to display it instead of 0
@@ -47,8 +66,7 @@ class _UserDataPopup extends State<UserDataPopup> {
       getTranslated(context, "userData_other")
     ];
 
-    // Building data
-    buildingData = [
+    _buildingList = [
       getTranslated(context, "userData_dontWnaTell"),
       getTranslated(context, "userData_workFromHome"),
       "Karaportti 4",
@@ -59,41 +77,40 @@ class _UserDataPopup extends State<UserDataPopup> {
       "Mid Point 7C"
     ];
 
-    _name = _storageService.name ?? "";
-    _lastName = _storageService.lastName ?? "";
+    _name = _storageService.name;
+    _lastName = _storageService.lastName;
 
     // Birth year and years worked in nokia, if 0, sets it to not selected
-    _birthYear = _storageService.birthYear ??
-        getTranslated(context, "userData_notSelected");
+    _birthYear = _storageService.birthYear;
     if (_birthYear == 0) {
       _birthYear = getTranslated(context, "userData_notSelected");
     }
 
-    _yearsInNokia = _storageService.yearsInNokia ??
-        getTranslated(context, "userData_notSelected");
+    _yearsInNokia = _storageService.yearsInNokia;
     if (_yearsInNokia == 0) {
       _yearsInNokia = getTranslated(context, "userData_notSelected");
     }
 
     // Gender and building uses lists index to identify which the user has chosen
     // Index is stored in shared preference and this way localization is easier.
-    _gender = _genderList[_storageService.gender ?? 0];
+    _gender = _genderList[_storageService.gender];
 
-    _building = buildingData[_storageService.building ?? 0];
+    _building = _buildingList[_storageService.building];
 
     // Gets floors data from shared preference, if it's 0, sets it to "Don't want to tell"
-    _floor = _storageService.floor.toString() ??
-        getTranslated(context, "userData_dontWnaTell");
+    _floor = _storageService.floor.toString();
     if (_floor == "0") {
       _floor = getTranslated(context, "userData_dontWnaTell");
     }
 
     // If building value is chosen by the user, generates floorlist depending on floorAmountPerBuilding values using building list's index
-    if (buildingData.indexOf(_building) != 0 &&
-        buildingData.indexOf(_building) != 1) {
+    if (_buildingList.indexOf(_building) != 0 &&
+        _buildingList.indexOf(_building) != 1) {
       floorList = [
         for (var i = 1;
-            i < floorAmountPerBuilding[buildingData.indexOf(_building) - 2] + 1;
+            i <
+                floorAmountPerBuilding[_buildingList.indexOf(_building) - 2] +
+                    1;
             i += 1)
           i.toString()
       ];
@@ -126,10 +143,10 @@ class _UserDataPopup extends State<UserDataPopup> {
     _storageService.birthYear = _birthYear;
     _storageService.yearsInNokia = _yearsInNokia;
     _storageService.gender = _genderList.indexOf(_gender);
-    _storageService.building = buildingData.indexOf(_building);
+    _storageService.building = _buildingList.indexOf(_building);
 
     // If user doesn't give building data, sets floor data to "Don't wan't to tell" aswell
-    if (buildingData.indexOf(_building) == 0) {
+    if (_buildingList.indexOf(_building) == 0) {
       _floor = getTranslated(context, "userData_dontWnaTell");
     }
 
@@ -359,21 +376,21 @@ class _UserDataPopup extends State<UserDataPopup> {
                   settingName: getTranslated(context, "userData_workBuilding"),
                   settingNameFontSize: 18.0,
                   value: _building,
-                  data: buildingData,
+                  data: _buildingList,
                   onChange: (newValue) {
                     setState(() {
                       // If value changes, changes floor to basic value, changes floor's list depending on building value
                       if (newValue != _building) {
                         _building = newValue;
                         _floor = getTranslated(context, "userData_dontWnaTell");
-                        if (buildingData.indexOf(_building) != 0 &&
-                            buildingData.indexOf(_building) != 1) {
+                        if (_buildingList.indexOf(_building) != 0 &&
+                            _buildingList.indexOf(_building) != 1) {
                           // Creates floor list depending on building's index value
                           floorList = [
                             for (var i = 1;
                                 i <
                                     floorAmountPerBuilding[
-                                            buildingData.indexOf(_building) -
+                                            _buildingList.indexOf(_building) -
                                                 2] +
                                         1;
                                 i += 1)
@@ -389,8 +406,8 @@ class _UserDataPopup extends State<UserDataPopup> {
               SizedBox(height: 22),
 
               // Floor
-              if (buildingData.indexOf(_building) != 0 &&
-                  buildingData.indexOf(_building) != 1)
+              if (_buildingList.indexOf(_building) != 0 &&
+                  _buildingList.indexOf(_building) != 1)
                 UserDataDropDownButton(
                     settingName: getTranslated(context, "userData_floor"),
                     settingNameFontSize: 18.0,

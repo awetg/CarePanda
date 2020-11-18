@@ -20,6 +20,10 @@
     "home_otherServicesBtn":"Muut plavelut",
     "home_msgForHrBtn":"Lähetä viesti HR:lle",
 
+    "msgForHR_title":"Lähetä viesti HR:lle",
+    "msgForHR_sendMsgAnon":"Lähetä viesti nimettömästi",
+    "msgForHR_hint":"Viesti HR:lle",
+
     "settings_title":"Asetukset",
     "settings_appSettings":"Applikaation asetukset",
     "settings_language":"Kieli",

@@ -2,6 +2,8 @@ import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/EditAddQuestionnaire.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/services/firestore_service.dart';
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
 
@@ -377,272 +379,323 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+  var _genderList;
+  var _buildingList;
+  var _length;
+  var _data;
+  var _expandedOnesList = [];
+  var _shouldExpand;
+
   // Expanding card
-  _expandItem(MsgDataStructure msgData) {
+  // Inserts into empty list all the indexes that should be expanded and use the list to determine which to expand
+  _expandItem(int data) {
     setState(() {
-      if (msgData.expanded == null) {
-        msgData.expanded = false;
+      if (_expandedOnesList.contains(data)) {
+        _expandedOnesList.remove(data);
+      } else {
+        _expandedOnesList.add(data);
       }
-      msgData.expanded = !msgData.expanded;
     });
   }
 
-  _genderLanguageTranslate(value) {
-    switch (value) {
-      case "Don't want to tell":
-        return getTranslated(context, "userData_dontWnaTell");
-      case "Male":
-        return getTranslated(context, "userData_male");
-      case "Female":
-        return getTranslated(context, "userData_female");
-      case "Other":
-        return getTranslated(context, "userData_other");
-      default:
-        return getTranslated(context, "hr_error");
-    }
-  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  _buildingLanguageTranslate(value) {
-    switch (value) {
-      case "Don't want to tell":
-        return getTranslated(context, "userData_dontWnaTell");
-      case "Working from home":
-        return getTranslated(context, "userData_workFromHome");
-      default:
-        return value;
-    }
+    _genderList = [
+      getTranslated(context, "userData_dontWnaTell"),
+      getTranslated(context, "userData_male"),
+      getTranslated(context, "userData_female"),
+      getTranslated(context, "userData_other")
+    ];
+
+    _buildingList = [
+      getTranslated(context, "userData_dontWnaTell"),
+      getTranslated(context, "userData_workFromHome"),
+      "Karaportti 4",
+      "Karaportti 8",
+      "KaraEast (Building 12)",
+      "Mid Point 7A",
+      "Mid Point 7B",
+      "Mid Point 7C"
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: msgData.length,
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Card(
-              child: ListTile(
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 6),
+    return StreamBuilder<List<MsgDataStructure>>(
+      stream: locator<FirestoreService>().getAllHrMessages(),
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          // Length and data
+          _length = snapshot.data.length;
+          _data = snapshot.data;
+          _data.sort((a, b) => b.date.compareTo(a.date) as int);
 
-                          // Name and last name
-                          Text(
-                              '${msgData[index].name ?? "(No name)"}  ${msgData[index].lastName ?? ""}',
-                              style: TextStyle(
-                                  color: Theme.of(context).accentColor),
-                              overflow: TextOverflow.ellipsis),
-                          SizedBox(height: 6),
-                          // Limits the message size (max 2 lines), when opened show's the entire message
-                          Text(
-                            msgData[index].message,
-                            overflow: msgData[index].expanded ?? false
-                                ? null
-                                : TextOverflow.ellipsis,
-                            maxLines:
-                                msgData[index].expanded ?? false ? null : 2,
-                          ),
-                          SizedBox(height: 12),
+          return Container(
+            child: Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _length,
+                physics: AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  // Boolean that determines is the card expanded or not
+                  _shouldExpand = _expandedOnesList.contains(index);
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Card(
+                      child: ListTile(
+                        title: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 6),
 
-                          // Date
-                          Text(msgData[index].date,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline2
-                                      .color)),
+                                  // Name and last name
+                                  Text(
+                                      '${_data[index].name == "" ? "(No name)" : _data[index].name}  ${_data[index].lastName}',
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                      overflow: TextOverflow.ellipsis),
+                                  SizedBox(height: 6),
+                                  // Limits the message size (max 2 lines), when opened show's the entire message
+                                  Text(
+                                    _data[index].message,
+                                    overflow: _shouldExpand ?? false
+                                        ? null
+                                        : TextOverflow.ellipsis,
+                                    maxLines: _shouldExpand ?? false ? null : 2,
+                                  ),
+                                  SizedBox(height: 12),
 
-                          // Free space
-                          msgData[index].expanded ?? false
-                              ? SizedBox(height: 10)
-                              : Container(),
+                                  // Date
+                                  Text(_data[index].date,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headline2
+                                              .color)),
 
-                          // Building
-                          if (msgData[index].building != null)
-                            Row(
-                              children: [
-                                msgData[index].expanded ?? false
-                                    ? Text(
-                                        getTranslated(
-                                            context, "hr_msgBuilding"),
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor))
-                                    : Container(),
-                                Expanded(
-                                  child: msgData[index].expanded ?? false
-                                      ? Text(
-                                          _buildingLanguageTranslate(
-                                              msgData[index].building),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        )
+                                  // Free space
+                                  _shouldExpand ?? false
+                                      ? SizedBox(height: 10)
                                       : Container(),
-                                ),
-                              ],
+
+                                  // Building
+                                  if (_data[index].building != null)
+                                    Row(
+                                      children: [
+                                        _shouldExpand ?? false
+                                            ? Text(
+                                                getTranslated(
+                                                    context, "hr_msgBuilding"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))
+                                            : Container(),
+                                        Expanded(
+                                          child: _expandedOnesList
+                                                      .contains(index) ??
+                                                  false
+                                              ? Text(
+                                                  _buildingList[snapshot
+                                                      .data[index].building],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                )
+                                              : Container(),
+                                        ),
+                                      ],
+                                    ),
+
+                                  // Free space
+                                  if (_data[index].floor != null)
+                                    _shouldExpand ?? false
+                                        ? SizedBox(height: 8)
+                                        : Container(),
+
+                                  // Floor
+                                  if (_data[index].floor != null)
+                                    Row(
+                                      children: [
+                                        _shouldExpand ?? false
+                                            ? Text(
+                                                getTranslated(
+                                                    context, "hr_msgFloor"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))
+                                            : Container(),
+                                        Expanded(
+                                          child: _expandedOnesList
+                                                      .contains(index) ??
+                                                  false
+                                              ? Text(
+                                                  (_data[index].floor == 0)
+                                                      ? getTranslated(context,
+                                                          "userData_dontWnaTell")
+                                                      : snapshot
+                                                          .data[index].floor
+                                                          .toString(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
+                                              : Container(),
+                                        ),
+                                      ],
+                                    ),
+
+                                  // Free space
+                                  if (_data[index].age != null &&
+                                          _data[index].building != null ||
+                                      _data[index].gender != null &&
+                                          _data[index].building != null)
+                                    _shouldExpand ?? false
+                                        ? SizedBox(height: 8)
+                                        : Container(),
+
+                                  // Age
+                                  Row(
+                                    children: [
+                                      if (_data[index].age != null)
+                                        _shouldExpand ?? false
+                                            ? Text(
+                                                getTranslated(
+                                                    context, "hr_msgAge"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))
+                                            : Container(),
+
+                                      if (_data[index].age != null)
+                                        Flexible(
+                                          child: _expandedOnesList
+                                                      .contains(index) ??
+                                                  false
+                                              ? Text(
+                                                  (_data[index].age == 0)
+                                                      ? getTranslated(context,
+                                                          "userData_notSelected")
+                                                      : snapshot.data[index].age
+                                                          .toString(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
+                                              : Container(),
+                                        ),
+
+                                      // Free space between
+                                      if (_data[index].age != null)
+                                        _shouldExpand ?? false
+                                            ? SizedBox(width: 10)
+                                            : Container(),
+
+                                      // gender
+                                      if (_data[index].gender != null)
+                                        _shouldExpand ?? false
+                                            ? Text(
+                                                getTranslated(
+                                                    context, "hr_msgGender"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))
+                                            : Container(),
+
+                                      if (_data[index].gender != null)
+                                        Expanded(
+                                          child: _expandedOnesList
+                                                      .contains(index) ??
+                                                  false
+                                              ? Text(
+                                                  _genderList[snapshot
+                                                      .data[index].gender],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                )
+                                              : Container(),
+                                        ),
+                                    ],
+                                  ),
+
+                                  // Free space between
+                                  if (snapshot.data[index].yearsInNokia !=
+                                              null &&
+                                          _data[index].building != null &&
+                                          _data[index].age != null ||
+                                      snapshot.data[index].yearsInNokia !=
+                                              null &&
+                                          _data[index].building != null &&
+                                          _data[index].gender != null)
+                                    _shouldExpand ?? false
+                                        ? SizedBox(height: 8)
+                                        : Container(),
+
+                                  // Years in nokia
+                                  if (_data[index].yearsInNokia != null)
+                                    Row(
+                                      children: [
+                                        _shouldExpand ?? false
+                                            ? Text(
+                                                getTranslated(context,
+                                                    "hr_msgYearsWorkedNokia"),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))
+                                            : Container(),
+                                        Expanded(
+                                          child: _expandedOnesList
+                                                      .contains(index) ??
+                                                  false
+                                              ? Text(
+                                                  (_data[index].yearsInNokia ==
+                                                          0)
+                                                      ? getTranslated(context,
+                                                          "userData_notSelected")
+                                                      : _data[index]
+                                                          .yearsInNokia
+                                                          .toString(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
+                                              : Container(),
+                                        ),
+                                      ],
+                                    ),
+
+                                  SizedBox(height: 6),
+                                ],
+                              ),
                             ),
 
-                          // Free space
-                          if (msgData[index].floor != null)
-                            msgData[index].expanded ?? false
-                                ? SizedBox(height: 8)
-                                : Container(),
+                            // Icon
+                            _shouldExpand ?? false
+                                ? Icon(Icons.expand_less, size: 28)
+                                : Icon(Icons.expand_more, size: 28),
+                          ],
+                        ),
 
-                          // Floor
-                          if (msgData[index].floor != null)
-                            Row(
-                              children: [
-                                msgData[index].expanded ?? false
-                                    ? Text(
-                                        getTranslated(context, "hr_msgFloor"),
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor))
-                                    : Container(),
-                                Expanded(
-                                  child: msgData[index].expanded ?? false
-                                      ? Text(
-                                          (msgData[index].floor == 0)
-                                              ? getTranslated(context,
-                                                  "userData_dontWnaTell")
-                                              : msgData[index].floor.toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      : Container(),
-                                ),
-                              ],
-                            ),
-
-                          // Free space
-                          if (msgData[index].age != null &&
-                                  msgData[index].building != null ||
-                              msgData[index].gender != null &&
-                                  msgData[index].building != null)
-                            msgData[index].expanded ?? false
-                                ? SizedBox(height: 8)
-                                : Container(),
-
-                          // Age
-                          Row(
-                            children: [
-                              if (msgData[index].age != null)
-                                msgData[index].expanded ?? false
-                                    ? Text(getTranslated(context, "hr_msgAge"),
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor))
-                                    : Container(),
-
-                              if (msgData[index].age != null)
-                                Flexible(
-                                  child: msgData[index].expanded ?? false
-                                      ? Text(
-                                          (msgData[index].age == 0)
-                                              ? getTranslated(context,
-                                                  "userData_notSelected")
-                                              : msgData[index].age.toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      : Container(),
-                                ),
-
-                              // Free space between
-                              if (msgData[index].age != null)
-                                msgData[index].expanded ?? false
-                                    ? SizedBox(width: 10)
-                                    : Container(),
-
-                              // gender
-                              if (msgData[index].gender != null)
-                                msgData[index].expanded ?? false
-                                    ? Text(
-                                        getTranslated(context, "hr_msgGender"),
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor))
-                                    : Container(),
-
-                              if (msgData[index].gender != null)
-                                Expanded(
-                                  child: msgData[index].expanded ?? false
-                                      ? Text(
-                                          _genderLanguageTranslate(
-                                              msgData[index].gender),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        )
-                                      : Container(),
-                                ),
-                            ],
-                          ),
-
-                          // Free space between
-                          if (msgData[index].yearsInNokia != null &&
-                                  msgData[index].building != null &&
-                                  msgData[index].age != null ||
-                              msgData[index].yearsInNokia != null &&
-                                  msgData[index].building != null &&
-                                  msgData[index].gender != null)
-                            msgData[index].expanded ?? false
-                                ? SizedBox(height: 8)
-                                : Container(),
-
-                          // Years in nokia
-                          if (msgData[index].yearsInNokia != null)
-                            Row(
-                              children: [
-                                msgData[index].expanded ?? false
-                                    ? Text(
-                                        getTranslated(
-                                            context, "hr_msgYearsWorkedNokia"),
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor))
-                                    : Container(),
-                                Expanded(
-                                  child: msgData[index].expanded ?? false
-                                      ? Text(
-                                          (msgData[index].yearsInNokia == 0)
-                                              ? getTranslated(context,
-                                                  "userData_notSelected")
-                                              : msgData[index]
-                                                  .yearsInNokia
-                                                  .toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      : Container(),
-                                ),
-                              ],
-                            ),
-
-                          SizedBox(height: 6),
-                        ],
+                        // On tap expands card to show more data of message
+                        onTap: () {
+                          _expandItem(index);
+                        },
                       ),
                     ),
-
-                    // Icon
-                    msgData[index].expanded ?? false
-                        ? Icon(Icons.expand_less, size: 28)
-                        : Icon(Icons.expand_more, size: 28),
-                  ],
-                ),
-
-                // On tap expands card to show more data of message
-                onTap: () {
-                  _expandItem(msgData[index]);
+                  );
                 },
               ),
             ),
           );
-        },
-      ),
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
@@ -656,61 +709,4 @@ List<QuestionnaireAddDataStructure> qstData = [
       "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
   new QuestionnaireAddDataStructure(true, "How you tomorrow?",
       "QuestionType.MultiSelection", '["Good","Bad","Can not say"]', null),
-];
-
-List<MsgDataStructure> msgData = [
-  new MsgDataStructure("Esko", "Aho", "Working from home", 2, 23,
-      "I need help with with this application", false, "Male", 1, "10.13.2020"),
-  new MsgDataStructure("Seppo", "Aho", "Karaportti 4", 0, 0,
-      "adsdasdaadsadsadsdasads", false, "Male", 0, "10.13.2020"),
-  new MsgDataStructure(
-      "Oskari",
-      "Talvimaa",
-      "KaraEast (Building 12)",
-      3,
-      22,
-      "asdsadasdasdsadsadasdasdsadasdsadsaadasdasddasasddasdasadsadsadsads",
-      null,
-      "Male",
-      5,
-      "10.13.2020"),
-  new MsgDataStructure("Joona", "Kumpu", "Mid Point 7A", 40, 22,
-      "asdjasddfgdfgsdfhfgjhd", false, null, null, "10.13.2020"),
-  new MsgDataStructure(null, "Kumpu", "Don't want to tell", null, 22,
-      "asdjasddfgdfgsdfhfgjhd", false, "Don't want to tell", 1, "10.13.2020"),
-  new MsgDataStructure(
-      "Jorma",
-      null,
-      "Don't want to tell",
-      null,
-      null,
-      "asdjasdsadasdasdfhhadssasdadsssssssssssssssssssssssssssasd ad as as sadd sad asd s s dassda  dassd aad sad s ads a  adsa dss addasd as",
-      false,
-      "Female",
-      1,
-      "10.13.2020"),
-  new MsgDataStructure(
-      "adsssssssssssssssssssssssssssssssssssssssasda",
-      null,
-      null,
-      null,
-      null,
-      "Something happened",
-      false,
-      "Other",
-      null,
-      "10.13.2020"),
-  new MsgDataStructure("asd ", null, null, null, null, "Something happened",
-      false, null, 1, "10.13.2020"),
-  new MsgDataStructure(
-      null,
-      "asdads ada s ads addasad s adsads ads adsasasasdasd",
-      null,
-      null,
-      null,
-      "Something happened",
-      false,
-      null,
-      null,
-      "10.13.2020"),
 ];
