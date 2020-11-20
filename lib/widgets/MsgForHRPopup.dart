@@ -99,7 +99,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                   autovalidateMode: AutovalidateMode.always,
                   validator: (value) {
                     if (_hasTriedToSendMsg) {
-                      if (value.isEmpty) {
+                      if (value.replaceAll(new RegExp(r"\s+"), "").isEmpty) {
                         _validMsg = false;
                         return getTranslated(context, "msgForHr_noMg");
                       } else {
@@ -107,7 +107,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                         return null;
                       }
                     }
-                    if (value.isNotEmpty) {
+                    if (value.replaceAll(new RegExp(r"\s+"), "").isNotEmpty) {
                       _validMsg = true;
                     }
                     return null;
