@@ -1,6 +1,8 @@
-import 'dart:convert';
-import 'package:carePanda/DataStructures/QuestionnaireAddDataStructure.dart';
+import 'dart:developer';
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/model/question_item.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:carePanda/services/firestore_service.dart';
 import 'package:carePanda/widgets/SimplePopupTwoButtons.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataTextField.dart';
@@ -9,11 +11,13 @@ import 'package:flutter/material.dart';
 class EditAddQuestionnaire extends StatefulWidget {
   EditAddQuestionnaire({
     @required this.pageTitle,
-    this.questionnaireData,
+    @required this.questionnaireData,
+    @required this.editingExistingQuestionnaire,
   });
 
   final pageTitle;
   final questionnaireData;
+  final editingExistingQuestionnaire;
 
   @override
   _EditAddQuestionnaireState createState() => _EditAddQuestionnaireState();
@@ -32,13 +36,13 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   var _questionType;
   var _questionTypeIndex;
   var _optionAmount;
-  var _listOfOptions;
+  List<String> _listOfOptions;
 
   // Bool to show or hide delete button
   var _newQuestionnaire = true;
 
   // New questionnaire list that is returned
-  var newQuestionList;
+  var newQuestionnaire;
 
   // Text field controller so that resetting textfield's is possible
   var textFieldController = TextEditingController();
@@ -69,25 +73,20 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
     _freeTextBoxBool = widget.questionnaireData.freeText ?? true;
 
     // Question type, repalcing characters to make it prettier for user
-    if (widget.questionnaireData.questionType == null) {
+    if (widget.questionnaireData.type == null) {
       _questionType = "QuestionType.RangeSelection";
       _questionTypeToIndex(_questionType);
     } else {
-      _questionType = widget.questionnaireData.questionType;
-      _questionTypeToIndex(_questionType);
+      _questionType = widget.questionnaireData.type;
+      _questionTypeToIndex(_questionType.toString());
     }
     // Get's option amount for multi/single -selection questionnaire
-    _optionAmount = widget.questionnaireData.options;
-    if (_optionAmount != null) {
-      _optionAmount = json.decode(_optionAmount).length.toString();
-    } else {
-      _optionAmount = "2";
-    }
+    _optionAmount = widget.questionnaireData.options.length.toString();
 
     // Gets options of multi/single -selection questionnaire
     _listOfOptions = widget.questionnaireData.options;
     if (_listOfOptions != null) {
-      _listOfOptions = json.decode(_listOfOptions);
+      _listOfOptions = _listOfOptions;
     } else {
       _listOfOptions = [];
     }
@@ -114,16 +113,16 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   }
 
   // Changes question type's index back to value so it can be stored in firestore properly
-  _questionTypeIndexToString(qstTypeIndex) {
+  _questionTypeIndexToQuestionType(qstTypeIndex) {
     switch (qstTypeIndex) {
       case 0:
-        return "QuestionType.RangeSelection";
+        return QuestionType.RangeSelection;
       case 1:
-        return "QuestionType.SingleSelection";
+        return QuestionType.SingleSelection;
       case 2:
-        return "QuestionType.MultiSelection";
+        return QuestionType.MultiSelection;
       default:
-        return "QuestionType.RangeSelection";
+        return QuestionType.RangeSelection;
     }
   }
 
@@ -183,30 +182,30 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
       }
     }
 
-    // Edits data to how it will be saved (not sure if needed)
-    // Uses the data structure to get into right form
-    newQuestionList = new QuestionnaireAddDataStructure(
-        _freeTextBoxBool,
-        _questionText.toString(),
-        _questionTypeIndexToString(_questionTypeIndex),
-        _listOfOptions
-            .toString()
-            .replaceAll("[", '["')
-            .replaceAll("]", '"]')
-            .replaceAll(", ", '","'),
-        10);
-
-    var arrayToParent = [];
-
-    // Array with variable submit so that parent knows wheter to delete or submit
-    arrayToParent.add(newQuestionList);
-    arrayToParent.add("Submit");
+    // Creates object to save in firestore
+    newQuestionnaire = new QuestionItem(
+      freeText: _freeTextBoxBool,
+      options: (_listOfOptions.length == 0) ? null : _listOfOptions,
+      question: _questionText.toString(),
+      rangeMax: (_questionTypeIndex == 0) ? 5 : null,
+      type: _questionTypeIndexToQuestionType(_questionTypeIndex),
+      date: DateTime.now().toString(),
+    );
 
     // Navigates back to HR management and removes history so going back is not possible
     // If option or question text is empty, shows snackbar and doesn't submit
     if (_questionTextNotEmpty) {
       if (_optionNotEmpty) {
-        Navigator.pop(context, arrayToParent);
+        // Save questionnaire
+        if (widget.editingExistingQuestionnaire) {
+          // Edits existing questionnaire
+          locator<FirestoreService>()
+              .editQuestionnaire(newQuestionnaire, widget.questionnaireData.id);
+        } else {
+          // Creates new questionnaire
+          locator<FirestoreService>().saveQuestionnaire(newQuestionnaire);
+        }
+        Navigator.pop(context);
       } else {
         _createSnackBar(
             getTranslated(context, "hr_editSnackbarOptionEmpty"), context);
@@ -218,9 +217,6 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   }
 
   _deleteQuestionnaire() async {
-    // Sends String "Delete" to parent so it knows to delete the questionnaire
-    var variableForParent = "Delete";
-
     // Opens dialog to make sure user wants to delete questionnaire
     // Also prevents user from acidentally deleting questionnaire
     final result = await showDialog(
@@ -233,7 +229,10 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
           );
         });
     if (result ?? false) {
-      Navigator.pop(context, variableForParent);
+      // Deletes questionnaire
+      locator<FirestoreService>()
+          .deleteQuestionnaire(widget.questionnaireData.id);
+      Navigator.pop(context);
     }
   }
 
@@ -374,6 +373,8 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
                         returnListFunction: (value, i) {
                           _optionOnChange(value, i);
                         }),
+
+                  if (_questionTypeIndex == 1) SizedBox(height: 4),
 
                   // Single selection
                   if (_questionTypeIndex == 1)

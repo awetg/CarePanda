@@ -97,6 +97,7 @@
     "hr_msgAge":"Age: ",
     "hr_msgGender":"Gender: ",
     "hr_msgYearsWorkedNokia":"Years worked in Nokia: ",
+    "hr_msgNoMsgs":"No messages",
 
     "hr_addQstTitle":"Add a new questionnaire",
     "hr_editQstTitle":"Edit questionnaire",

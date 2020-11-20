@@ -31,9 +31,8 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
           lastName: _storageService.lastName,
           building: _storageService.building,
           floor: _storageService.floor,
-          age: _storageService.birthYear,
+          birthYear: _storageService.birthYear,
           message: _msg,
-          expanded: false,
           gender: _storageService.gender,
           yearsInNokia: _storageService.yearsInNokia,
           date: DateTime.now().toString());
@@ -44,9 +43,8 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
           lastName: "",
           building: 0,
           floor: 0,
-          age: 0,
+          birthYear: 0,
           message: _msg,
-          expanded: false,
           gender: 0,
           yearsInNokia: 0,
           date: DateTime.now().toString());

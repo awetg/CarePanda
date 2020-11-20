@@ -97,10 +97,27 @@ class FirestoreService {
             }));
   }
 
+  // Save new questionnaire
+  Future<void> saveQuestionnaire(QuestionItem response) {
+    return _db.collection(_survey_questions_path).doc().set(response.toMap());
+  }
+
+  // Edit questionnaire
+  Future<void> editQuestionnaire(QuestionItem response, id) {
+    return _db.collection(_survey_questions_path).doc(id).set(response.toMap());
+  }
+
+  // Delete questionnaire
+  Future<void> deleteQuestionnaire(id) {
+    return _db.collection(_survey_questions_path).doc(id).delete();
+  }
+
+  // Save new HR message
   Future<void> saveHrMessage(MsgDataStructure response) {
     return _db.collection(_hrMessages_path).doc().set(response.toMap());
   }
 
+  // Get all HR messages
   Stream<List<MsgDataStructure>> getAllHrMessages() {
     return _db
         .collection(_hrMessages_path)

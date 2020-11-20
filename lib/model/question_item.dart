@@ -18,6 +18,8 @@ class QuestionItem {
   final List<String> options;
   // show free text box if set true, filling free text box is always optional for user
   final bool freeText;
+  // Date when questionnaire was added
+  final String date;
 
   const QuestionItem(
       {this.id,
@@ -25,7 +27,8 @@ class QuestionItem {
       this.type,
       this.rangeMax = 0,
       this.options = const [],
-      this.freeText = false});
+      this.freeText = false,
+      this.date});
 
   // Convert question from Firebase Firestore map of values to type of QuestionItem
   factory QuestionItem.fromMap(Map<String, dynamic> json) {
@@ -36,7 +39,8 @@ class QuestionItem {
             QuestionType.values.firstWhere((e) => e.toString() == json["type"]),
         rangeMax: ((json["rangeMax"] ?? 0) as int).toDouble(),
         options: List<String>.from(jsonDecode(json["options"] ?? "[]")),
-        freeText: json["freeText"] ?? false);
+        freeText: json["freeText"] ?? false,
+        date: json["date"]);
   }
 
   // Convert question from QuestionItem to Firebase Firestore map of values
@@ -45,9 +49,16 @@ class QuestionItem {
       "id": id,
       "question": question,
       "type": type.toString(),
-      "rangeMax": rangeMax,
-      "options": options,
+      "rangeMax": (rangeMax == null) ? null : rangeMax.toInt(),
+      "options": (options == null)
+          ? null
+          : options
+              .toString()
+              .replaceAll('[', '["')
+              .replaceAll(']', '"]')
+              .replaceAll(',', '","'),
       "freeText": freeText,
+      "date": date,
     };
   }
 }

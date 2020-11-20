@@ -3,7 +3,7 @@ class MsgDataStructure {
   final String lastName;
   final int building;
   final int floor;
-  final int age;
+  final int birthYear;
   final String message;
   final int gender;
   final int yearsInNokia;
@@ -11,16 +11,14 @@ class MsgDataStructure {
 
   // Bool to determine wheter the card is expanded in the UI
   // When using real data, give all the msgs "Expnaded" as false
-  bool expanded;
 
   MsgDataStructure(
       {this.name,
       this.lastName,
       this.building,
       this.floor,
-      this.age,
+      this.birthYear,
       this.message,
-      this.expanded,
       this.gender,
       this.yearsInNokia,
       this.date});
@@ -32,11 +30,10 @@ class MsgDataStructure {
       lastName: json["lastName"],
       building: json["building"],
       floor: json["floor"],
-      age: json["age"],
+      birthYear: json["birthYear"],
       gender: json["gender"],
       yearsInNokia: json["yearsInNokia"],
       date: json["date"],
-      expanded: json["expanded"],
     );
   }
 
@@ -47,11 +44,10 @@ class MsgDataStructure {
       "lastName": lastName,
       "building": building,
       "floor": floor,
-      "age": age,
+      "birthYear": birthYear,
       "gender": gender,
       "yearsInNokia": yearsInNokia,
       "date": date,
-      "expanded": expanded
     };
   }
 }
