@@ -4,6 +4,7 @@ import 'package:carePanda/widgets/HRLoginPopup.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/Theme.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/widgets/ReportBugPopup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,6 @@ class _SettingsPage extends State<SettingsPage> {
         padding: EdgeInsets.only(top: 10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             // App settings
             CardWidget(widget: AppSettings()),
@@ -91,48 +91,70 @@ class _SettingsPage extends State<SettingsPage> {
             CardWidget(widget: UserSettings()),
             SizedBox(height: 18),
 
-            // HR login button
-            if ((user == null))
-              Padding(
-                padding: const EdgeInsets.only(right: 14.0),
-                child: OutlineButton(
-                  child: Text(getTranslated(context, "settings_loginBtn"),
-                      style: TextStyle(fontSize: 18)),
-                  textColor: Theme.of(context).accentColor,
-                  borderSide: BorderSide(
-                    color: Theme.of(context).accentColor,
+            Padding(
+              padding: const EdgeInsets.only(right: 14, left: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlineButton(
+                    child: Text(getTranslated(context, "settings_reportBugBtn"),
+                        style: TextStyle(fontSize: 18)),
+                    textColor: Theme.of(context).accentColor,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).accentColor,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        barrierColor: _storageService.darkTheme
+                            ? Colors.black.withOpacity(0.4)
+                            : null,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ReportBugPopup();
+                        },
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    showDialog(
-                      barrierColor: _storageService.darkTheme
-                          ? Colors.black.withOpacity(0.4)
-                          : null,
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return HRLoginPopup();
-                      },
-                    ).then((_) => _loginPopupClosed());
-                  },
-                ),
-              ),
 
-            // HR logout button
-            if (!(user == null))
-              Padding(
-                padding: const EdgeInsets.only(right: 14.0),
-                child: OutlineButton(
-                  child: Text(getTranslated(context, "settings_logoutBtn"),
-                      style: TextStyle(fontSize: 18)),
-                  textColor: Theme.of(context).accentColor,
-                  borderSide: BorderSide(
-                    color: Theme.of(context).accentColor,
-                  ),
-                  onPressed: () {
-                    _logout();
-                  },
-                ),
+                  // HR login button
+                  if ((user == null))
+                    OutlineButton(
+                      child: Text(getTranslated(context, "settings_loginBtn"),
+                          style: TextStyle(fontSize: 18)),
+                      textColor: Theme.of(context).accentColor,
+                      borderSide: BorderSide(
+                        color: Theme.of(context).accentColor,
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          barrierColor: _storageService.darkTheme
+                              ? Colors.black.withOpacity(0.4)
+                              : null,
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return HRLoginPopup();
+                          },
+                        ).then((_) => _loginPopupClosed());
+                      },
+                    ),
+
+                  // HR logout button
+                  if (!(user == null))
+                    OutlineButton(
+                      child: Text(getTranslated(context, "settings_logoutBtn"),
+                          style: TextStyle(fontSize: 18)),
+                      textColor: Theme.of(context).accentColor,
+                      borderSide: BorderSide(
+                        color: Theme.of(context).accentColor,
+                      ),
+                      onPressed: () {
+                        _logout();
+                      },
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),

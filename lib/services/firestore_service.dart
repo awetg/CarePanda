@@ -1,5 +1,6 @@
 import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/model/question_item.dart';
+import 'package:carePanda/model/reportMsgModel.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'LocalStorageService.dart';
@@ -18,6 +19,7 @@ class FirestoreService {
   static const String _survey_response_path = "survey_responses";
   static const String _survey_questions_path = "survey_questions";
   static const String _hrMessages_path = "hr_messages";
+  static const String _reportBug_path = "bug_report_mesages";
 
   factory FirestoreService() {
     return _firestoreService;
@@ -134,5 +136,10 @@ class FirestoreService {
   // Delete HR message
   Future<void> deleteHrMessage(id) {
     return _db.collection(_hrMessages_path).doc(id).delete();
+  }
+
+  // Save new report a bug -message
+  Future<void> saveReportBugMsg(ReportMsgModel response) {
+    return _db.collection(_reportBug_path).doc().set(response.toMap());
   }
 }

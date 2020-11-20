@@ -23,7 +23,7 @@
     "msgForHR_title":"Lähetä viesti HR:lle",
     "msgForHR_sendMsgAnon":"Lähetä viesti nimettömästi",
     "msgForHR_hint":"Viesti HR:lle",
-    "msgForHr_noMg":"Viesti ei voi olla tyhjä",
+    "msgForHr_noMsg":"Viesti ei voi olla tyhjä",
 
     "settings_title":"Asetukset",
     "settings_appSettings":"Applikaation asetukset",
@@ -40,6 +40,12 @@
     "settings_logoutBtn":"Kirjaudu ulos",
     "settings_successfulLogin":"Kirjauduit sisään onnistuneesti",
     "settings_successfulLogout":"Kirjauduit ulos onnistuneesti",
+    "settings_reportBugBtn":"Reportoi bugi",
+
+    "reportBug_title":"Kertoisitko meille jos sinulla on tullut joitain bugeja vastaan",
+    "reportBug_hint":"Kuvaile bugia",
+    "reportBug_noMsg":"Viesti ei voi olla tyhjä",
+    "reportBug_privacy":"* Bugin reportointi ei lähetä henkilökohtaisia tietoja, vaan pelkästään annetun viestin ja ajankohdan",
 
     "user_dashboardTitle":"Dashboard",
 

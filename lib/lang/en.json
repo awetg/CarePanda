@@ -23,7 +23,7 @@
     "msgForHR_title":"Send a message for HR",
     "msgForHR_sendMsgAnon":"Send message anonymously",
     "msgForHR_hint":"Message for HR",
-    "msgForHr_noMg":"Message can not be empty",
+    "msgForHr_noMsg":"Message can not be empty",
 
     "settings_title":"Settings",
     "settings_appSettings": "App settings",
@@ -40,6 +40,12 @@
     "settings_logoutBtn":"logout",
     "settings_successfulLogin":"Successfully logged in",
     "settings_successfulLogout":"Successfully logged out",
+    "settings_reportBugBtn":"Report a bug",
+
+    "reportBug_title":"Please inform us of any bugs you have come across",
+    "reportBug_hint":"Describe the bug",
+    "reportBug_noMsg":"Message can not be empty",
+    "reportBug_privacy":"* Reporting a bug doesn't send any personal information, only given message and date/time when message was sent",
 
     "user_dashboardTitle":"Dashboard",
 

@@ -1,63 +1,30 @@
-import 'package:carePanda/DataStructures/MsgDataStructure.dart';
 import 'package:carePanda/localization/localization.dart';
-import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/model/reportMsgModel.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 
-class MsgForHRPopup extends StatefulWidget {
+class ReportBugPopup extends StatefulWidget {
   @override
-  _MsgForHRPopup createState() => _MsgForHRPopup();
+  _ReportBugPopup createState() => _ReportBugPopup();
 }
 
-class _MsgForHRPopup extends State<MsgForHRPopup> {
-  var _anonymousMsg = false;
-  var data;
-  var _storageService = locator<LocalStorageService>();
+class _ReportBugPopup extends State<ReportBugPopup> {
   var _msg;
   var _validMsg = false;
   var _hasTriedToSendMsg = false;
 
-  // Checkbox on change
-  _onAnonymousCheckBoxChange(bool value) {
-    setState(() {
-      _anonymousMsg = value;
-    });
-  }
-
-  // Sends message
-  _sendMessage() {
+  // Sends bug report
+  _sendBugReport() {
     setState(() {
       _hasTriedToSendMsg = true;
     });
 
-    // Send message to firebase (if not anonymous, sends userdata with the msg)
-    if (!_anonymousMsg) {
-      data = new MsgDataStructure(
-          name: _storageService.name,
-          lastName: _storageService.lastName,
-          building: _storageService.building,
-          floor: _storageService.floor,
-          birthYear: _storageService.birthYear,
-          message: _msg,
-          gender: _storageService.gender,
-          yearsInNokia: _storageService.yearsInNokia,
-          date: DateTime.now().toString());
-    } else {
-      data = new MsgDataStructure(
-          name: "",
-          lastName: "",
-          building: 0,
-          floor: 0,
-          birthYear: 0,
-          message: _msg,
-          gender: 0,
-          yearsInNokia: 0,
-          date: DateTime.now().toString());
-    }
-    if (_validMsg) {
-      locator<FirestoreService>().saveHrMessage(data);
+    var data =
+        new ReportMsgModel(message: _msg, date: DateTime.now().toString());
 
+    if (_validMsg) {
+      locator<FirestoreService>().saveReportBugMsg(data);
       Navigator.of(context).pop();
     }
   }
@@ -68,28 +35,16 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
 
     return AlertDialog(
       contentPadding: EdgeInsets.only(left: 25, right: 25, top: 5, bottom: 5),
-      title: Text(getTranslated(context, "msgForHR_title"),
+      title: Text(getTranslated(context, "reportBug_title"),
           style: TextStyle(color: Theme.of(context).accentColor)),
 
       // Container with fixed width to make dialog wider
       content: Container(
         width: width - 100,
+        padding: EdgeInsets.only(top: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTileTheme(
-              contentPadding: EdgeInsets.all(0),
-              child: CheckboxListTile(
-                title: Text(getTranslated(context, "msgForHR_sendMsgAnon")),
-                value: _anonymousMsg,
-                activeColor: Theme.of(context).accentColor,
-                onChanged: _onAnonymousCheckBoxChange,
-                controlAffinity: ListTileControlAffinity.trailing,
-              ),
-            ),
-
-            SizedBox(height: 10),
-
             // Theme so that in light mode borders don't dissapear on focus
             Theme(
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
@@ -103,7 +58,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                     if (_hasTriedToSendMsg) {
                       if (value.replaceAll(new RegExp(r"\s+"), "").isEmpty) {
                         _validMsg = false;
-                        return getTranslated(context, "msgForHr_noMsg");
+                        return getTranslated(context, "reportBug_noMsg");
                       } else {
                         _validMsg = true;
                         return null;
@@ -128,7 +83,22 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                           color: Theme.of(context).textTheme.bodyText1.color,
                         ),
                       ),
-                      hintText: getTranslated(context, "msgForHR_hint"))),
+                      hintText: getTranslated(context, "reportBug_hint"))),
+            ),
+            SizedBox(height: 8),
+
+            // Privacy message
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(getTranslated(context, "reportBug_privacy"),
+                      style: TextStyle(
+                          fontSize: 15.0,
+                          color: Theme.of(context).accentColor)),
+                ),
+              ],
             ),
           ],
         ),
@@ -149,7 +119,7 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
               style: TextStyle(fontSize: 18)),
           textColor: Colors.white,
           onPressed: () {
-            _sendMessage();
+            _sendBugReport();
           },
         ),
       ],
