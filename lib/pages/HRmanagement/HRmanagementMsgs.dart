@@ -68,10 +68,11 @@ class _MessagesState extends State<Messages> {
           return SimplePopUp(
             cancelBtnName: getTranslated(context, "cancelBtn"),
             confirmBtnName: getTranslated(context, "confirmBtn"),
-            title: getTranslated(context, "hr_deletePopupTitle"),
+            title: getTranslated(context, "hr_msgDeleteMsg"),
           );
         });
     if (result ?? false) {
+      _expandedOnesList = [];
       locator<FirestoreService>().deleteHrMessage(data.id);
       return true;
     }
