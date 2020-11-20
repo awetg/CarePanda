@@ -105,6 +105,8 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                   _email = email;
                 },
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
                   labelText: getTranslated(context, "hrLogin_emailTxtfield"),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(
@@ -155,6 +157,8 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                 },
                 obscureText: true,
                 decoration: new InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
                   labelText: getTranslated(context, "hrLogin_passwordTxtfield"),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   enabledBorder: OutlineInputBorder(

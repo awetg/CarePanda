@@ -23,6 +23,7 @@
     "msgForHR_title":"Lähetä viesti HR:lle",
     "msgForHR_sendMsgAnon":"Lähetä viesti nimettömästi",
     "msgForHR_hint":"Viesti HR:lle",
+    "msgForHr_noMg":"Viesti ei voi olla tyhjä",
 
     "settings_title":"Asetukset",
     "settings_appSettings":"Applikaation asetukset",
@@ -76,13 +77,14 @@
 
     "hr_managementTitle":"HR hallintokeskus",
     "hr_questionnaireTopBtn":"Kyselyt",
-    "hr_MsgsTopeBtn":"Viestit",
+    "hr_MsgsTopBtn":"Viestit",
     "hr_currentQst":"Tämänhetkiset kyselyt",
     "hr_qstQuestion":"Kysymys: ",
     "hr_qstFreeText":"Vapaa tekstikenttä: ",
     "hr_qstQstType":"Kysymyksen tyyppi: ",
     "hr_qstMaxRange":"Maksimi määrä: ",
     "hr_qstOptions":"Vaihtoehdot: ",
+    "hr_qstNoQsts":"Ei kyselyitä",
 
     "hr_true":"Kyllä",
     "hr_false":"Ei",
@@ -92,12 +94,15 @@
     "hr_singleSelection":"Yksi valintainen",
     "hr_multiSelection":"Monivalinta",
 
+    "hr_msgNoName":"(Ei nimeä)",
     "hr_msgBuilding":"Rakennus: ",
     "hr_msgFloor":"Kerros: ",
     "hr_msgAge":"Ikä: ",
     "hr_msgGender":"Sukupuoli: ",
     "hr_msgYearsWorkedNokia":"Vuosia työskennellyt Nokialla: ",
     "hr_msgNoMsgs":"Ei viestejä",
+    "hr_msgsDelete":"Poista",
+    "hr_msgDeleteMsg":"Oletko varma, että haluat poistaa viestin?",
 
     "hr_addQstTitle":"Lisää uusi kysely",
     "hr_editQstTitle":"Muokkaa kyselyä",
@@ -111,8 +116,21 @@
 
     "hr_editSnackbarOptionEmpty":"Valinta ei voi olla tyhjä",
     "hr_editSnackbarQuestEmpty":"Kysymys ei voi olla tyhjä",
-
     "hr_deletePopupTitle":"Oletko varma, että haluat poistaa kyselyn?",
+
+    "hr_infoTitle":"HR hallinto sivun ohjeistus",
+    "hr_infoQstTitle":"Kyselyt",
+    "hr_infoQstAddingTitle":"Kyselyjen lisäys",
+    "hr_infoQstAddingText":"Kyselyitä voi lisätä painamalla '+' painiketta oikealla alakulmassa, ollessa 'Kysely' välilehdellä, hallintokeskus sivulla.",
+    "hr_infoQstEditDeleteTitle":"Kyselyitten muokkaus ja poistaminen",
+    "hr_infoQstEditDeleteText": "Klikkaamalla kyselyä, uusi sivu aukeaa, jossa voi muokata tai poistaa kyseisen kyselyn.",
+    "hr_infoQstExtraTitle":"Lisätietoa",
+    "hr_infoQstExtraText":"Yhtä kyselyä ei voi poistaa eikä muokata, mikä on osoitettu tummemmalla tausta värillä.",
+    "hr_infoMsgsTitle":"Viestit",
+    "hr_infoMsgsInfoTitle":"Tietoa viesteistä",
+    "hr_infoMsgsInfoText":"Klikkaamalla viesti korttia, kortti laajenee näyttäen enemmän tietoa viestin lähettäjästä. Käyttäjät voivat lähettää viestejä anonyyminä, jolloin käyttäjän tiedot on muutettu 'En halua kertoa' ja 'Ei valittu' -teksteiksi. '(Ei nimeä)' -teksti tarkoittaa, että käyttäjä ei ole määrittänyt nimeään tai käyttäjä on lähettänyt viestin anonyymisti.",
+    "hr_infoMsgDeletingTitle":"Viestien poistaminen",
+    "hr_infoMsgDeletingText":"Viestejä voi poistaa pyyhkäisemällä viesti korttia oikealle tai vasemmalle, ja vahvistamlla poiston.",
 
     "qst_freeTextHint":"Valinnainen lisä kommentti",
     "qst_tyTitle":"Kittos, että vastasit kyselyyn!",

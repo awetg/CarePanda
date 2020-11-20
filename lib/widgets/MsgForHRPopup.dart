@@ -16,6 +16,8 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
   var data;
   var _storageService = locator<LocalStorageService>();
   var _msg;
+  var _validMsg = false;
+  var _hasTriedToSendMsg = false;
 
   _onAnonymousCheckBoxChange(bool value) {
     setState(() {
@@ -24,6 +26,10 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
   }
 
   _sendMessage() {
+    setState(() {
+      _hasTriedToSendMsg = true;
+    });
+
     // Send message to firebase (if not anonymous, sends userdata with the msg)
     if (!_anonymousMsg) {
       data = new MsgDataStructure(
@@ -36,7 +42,6 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
           gender: _storageService.gender,
           yearsInNokia: _storageService.yearsInNokia,
           date: DateTime.now().toString());
-      log("isAnonymous: " + _anonymousMsg.toString());
     } else {
       data = new MsgDataStructure(
           name: "",
@@ -48,12 +53,12 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
           gender: 0,
           yearsInNokia: 0,
           date: DateTime.now().toString());
-      log("isAnonymous: " + _anonymousMsg.toString());
     }
+    if (_validMsg) {
+      locator<FirestoreService>().saveHrMessage(data);
 
-    locator<FirestoreService>().saveHrMessage(data);
-
-    Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -87,30 +92,41 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
             // Theme so that in light mode borders don't dissapear on focus
             Theme(
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
-              child: FractionallySizedBox(
-                child: Container(
-                  color: Theme.of(context).cardColor,
-                  child: TextFormField(
-                      onChanged: (value) {
-                        _msg = value;
-                      },
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1.color,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1.color,
-                            ),
-                          ),
-                          hintText: getTranslated(context, "msgForHR_hint"))),
-                ),
-              ),
+              child: TextFormField(
+                  onChanged: (value) {
+                    _msg = value;
+                  },
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    if (_hasTriedToSendMsg) {
+                      if (value.isEmpty) {
+                        _validMsg = false;
+                        return getTranslated(context, "msgForHr_noMg");
+                      } else {
+                        _validMsg = true;
+                        return null;
+                      }
+                    }
+                    if (value.isNotEmpty) {
+                      _validMsg = true;
+                    }
+                    return null;
+                  },
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Theme.of(context).cardColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).textTheme.bodyText1.color,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).textTheme.bodyText1.color,
+                        ),
+                      ),
+                      hintText: getTranslated(context, "msgForHR_hint"))),
             ),
           ],
         ),

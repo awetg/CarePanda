@@ -124,7 +124,15 @@ class FirestoreService {
         // .get() //future
         .snapshots()
         .map((snapshots) => snapshots.docs
-            .map((doc) => MsgDataStructure.fromMap(doc.data()))
+            .map((doc) => MsgDataStructure.fromMap({
+                  ...doc.data(),
+                  ...{"id": doc.id}
+                }))
             .toList());
+  }
+
+  // Delete HR message
+  Future<void> deleteHrMessage(id) {
+    return _db.collection(_hrMessages_path).doc(id).delete();
   }
 }

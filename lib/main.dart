@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/HRdashboardPage.dart';
-import 'package:carePanda/pages/HRmanagementPage.dart';
+import 'package:carePanda/pages/HRmanagement/HRmanagementPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_auth/firebase_auth.dart';

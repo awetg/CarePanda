@@ -1,4 +1,5 @@
 class MsgDataStructure {
+  final String id;
   final String name;
   final String lastName;
   final int building;
@@ -13,7 +14,8 @@ class MsgDataStructure {
   // When using real data, give all the msgs "Expnaded" as false
 
   MsgDataStructure(
-      {this.name,
+      {this.id,
+      this.name,
       this.lastName,
       this.building,
       this.floor,
@@ -25,6 +27,7 @@ class MsgDataStructure {
 
   factory MsgDataStructure.fromMap(Map<String, dynamic> json) {
     return MsgDataStructure(
+      id: json["id"] as String,
       message: json["message"],
       name: json["name"],
       lastName: json["lastName"],

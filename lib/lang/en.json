@@ -23,6 +23,7 @@
     "msgForHR_title":"Send a message for HR",
     "msgForHR_sendMsgAnon":"Send message anonymously",
     "msgForHR_hint":"Message for HR",
+    "msgForHr_noMg":"Message can not be empty",
 
     "settings_title":"Settings",
     "settings_appSettings": "App settings",
@@ -76,13 +77,14 @@
 
     "hr_managementTitle":"HR management",
     "hr_questionnaireTopBtn":"Questionnaire",
-    "hr_MsgsTopeBtn":"Messages",
+    "hr_MsgsTopBtn":"Messages",
     "hr_currentQst":"Current questionnaires",
     "hr_qstQuestion":"Question: ",
     "hr_qstFreeText":"Free textbox: ",
     "hr_qstQstType":"Question type: ",
     "hr_qstMaxRange":"Max range: ",
     "hr_qstOptions":"Options: ",
+    "hr_qstNoQsts":"No questionnaires",
 
     "hr_true":"Yes",
     "hr_false":"No",
@@ -92,12 +94,15 @@
     "hr_singleSelection":"Single selection",
     "hr_multiSelection":"Multi selection",
 
+    "hr_msgNoName":"(No name)",
     "hr_msgBuilding":"Building: ",
     "hr_msgFloor":"Floor: ",
     "hr_msgAge":"Age: ",
     "hr_msgGender":"Gender: ",
     "hr_msgYearsWorkedNokia":"Years worked in Nokia: ",
     "hr_msgNoMsgs":"No messages",
+    "hr_msgsDelete":"Delete",
+    "hr_msgDeleteMsg":"Are you sure you want to delete a message?",
 
     "hr_addQstTitle":"Add a new questionnaire",
     "hr_editQstTitle":"Edit questionnaire",
@@ -111,11 +116,24 @@
 
     "hr_editSnackbarOptionEmpty":"Option can not be empty",
     "hr_editSnackbarQuestEmpty":"Question text can not be empty",
-
     "hr_deletePopupTitle":"Are you sure you want to delete a questionnaire?",
 
+    "hr_infoTitle":"HR management page's info",
+    "hr_infoQstTitle":"Questionnaires",
+    "hr_infoQstAddingTitle":"Questionnaire adding",
+    "hr_infoQstAddingText":"Questionnaires can be added by pressing '+' button in the bottom right corner, while being in the 'Questionnaire' tab in management page.",
+    "hr_infoQstEditDeleteTitle":"Questionnaire editing and deleting",
+    "hr_infoQstEditDeleteText": "By clicking a questionnaire in management page, a new page opens where you can edit or delete the questionnaire.",
+    "hr_infoQstExtraTitle":"Extra info",
+    "hr_infoQstExtraText":"One questionnaire can not be edited or deleted which is indicated with darker background color.",
+    "hr_infoMsgsTitle":"Messages",
+    "hr_infoMsgsInfoTitle":"Information of messages",
+    "hr_infoMsgsInfoText":"By clicking a message card, message card expands, revealing more information of the user who sent the message. Users are able to send messages anonymously in which case all the users info is changed into 'Don't want to tell' and 'Not selected'. '(No name)' indicates that user has not set a name or user is sending message anonymously.",
+    "hr_infoMsgDeletingTitle":"Message deleting",
+    "hr_infoMsgDeletingText":"Messages can be deleted by swiping message card either left or right and then confirming deletion.",
+
     "qst_freeTextHint":"Optional extra comment",
-    "qst_tyTitle":"Thank you for completing the suvey!",
+    "qst_tyTitle":"Thank you for completing the survey!",
     "qst_tyText":"Your response will only be used in ways that does not identify you. We will use your feedback to understand your workspace better.",
 
     "skipBtn":"Skip",
