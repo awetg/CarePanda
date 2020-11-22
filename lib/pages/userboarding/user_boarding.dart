@@ -1,6 +1,7 @@
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/main.dart';
 import 'package:carePanda/model/slider_item.dart';
+import 'package:carePanda/pages/TermsAndServices.dart';
 import 'package:carePanda/pages/userboarding/slider_dot.dart';
 import 'package:carePanda/pages/userboarding/slider_page.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
@@ -53,30 +54,22 @@ class _UserBoardingState extends State<UserBoarding> {
           duration: animation_duration, curve: animation_type);
     else {
       _storageService.showBoarding = false;
-      // Pushes to home and removes history, which makes it unable to move back with back button
+      // Pushes to Terms & Services and removes history, which makes it unable to move back with back button
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => MyStatefulWidget()),
-          (Route<dynamic> route) => false).then(
-        (value) {
-          setState(() {});
-        },
-      );
+          MaterialPageRoute(builder: (context) => TermsAndServices()),
+          (Route<dynamic> route) => false);
     }
   }
 
   //  pop userboarding page
   skipAllPages() async {
     _storageService.showBoarding = false;
-    // Pushes to home and removes history, which makes it unable to move back with back button
+    // Pushes to Terms & Services and removes history, which makes it unable to move back with back button
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
-        (Route<dynamic> route) => false).then(
-      (value) {
-        setState(() {});
-      },
-    );
+        MaterialPageRoute(builder: (context) => TermsAndServices()),
+        (Route<dynamic> route) => false);
   }
 
   // initialize pageContorller

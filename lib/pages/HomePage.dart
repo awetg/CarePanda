@@ -1,4 +1,5 @@
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/pages/TermsAndServices.dart';
 import 'package:carePanda/widgets/CardWidget.dart';
 import 'package:carePanda/widgets/OtherServicesPopup.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
@@ -42,8 +43,10 @@ class _HomePageState extends State<HomePage> {
 // If application is started for the first time, opens up a popup
   openStartUpPopUp() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => UserDataPopup()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => TermsAndServices()),
+          (Route<dynamic> route) => false);
     });
   }
 
@@ -206,6 +209,7 @@ class Timer extends StatelessWidget {
 class Questionnaire extends StatelessWidget {
   Questionnaire({this.countdownWidget});
   final countdownWidget;
+  final _storageService = locator<LocalStorageService>();
 
   @override
   Widget build(BuildContext context) {
@@ -243,13 +247,15 @@ class Questionnaire extends StatelessWidget {
                         child: Text(getTranslated(context, "home_answerBtn"),
                             style: TextStyle(fontSize: 18)),
                         textColor: Colors.white,
-                        onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                  fullscreenDialog: true,
-                                  builder: (context) => SurveyFlow()));
-                          _storageService.hasQuestionnaire = false;
-                        },
+                        onPressed: _storageService.firstTimeStartUp ?? true
+                            ? null
+                            : () {
+                                Navigator.of(context, rootNavigator: true).push(
+                                    MaterialPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) => SurveyFlow()));
+                                _storageService.hasQuestionnaire = false;
+                              },
                       ),
                     ),
                   ),
@@ -298,6 +304,7 @@ class BigButton extends StatelessWidget {
   BigButton({this.title, this.dialog});
   final title;
   final dialog;
+  final _storageService = locator<LocalStorageService>();
 
   @override
   Widget build(BuildContext context) {
@@ -308,17 +315,19 @@ class BigButton extends StatelessWidget {
             textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
         color: Theme.of(context).cardColor,
         textColor: Theme.of(context).accentColor,
-        onPressed: () {
-          showDialog(
-            barrierColor: _storageService.darkTheme
-                ? Colors.black.withOpacity(0.4)
-                : null,
-            context: context,
-            builder: (BuildContext context) {
-              return dialog;
-            },
-          );
-        },
+        onPressed: _storageService.firstTimeStartUp ?? true
+            ? null
+            : () {
+                showDialog(
+                  barrierColor: _storageService.darkTheme
+                      ? Colors.black.withOpacity(0.4)
+                      : null,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return dialog;
+                  },
+                );
+              },
       ),
     );
   }

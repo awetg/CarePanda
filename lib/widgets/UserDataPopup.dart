@@ -1,4 +1,5 @@
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/main.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/widgets/UserDataDropDownButton.dart';
 import 'package:carePanda/widgets/UserDataPickerPopup.dart';
@@ -159,13 +160,27 @@ class _UserDataPopup extends State<UserDataPopup> {
     }
 
     _storageService.firstTimeStartUp = false;
-    Navigator.of(context).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+        (Route<dynamic> route) => false).then(
+      (value) {
+        setState(() {});
+      },
+    );
   }
 
   // Skips setting data but but changes shared preference so that the popup wont show up when opening app again
   skipSettingData() {
     _storageService.firstTimeStartUp = false;
-    Navigator.of(context).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+        (Route<dynamic> route) => false).then(
+      (value) {
+        setState(() {});
+      },
+    );
   }
 
   // Resets birth year variable from shared preferences

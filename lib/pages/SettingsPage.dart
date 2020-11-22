@@ -125,18 +125,20 @@ class _SettingsPage extends State<SettingsPage> {
                       borderSide: BorderSide(
                         color: Theme.of(context).accentColor,
                       ),
-                      onPressed: () {
-                        showDialog(
-                          barrierColor: _storageService.darkTheme
-                              ? Colors.black.withOpacity(0.4)
-                              : null,
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return HRLoginPopup();
-                          },
-                        ).then((_) => _loginPopupClosed());
-                      },
+                      onPressed: _storageService.firstTimeStartUp ?? true
+                          ? null
+                          : () {
+                              showDialog(
+                                barrierColor: _storageService.darkTheme
+                                    ? Colors.black.withOpacity(0.4)
+                                    : null,
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return HRLoginPopup();
+                                },
+                              ).then((_) => _loginPopupClosed());
+                            },
                     ),
 
                   // HR logout button
@@ -359,6 +361,7 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
+  final _storageService = locator<LocalStorageService>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -387,12 +390,14 @@ class _UserSettingsState extends State<UserSettings> {
                 borderSide: BorderSide(
                   color: Theme.of(context).accentColor,
                 ),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) => UserDataPopup()));
-                },
+                onPressed: _storageService.firstTimeStartUp ?? true
+                    ? null
+                    : () {
+                        Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                fullscreenDialog: true,
+                                builder: (context) => UserDataPopup()));
+                      },
               ),
             ],
           ),
