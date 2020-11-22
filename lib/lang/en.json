@@ -114,10 +114,12 @@
     "hr_msgNoMsgs":"No messages",
     "hr_msgsDelete":"Delete",
     "hr_msgDeleteMsg":"Are you sure you want to delete a message?",
-
     "hr_responseTitle":"Which questionnaire's free message responses would you like to see?",
     "hr_responseQst":"Questionnaire: ",
+    
     "hr_freeResponTitle":"Survey's free message responses",
+    "hr_freeResponQst":"Question",
+    "hr_freeResponMsgs":"Free message responses",
     "hr_freeResponNoRespon":"No free message responses",
 
     "hr_addQstTitle":"Add a new questionnaire",
@@ -144,9 +146,12 @@
     "hr_infoQstExtraText":"One questionnaire can not be edited or deleted which is indicated with darker background color.",
     "hr_infoMsgsTitle":"Messages",
     "hr_infoMsgsInfoTitle":"Information of messages",
-    "hr_infoMsgsInfoText":"By clicking a message card, message card expands, revealing more information of the user who sent the message. Users are able to send messages anonymously in which case all the users info is changed into 'Don't want to tell' and 'Not selected'. '(No name)' indicates that user has not set a name or user is sending message anonymously.",
+    "hr_infoMsgsInfoText":"By clicking a message card, message card expands, revealing more information of the user who sent the message. '(No name)' indicates that the user has not set a name or the user is sending message anonymously.",
     "hr_infoMsgDeletingTitle":"Message deleting",
     "hr_infoMsgDeletingText":"Messages can be deleted by swiping message card either left or right and then confirming deletion.",
+    "hr_infoSurveyTitle":"Survey responses",
+    "hr_infoSurveyInfoTitle":"Information of survey responses",
+    "hr_infoSurveryInfoText":"Survey response tab shows list of questionnaires and by clicking one of them, new page opens with list of all the questionnaire's free message responses. Responses expand by clicking on them, showing more information of the user who wrote the response.",
 
     "qst_freeTextHint":"Optional extra comment",
     "qst_tyTitle":"Thank you for completing the survey!",

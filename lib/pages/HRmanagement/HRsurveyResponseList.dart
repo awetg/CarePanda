@@ -109,7 +109,9 @@ class _HRsurveyResponsesState extends State<HRsurveyResponses> {
                                       builder: (context) =>
                                           SurveyFreeResponseList(
                                               questionID:
-                                                  _questionsData[index].id),
+                                                  _questionsData[index].id,
+                                              question: _questionsData[index]
+                                                  .question),
                                     ),
                                   );
                                 },

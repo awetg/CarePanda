@@ -114,10 +114,12 @@
     "hr_msgNoMsgs":"Ei viestejä",
     "hr_msgsDelete":"Poista",
     "hr_msgDeleteMsg":"Oletko varma, että haluat poistaa viestin?",
-
     "hr_responseTitle":"Minkä kyselyn vapaita vastauksia haluat katsella?",
     "hr_responseQst":"Kysely: ",
+    
     "hr_freeResponTitle":"Kyselyn vapaat vastaukset",
+    "hr_freeResponQst":"Kysymys",
+    "hr_freeResponMsgs":"Vapaat vastaukset",
     "hr_freeResponNoRespon":"Ei vapaita vastauksia",
 
     "hr_addQstTitle":"Lisää uusi kysely",
@@ -144,9 +146,12 @@
     "hr_infoQstExtraText":"Yhtä kyselyä ei voi poistaa eikä muokata, mikä on osoitettu tummemmalla tausta värillä.",
     "hr_infoMsgsTitle":"Viestit",
     "hr_infoMsgsInfoTitle":"Tietoa viesteistä",
-    "hr_infoMsgsInfoText":"Klikkaamalla viesti korttia, kortti laajenee näyttäen enemmän tietoa viestin lähettäjästä. Käyttäjät voivat lähettää viestejä anonyyminä, jolloin käyttäjän tiedot on muutettu 'En halua kertoa' ja 'Ei valittu' -teksteiksi. '(Ei nimeä)' -teksti tarkoittaa, että käyttäjä ei ole määrittänyt nimeään tai käyttäjä on lähettänyt viestin anonyymisti.",
+    "hr_infoMsgsInfoText":"Klikkaamalla viesti korttia, kortti laajenee näyttäen enemmän tietoa viestin lähettäjästä. '(Ei nimeä)' -nimi tarkoittaa, että käyttäjä ei ole määrittänyt nimeään tai käyttäjä on lähettänyt viestin anonyymisti.",
     "hr_infoMsgDeletingTitle":"Viestien poistaminen",
     "hr_infoMsgDeletingText":"Viestejä voi poistaa pyyhkäisemällä viesti korttia oikealle tai vasemmalle, ja vahvistamlla poiston.",
+    "hr_infoSurveyTitle":"Kyselyjen vastaukset",
+    "hr_infoSurveyInfoTitle":"Tietoa kyselyjen vastauksista",
+    "hr_infoSurveryInfoText":"Kyselyjen vastaus välilehti näyttää listan kyselyistä. Kyselyä klikkaamalla uusi sivu aukeaa, näyttäen kyselyn kaikki vapaat vastaukset. Vastauksen kortti laajenee sitä klikkaamalla, näyttäen enemmän tietoa vastauksen lähettäjästä.",
 
     "qst_freeTextHint":"Valinnainen lisä kommentti",
     "qst_tyTitle":"Kittos, että vastasit kyselyyn!",

@@ -19,6 +19,8 @@ class HRmanagementInfoPage extends StatelessWidget {
                 CardWidget(widget: QuestionnaireInfo()),
                 SizedBox(height: 4),
                 CardWidget(widget: MessageInfo()),
+                SizedBox(height: 4),
+                CardWidget(widget: SurveyResponseInfo()),
                 SizedBox(height: 6),
               ]),
         ));
@@ -177,5 +179,49 @@ class MessageInfo extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SurveyResponseInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headlineTextColor = theme.accentColor;
+    final basicTextColor = theme.textTheme.bodyText1.color;
+    return Container(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            // Messages title
+            Text(
+              getTranslated(context, "hr_infoSurveyTitle"),
+              style: TextStyle(
+                  color: headlineTextColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24),
+            ),
+            SizedBox(height: 16),
+
+            // Message's information
+            FractionallySizedBox(
+              widthFactor: 1,
+              child: Text(
+                getTranslated(context, "hr_infoSurveyInfoTitle"),
+                style: TextStyle(
+                  color: headlineTextColor,
+                  fontSize: 18,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              getTranslated(context, "hr_infoSurveryInfoText"),
+              style: TextStyle(color: basicTextColor, fontSize: 16),
+            ),
+          ],
+        ));
   }
 }

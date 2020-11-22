@@ -173,7 +173,7 @@ class _MessagesState extends State<Messages> {
                                         maxLines:
                                             _shouldExpand ?? false ? null : 2,
                                       ),
-                                      SizedBox(height: 12),
+                                      SizedBox(height: 10),
 
                                       // Date
                                       Text(_formattedDate(_msgData[index].date),

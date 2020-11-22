@@ -114,9 +114,8 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
       // Floating button -> opens page to add new questionnaire
       // When leaving the edit page, handles adding questionnaire
       // Gives array with null values
-      floatingActionButton: _showMessages
-          ? null
-          : FloatingActionButton(
+      floatingActionButton: _showQuestionnaire
+          ? FloatingActionButton(
               backgroundColor: Theme.of(context).accentColor,
               foregroundColor: Colors.white,
               onPressed: () async {
@@ -133,7 +132,8 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                 setState(() {});
               },
               child: Icon(Icons.add),
-            ),
+            )
+          : null,
     );
   }
 }
