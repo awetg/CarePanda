@@ -88,6 +88,7 @@
     "hr_managementTitle":"HR management",
     "hr_questionnaireTopBtn":"Questionnaire",
     "hr_MsgsTopBtn":"Messages",
+    "hr_responsesBtn":"Survey responses",
     "hr_currentQst":"Current questionnaires",
     "hr_qstQuestion":"Question: ",
     "hr_qstFreeText":"Free textbox: ",
@@ -113,6 +114,11 @@
     "hr_msgNoMsgs":"No messages",
     "hr_msgsDelete":"Delete",
     "hr_msgDeleteMsg":"Are you sure you want to delete a message?",
+
+    "hr_responseTitle":"Which questionnaire's free message responses would you like to see?",
+    "hr_responseQst":"Questionnaire: ",
+    "hr_freeResponTitle":"Survey's free message responses",
+    "hr_freeResponNoRespon":"No free message responses",
 
     "hr_addQstTitle":"Add a new questionnaire",
     "hr_editQstTitle":"Edit questionnaire",

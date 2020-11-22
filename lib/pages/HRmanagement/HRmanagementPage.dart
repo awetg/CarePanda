@@ -1,11 +1,13 @@
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/HRmanagement/EditAddQuestionnaire.dart';
-import 'package:carePanda/pages/HRmanagement/HRmanagementEditQuestionnaire.dart';
+import 'package:carePanda/pages/HRmanagement/HRmanagementQuestionnaire.dart';
 import 'package:carePanda/pages/HRmanagement/HRmanagementInfoPage.dart';
 import 'package:carePanda/pages/HRmanagement/HRmanagementMsgs.dart';
 import 'package:carePanda/widgets/TopButton.dart';
 import 'package:flutter/material.dart';
+
+import 'HRsurveyResponseList.dart';
 
 class HRmanagementPage extends StatefulWidget {
   @override
@@ -14,12 +16,16 @@ class HRmanagementPage extends StatefulWidget {
 
 class _HRmanagementPageState extends State<HRmanagementPage> {
   var _showMessages = false;
+  var _showSurveyResponse = false;
+  var _showQuestionnaire = true;
 
   // Shows questionnaires
   _showQuestionnairesFunction() {
-    if (_showMessages) {
+    if (!_showQuestionnaire) {
       setState(() {
+        _showQuestionnaire = true;
         _showMessages = false;
+        _showSurveyResponse = false;
       });
     }
   }
@@ -28,7 +34,20 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
   _showMessagesFunction() {
     if (!_showMessages) {
       setState(() {
+        _showQuestionnaire = false;
         _showMessages = true;
+        _showSurveyResponse = false;
+      });
+    }
+  }
+
+  // Shows survey responses
+  _showSurveyResponsesFunction() {
+    if (!_showSurveyResponse) {
+      setState(() {
+        _showQuestionnaire = false;
+        _showMessages = false;
+        _showSurveyResponse = true;
       });
     }
   }
@@ -61,25 +80,33 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                // Mental health button
+                // Show questionnaire
                 TopButton(
                   name: getTranslated(context, "hr_questionnaireTopBtn"),
-                  boolState: _showMessages,
+                  boolState: !_showQuestionnaire,
                   function: _showQuestionnairesFunction,
                 ),
 
-                // Physical health button
+                // Show messages
                 TopButton(
                   name: getTranslated(context, "hr_MsgsTopBtn"),
                   boolState: !_showMessages,
                   function: _showMessagesFunction,
                 ),
+
+                // Show survey response
+                TopButton(
+                  name: getTranslated(context, "hr_responsesBtn"),
+                  boolState: !_showSurveyResponse,
+                  function: _showSurveyResponsesFunction,
+                ),
               ],
             ),
 
-            // Shows messages or questionnaires
+            // Shows messages, questionnaires or survey responses
+            if (_showQuestionnaire) QuestionnaireModification(),
             if (_showMessages) Messages(),
-            if (!_showMessages) QuestionnaireModification()
+            if (_showSurveyResponse) HRsurveyResponses(),
           ],
         ),
       ),

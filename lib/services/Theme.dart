@@ -2,9 +2,6 @@ import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
 
-// TODO: fix outlined color of TextFormField changing to white on light theme
-// relevant widget/code can be found on question_page.dart line 74 TextFormField widget
-
 class ThemeChanger with ChangeNotifier {
   // a singleton contructor
   static final ThemeChanger _themeChanger = ThemeChanger._privateConstructor();

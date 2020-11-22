@@ -88,6 +88,7 @@
     "hr_managementTitle":"HR hallintokeskus",
     "hr_questionnaireTopBtn":"Kyselyt",
     "hr_MsgsTopBtn":"Viestit",
+    "hr_responsesBtn":"Kyselyjen vastaukset",
     "hr_currentQst":"Tämänhetkiset kyselyt",
     "hr_qstQuestion":"Kysymys: ",
     "hr_qstFreeText":"Vapaa tekstikenttä: ",
@@ -113,6 +114,11 @@
     "hr_msgNoMsgs":"Ei viestejä",
     "hr_msgsDelete":"Poista",
     "hr_msgDeleteMsg":"Oletko varma, että haluat poistaa viestin?",
+
+    "hr_responseTitle":"Minkä kyselyn vapaita vastauksia haluat katsella?",
+    "hr_responseQst":"Kysely: ",
+    "hr_freeResponTitle":"Kyselyn vapaat vastaukset",
+    "hr_freeResponNoRespon":"Ei vapaita vastauksia",
 
     "hr_addQstTitle":"Lisää uusi kysely",
     "hr_editQstTitle":"Muokkaa kyselyä",

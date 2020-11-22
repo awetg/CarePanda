@@ -6,6 +6,9 @@ import 'package:carePanda/services/firestore_service.dart';
 import 'package:carePanda/services/survey_response_service.dart';
 import 'package:flutter/material.dart';
 
+// TODO: Label on each side of slider
+// TODO: userdata into survery answer
+
 class SurveyFlow extends StatefulWidget {
   @override
   _SurveyFlowState createState() => _SurveyFlowState();

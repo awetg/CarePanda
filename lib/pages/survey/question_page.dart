@@ -72,18 +72,22 @@ class QuestionPage extends StatelessWidget {
                   height: 32.0,
                 ),
                 _questionItem.freeText
-                    ? TextFormField(
-                        initialValue: locator<SurveyResponseService>()
-                            .getFreeTextById(_questionItem.id),
-                        onChanged: (text) {
-                          locator<SurveyResponseService>()
-                              .updateFreeText(_questionItem.id, text);
-                        },
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            hintText:
-                                getTranslated(context, "qst_freeTextHint")))
+                    ? Theme(
+                        data: Theme.of(context)
+                            .copyWith(primaryColor: Color(0xff027DC5)),
+                        child: TextFormField(
+                            initialValue: locator<SurveyResponseService>()
+                                .getFreeTextById(_questionItem.id),
+                            onChanged: (text) {
+                              locator<SurveyResponseService>()
+                                  .updateFreeText(_questionItem.id, text);
+                            },
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                hintText: getTranslated(
+                                    context, "qst_freeTextHint"))),
+                      )
                     : Container()
               ],
             ),

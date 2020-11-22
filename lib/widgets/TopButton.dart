@@ -24,7 +24,7 @@ class TopButton extends StatelessWidget {
         ),
         child: RaisedButton(
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          child: Text(name, style: TextStyle(fontSize: 18)),
+          child: Text(name, style: TextStyle(fontSize: 16)),
           color: Theme.of(context).canvasColor,
           textColor: Theme.of(context).textTheme.bodyText1.color,
           elevation: 0,

@@ -55,11 +55,8 @@ class _TermsAndServicesState extends State<TermsAndServices> {
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .color,
-                                  width: 0.6),
+                                  color: Theme.of(context).accentColor,
+                                  width: 1),
                             ),
                             child: Scrollbar(
                               controller: ScrollController(),
