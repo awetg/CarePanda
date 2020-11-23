@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/question_page.dart';
@@ -115,15 +116,15 @@ class _SurveyFlowState extends State<SurveyFlow> {
   // shows an alert if there are unanswered questions
   Widget unansweredQuestionsAlert() {
     return getAlertDialog(
-        title: 'There are unanswered questions!',
-        content: 'Please answere all questions before completing the survey.',
-        positiveButtonTitle: "ANSWER",
+        title: getTranslated(context, "qst_unansweredQstTitle"),
+        content: getTranslated(context, "qst_unansweredQstContent"),
+        positiveButtonTitle: getTranslated(context, "qst_answerBtn"),
         postiveOnPressed: () {
           // naviagate to first question or page if user decide to answer question
           _pageController.jumpToPage(_pageController.initialPage);
           Navigator.of(context).pop(false);
         },
-        negativeButtonTitle: "EXIT SURVEY",
+        negativeButtonTitle: getTranslated(context, "qst_exitSurveyBtn"),
         negativeOnPressed: () {
           // exit survery flow or answering questions if user decide to exit,
           // answered questions will not be submitted if all questions are not answered
@@ -136,11 +137,11 @@ class _SurveyFlowState extends State<SurveyFlow> {
     return (await showDialog(
           context: context,
           builder: (context) => getAlertDialog(
-              title: 'Are you sure?',
-              content: 'Do you want to cancel answering the questionnaire?',
-              positiveButtonTitle: "NO",
+              title: getTranslated(context, "qst_cancelAnsweringTitle"),
+              content: getTranslated(context, "qst_cancelAnsweringContent"),
+              positiveButtonTitle: getTranslated(context, "qst_noBtn"),
               postiveOnPressed: () => Navigator.of(context).pop(false),
-              negativeButtonTitle: "YES",
+              negativeButtonTitle: getTranslated(context, "qst_yesBtn"),
               negativeOnPressed: () => Navigator.of(context).pop(true)),
         )) ??
         false; // return false if user clicked outside of Alert Dialog
@@ -202,7 +203,8 @@ class _SurveyFlowState extends State<SurveyFlow> {
                                   padding: EdgeInsets.only(bottom: 96.0),
                                   child: ElevatedButton(
                                     onPressed: submitResponse,
-                                    child: Text("DONE"),
+                                    child: Text(
+                                        getTranslated(context, "qst_doneBtn")),
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: Size(128, 36),
                                         shape: const RoundedRectangleBorder(
@@ -248,7 +250,8 @@ class _SurveyFlowState extends State<SurveyFlow> {
                                             context: context,
                                             builder: (context) =>
                                                 unansweredQuestionsAlert()),
-                                    child: Text("NEXT"),
+                                    child: Text(
+                                        getTranslated(context, "qst_nextBtn")),
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: Size(128, 36),
                                         shape: const RoundedRectangleBorder(
@@ -265,7 +268,8 @@ class _SurveyFlowState extends State<SurveyFlow> {
                                   child: OutlinedButton(
                                     onPressed:
                                         currentIndex == 0 ? null : previousPage,
-                                    child: Text("PREVIOUS"),
+                                    child: Text(getTranslated(
+                                        context, "qst_previousBtn")),
                                     style: OutlinedButton.styleFrom(
                                         minimumSize: Size(128, 36),
                                         side: currentIndex == 0

@@ -17,7 +17,7 @@ class SurveyFreeResponseList extends StatefulWidget {
 
 class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
   var _expandedOnesList = [];
-  var _shouldExpand;
+  var _expanded;
 
   var _allSurveyMsgResponses;
   var _amountOfResponses = 0;
@@ -59,19 +59,21 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 0),
             child: Text(getTranslated(context, "hr_freeResponQst"),
-                style: TextStyle(fontSize: 20, color: Colors.white)),
+                style: TextStyle(fontSize: 20)),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
             child: Text(widget.question,
                 style: TextStyle(
-                    fontSize: 20, color: Theme.of(context).accentColor)),
+                    fontSize: 20,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.bold)),
           ),
           Divider(color: Theme.of(context).accentColor),
           Padding(
             padding: const EdgeInsets.only(top: 6, bottom: 6),
             child: Text(getTranslated(context, "hr_freeResponMsgs"),
-                style: TextStyle(fontSize: 20, color: Colors.white)),
+                style: TextStyle(fontSize: 20)),
           ),
           StreamBuilder<List<SurveyResponse>>(
             stream: locator<FirestoreService>().getAllSurveyResponses(),
@@ -110,7 +112,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                         physics: AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           // Boolean that determines is the card expanded or not
-                          _shouldExpand = _expandedOnesList.contains(index);
+                          _expanded = _expandedOnesList.contains(index);
                           return Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Card(
@@ -127,12 +129,11 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                                             _surveyResponse[index].freeText ??
                                                 getTranslated(
                                                     context, "hr_error"),
-                                            overflow: _shouldExpand ?? false
+                                            overflow: _expanded ?? false
                                                 ? null
                                                 : TextOverflow.ellipsis,
-                                            maxLines: _shouldExpand ?? false
-                                                ? null
-                                                : 2,
+                                            maxLines:
+                                                _expanded ?? false ? null : 2,
                                           ),
                                           SizedBox(height: 4),
 
@@ -145,12 +146,20 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                                                       .textTheme
                                                       .headline2
                                                       .color)),
+
+                                          _expanded ?? false
+                                              ? Text(
+                                                  "* No user data to show yet - Work In Progress",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .accentColor))
+                                              : Container(),
                                         ],
                                       ),
                                     ),
 
                                     // Icon
-                                    _shouldExpand ?? false
+                                    _expanded ?? false
                                         ? Icon(Icons.expand_less, size: 28)
                                         : Icon(Icons.expand_more, size: 28),
                                   ],

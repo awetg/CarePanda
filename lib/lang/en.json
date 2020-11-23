@@ -156,6 +156,18 @@
     "qst_freeTextHint":"Optional extra comment",
     "qst_tyTitle":"Thank you for completing the survey!",
     "qst_tyText":"Your response will only be used in ways that does not identify you. We will use your feedback to understand your workspace better.",
+    "qst_unansweredQstTitle":"There are unanswered questions!",
+    "qst_unansweredQstContent":"Please answere all questions before completing the survey.",
+    "qst_cancelAnsweringTitle":"Are you sure?",
+    "qst_cancelAnsweringContent":"Do you want to cancel answering the questionnaire?",
+    "qst_answerBtn":"ANSWER",
+    "qst_exitSurveyBtn":"EXIT SURVEY",
+    "qst_noBtn":"NO",
+    "qst_yesBtn":"YES",
+    "qst_doneBtn":"DONE",
+    "qst_nextBtn":"NEXT",
+    "qst_previousBtn":"PREVIOUS",
+
 
     "skipBtn":"Skip",
     "submitBtn":"Submit",
