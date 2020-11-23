@@ -1,3 +1,4 @@
+import 'package:carePanda/model/graph_time_format.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
@@ -8,42 +9,29 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /* 
   NOTE: 
     -Changed LineChart widget to Stateless widget since it doesn't maintain state
-    - Changed axis color to `charts.MaterialPalette.blue.shadeDefault` since the color of line is changed to white or black only
-      to have previous effect set it to `locator<LocalStorageService>().darkTheme ? charts.MaterialPalette.white : charts.MaterialPalette.black`
     - TODO: change LineChart widget arguments or handle gracefully when value of survey response object is not number, 
       it only support passing list of survery response where type is RangeSelection at the moment
     - TODO: Replace list of question stream in build function, it used to get all questions and get a single question by id
 */
 
-class LineChart extends StatelessWidget {
+class TimeSeriesChart extends StatelessWidget {
   final List<SurveyResponse> data;
-  final String title;
-  const LineChart({this.data, this.title});
+  final GraphTimeFormat graphTimeFormat;
+  const TimeSeriesChart({this.data, this.graphTimeFormat});
 
   @override
   Widget build(BuildContext context) {
-    // Color for axis
-    final charts.NumericAxisSpec axis = charts.NumericAxisSpec(
-      renderSpec: charts.GridlineRendererSpec(
-        labelStyle: charts.TextStyleSpec(
-            color: charts.MaterialPalette.blue.shadeDefault),
-        lineStyle: charts.LineStyleSpec(
-            thickness: 0, color: charts.MaterialPalette.gray.shadeDefault),
-      ),
-    );
-
     return StreamBuilder<List<QuestionItem>>(
         stream: locator<FirestoreService>().getSurveyQuestions(),
         builder: (context, snapshot) {
           // set question as title of the graph
           if (snapshot.hasData && snapshot.data.length > 0) {
             // find question corresponding to this group of responses or answers
-            final QuestionItem question =
-                snapshot.data.firstWhere((e) => e.id == title, orElse: null);
+            final QuestionItem question = snapshot.data
+                .firstWhere((e) => e.id == data.first.questionId, orElse: null);
             // set the question as title of the graph
             final String _graphTitle = question?.question ?? "Not found";
 
-            // sort
             data.sort((a, b) => a.time.toDate().compareTo(b.time.toDate()));
 
             // convert list of survey response to a list series
@@ -51,10 +39,12 @@ class LineChart extends StatelessWidget {
               charts.Series(
                   id: "value",
                   data: data,
+                  areaColorFn: (_, __) => charts.Color.fromHex(code: "#e3f2fd"),
                   domainFn: (SurveyResponse res, _) => res.time.toDate(),
                   measureFn: (SurveyResponse res, _) => double.parse(res.value),
                   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault)
             ];
+
             return Container(
               height: 310,
               padding: EdgeInsets.only(left: 4.0),
@@ -69,7 +59,7 @@ class LineChart extends StatelessWidget {
                   Text(
                     _graphTitle,
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                   SizedBox(height: 8),
 
@@ -78,29 +68,55 @@ class LineChart extends StatelessWidget {
                     child: new charts.TimeSeriesChart(
                       _chartSeries,
                       animate: true,
-                      primaryMeasureAxis: axis,
-                      behaviors: [
-                        charts.LinePointHighlighter(
-                          drawFollowLinesAcrossChart: true,
-                          showHorizontalFollowLine:
-                              charts.LinePointHighlighterFollowLineType.all,
-                        )
-                      ],
-                      domainAxis: charts.DateTimeAxisSpec(
+                      // defaultInteractions: false,
+                      // defaultRenderer: new charts.BarRendererConfig<DateTime>(
+                      //     strokeWidthPx: 20.0),
+                      // defaultRenderer: charts.LineRendererConfig(
+                      //     includeArea: true, stacked: true),
+                      defaultRenderer: charts.LineRendererConfig(
+                        includePoints: true,
+                      ),
+                      dateTimeFactory: const charts.LocalDateTimeFactory(),
+                      primaryMeasureAxis: charts.NumericAxisSpec(
                         renderSpec: charts.GridlineRendererSpec(
                           labelStyle: charts.TextStyleSpec(
-                              color: charts.MaterialPalette.blue.shadeDefault),
+                              color: charts.MaterialPalette.gray.shadeDefault),
                           lineStyle: charts.LineStyleSpec(
                               thickness: 0,
                               color: charts.MaterialPalette.gray.shadeDefault),
                         ),
-                        //tickProviderSpec: charts.DayTickProviderSpec(increments: [1]),
-                        tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
-                          day: charts.TimeFormatterSpec(
-                            format: 'dd-MM',
-                            transitionFormat: 'dd-MM',
-                          ),
+                      ),
+                      behaviors: [
+                        charts.SlidingViewport(),
+                        charts.PanAndZoomBehavior(),
+                      ],
+                      domainAxis: charts.DateTimeAxisSpec(
+                        renderSpec: charts.GridlineRendererSpec(
+                          labelStyle: charts.TextStyleSpec(
+                              color: charts.MaterialPalette.gray.shadeDefault),
+                          lineStyle: charts.LineStyleSpec(
+                              thickness: 0,
+                              color: charts.MaterialPalette.gray.shadeDefault),
                         ),
+                        tickProviderSpec: charts.StaticDateTimeTickProviderSpec(
+                            graphTimeFormat.tickSpec),
+                        tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+                            month: charts.TimeFormatterSpec(
+                              format: graphTimeFormat.timeFormat,
+                              transitionFormat: graphTimeFormat.timeFormat,
+                            ),
+                            year: charts.TimeFormatterSpec(
+                              format: graphTimeFormat.timeFormat,
+                              transitionFormat: graphTimeFormat.timeFormat,
+                            ),
+                            day: charts.TimeFormatterSpec(
+                              format: graphTimeFormat.timeFormat,
+                              transitionFormat: graphTimeFormat.timeFormat,
+                            ),
+                            minute: charts.TimeFormatterSpec(
+                              format: graphTimeFormat.timeFormat,
+                              transitionFormat: graphTimeFormat.timeFormat,
+                            )),
                       ),
                     ),
                   ),

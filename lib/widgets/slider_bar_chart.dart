@@ -7,15 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:carePanda/extensions.dart';
 
-class BarChart extends StatelessWidget {
+class SliderBarChart extends StatelessWidget {
   final List<SurveyResponse> data;
-  const BarChart({this.data});
+  const SliderBarChart({this.data});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<QuestionItem>>(
         stream: locator<FirestoreService>().getSurveyQuestions(),
         builder: (context, snapshot) {
+          // set question as title of the graph
           if (snapshot.hasData && snapshot.data.length > 0) {
             // find question corresponding to this group of responses or answers
             final QuestionItem question = snapshot.data
@@ -23,60 +24,27 @@ class BarChart extends StatelessWidget {
             // set the question as title of the graph
             final String _graphTitle = question?.question ?? "Not found";
 
-            // sort
-            data.sort((a, b) => a.time.toDate().compareTo(b.time.toDate()));
+            final count = data.groupBy((d) => d.value);
 
-            var dayGroup = data.groupBy(
-                (d) => d.time.toDate().toIso8601String().split('T').first);
-
-            var series = dayGroup.values
-                .map((e) => e
-                    .groupBy((s) => s.value)
-                    .entries
-                    .map((e) => BarChartModel(
-                        option: e.value.first.value,
-                        dateTime: e.value.first.time.toDate(),
-                        value: e.value.length))
-                    .toList())
-                .toList()
-                .expand((e) => e)
-                .toList();
-
-            // var s = dayGroup.map((key, value) => MapEntry(
-            //     key,
-            //     BarChartModel(
-            //         option: value.first.value,
-            //         dateTime: value.first.time.toDate(),
-            //         value: value.length)));
-
-            // var barmodels = dayGroup.entries
-            //     .map((e) => e.value
-            //         .groupBy((v) => v.value)
-            //         .entries
-            //         .map((e) => MapEntry(
-            //             e.key,
-            //             BarChartModel(
-            //                 option: e.value.first.value,
-            //                 dateTime: e.value.first.time.toDate(),
-            //                 value: e.value.length)))
-            //         .toList())
-            //     .toList();
+            final series =
+                List.generate(question.rangeMax.toInt(), (i) => (i + 1))
+                    .map((e) => SliderBarChartModel(
+                        x: e, y: count[e.toDouble().toString()]?.length ?? 0))
+                    .toList();
 
             // convert list of survey response to a list series
-            final List<charts.Series<BarChartModel, String>> _chartSeries =
-                series
-                    .groupBy((d) => d.option)
-                    .entries
-                    .map((e) => new charts.Series<BarChartModel, String>(
-                          id: e.key,
-                          data: e.value,
-                          domainFn: (BarChartModel res, _) =>
-                              res.dateTime.day.toString(),
-                          measureFn: (BarChartModel res, _) => res.value,
-                          // labelAccessorFn: (SurveyResponse res, _) =>
-                          //     '${res.value}'
-                        ))
-                    .toList();
+            final List<charts.Series<SliderBarChartModel, String>>
+                _chartSeries = [
+              charts.Series(
+                  id: "value",
+                  data: series,
+                  // areaColorFn: (_, __) => charts.Color.fromHex(code: "#e3f2fd"),
+                  domainFn: (SliderBarChartModel res, _) => res.x.toString(),
+                  measureFn: (SliderBarChartModel res, _) => res.y,
+                  labelAccessorFn: (SliderBarChartModel res, _) =>
+                      "${res.y}(${((res.y / data.length) * 100).toStringAsFixed(0)} %)",
+                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault)
+            ];
 
             return Container(
               height: 310,
@@ -84,7 +52,7 @@ class BarChart extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 6),
 
@@ -94,18 +62,23 @@ class BarChart extends StatelessWidget {
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 16),
+                  Text(
+                    "${data.length} responses",
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(height: 16),
 
                   Expanded(
                     // Chart
                     child: new charts.BarChart(
                       _chartSeries,
                       animate: true,
-                      barGroupingType: charts.BarGroupingType.grouped,
-                      behaviors: [new charts.SeriesLegend()],
-                      // defaultInteractions: false,
-                      // vertical: false,
-                      // Color for axis
+                      barRendererDecorator:
+                          new charts.BarLabelDecorator<String>(
+                        outsideLabelStyleSpec: new charts.TextStyleSpec(
+                            color: charts.MaterialPalette.gray.shadeDefault),
+                      ),
                       primaryMeasureAxis: charts.NumericAxisSpec(
                         renderSpec: charts.GridlineRendererSpec(
                           labelStyle: charts.TextStyleSpec(
@@ -115,9 +88,8 @@ class BarChart extends StatelessWidget {
                               color: charts.MaterialPalette.gray.shadeDefault),
                         ),
                       ),
-                      domainAxis: charts.OrdinalAxisSpec(
+                      domainAxis: charts.AxisSpec<String>(
                         renderSpec: charts.GridlineRendererSpec(
-                          // labelRotation: 60,
                           labelStyle: charts.TextStyleSpec(
                               color: charts.MaterialPalette.gray.shadeDefault),
                           lineStyle: charts.LineStyleSpec(
@@ -132,7 +104,7 @@ class BarChart extends StatelessWidget {
               ),
             );
           } else {
-            // show error
+            // show error page if stream of list of question is null or empty
             return Container();
           }
         });

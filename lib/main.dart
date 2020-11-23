@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:carePanda/localization/localization.dart';
-import 'package:carePanda/pages/HRdashboardPage.dart';
 import 'package:carePanda/pages/HRmanagement/HRmanagementPage.dart';
+import 'package:carePanda/pages/dashboard/DashboardPage.dart';
+import 'package:carePanda/pages/dashboard/HRdashboardPage.dart';
 import 'package:carePanda/pages/userboarding/user_boarding.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carePanda/pages/HomePage.dart';
-import 'package:carePanda/pages/DashboardPage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
