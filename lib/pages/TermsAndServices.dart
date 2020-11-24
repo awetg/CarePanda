@@ -59,8 +59,6 @@ class _TermsAndServicesState extends State<TermsAndServices> {
                                   width: 1),
                             ),
                             child: Scrollbar(
-                              controller: ScrollController(),
-                              isAlwaysShown: true,
                               child: SingleChildScrollView(
                                 child: Container(
                                   child: Padding(

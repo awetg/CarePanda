@@ -67,7 +67,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                 style: TextStyle(
                     fontSize: 20,
                     color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.bold)),
+                    fontWeight: FontWeight.w600)),
           ),
           Divider(color: Theme.of(context).accentColor),
           Padding(
@@ -184,7 +184,8 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                           children: [
                             Text(
                                 getTranslated(context, "hr_freeResponNoRespon"),
-                                style: TextStyle(fontSize: 24)),
+                                style: TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.bold)),
                           ],
                         ));
                   }
@@ -196,7 +197,8 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(getTranslated(context, "hr_freeResponNoRespon"),
-                              style: TextStyle(fontSize: 24)),
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold)),
                         ],
                       ));
                 }

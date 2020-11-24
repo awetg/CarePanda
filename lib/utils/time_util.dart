@@ -5,6 +5,8 @@ import 'package:carePanda/pages/dashboard/day_board.dart';
 import 'package:carePanda/pages/dashboard/month_board.dart';
 import 'package:carePanda/pages/dashboard/week_board.dart';
 import 'package:carePanda/pages/dashboard/year_board.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -65,6 +67,9 @@ class TimeUtil {
   }
 
   String getBoardTitle(String timePeriod) {
+    final _storageService = locator<LocalStorageService>();
+    final _lang = _storageService.language;
+
     final now = new DateTime.now();
     final lastMidnight = now.subtract(Duration(
       hours: now.hour,
@@ -75,11 +80,11 @@ class TimeUtil {
     ));
     final weekPair = TimeUtil.instance.getStartAndEndOfMonth(now);
     final _boardTitles = {
-      "Day": DateFormat("EEEE, MMMM dd").format(lastMidnight),
-      "Week": DateFormat("MMMM dd - ").format(weekPair.first) +
-          DateFormat("d").format(weekPair.second),
-      "Month": DateFormat("MMMM y").format(DateTime.now()),
-      "Year": DateFormat("y").format(startOfThisYear)
+      "Day": DateFormat("EEEE, MMMM dd", _lang).format(lastMidnight),
+      "Week": DateFormat("MMMM dd - ", _lang).format(weekPair.first) +
+          DateFormat("d", _lang).format(weekPair.second),
+      "Month": DateFormat("MMMM y", _lang).format(DateTime.now()),
+      "Year": DateFormat("y", _lang).format(startOfThisYear)
     };
     return _boardTitles[timePeriod];
   }

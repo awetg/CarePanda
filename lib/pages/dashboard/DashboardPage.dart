@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/board_type.dart';
 import 'package:carePanda/model/survey_response.dart';
 import 'package:carePanda/pages/dashboard/dashboard_empty_page.dart';
@@ -7,13 +8,26 @@ import 'package:carePanda/utils/time_util.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardPage extends StatelessWidget {
+  _tabNameTranslated(tab, context) {
+    switch (tab) {
+      case "Week":
+        return getTranslated(context, "graph_week");
+      case "Month":
+        return getTranslated(context, "graph_month");
+      case "Year":
+        return getTranslated(context, "graph_year");
+      default:
+        return "Error";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: TimeUtil.instance.hrTimePeriodTabs.length,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Dashboard',
+          title: Text(getTranslated(context, "graph_dashboardTitle"),
               style: TextStyle(color: Theme.of(context).accentColor)),
           bottom: TabBar(
             indicator: UnderlineTabIndicator(
@@ -24,7 +38,7 @@ class DashBoardPage extends StatelessWidget {
             tabs: [
               for (final tab in TimeUtil.instance.personalTimePeriodTabs)
                 Tab(
-                  text: tab,
+                  text: _tabNameTranslated(tab, context),
                 )
             ],
           ),

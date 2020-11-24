@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/bar_chart_model.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
@@ -22,7 +23,8 @@ class SliderBarChart extends StatelessWidget {
             final QuestionItem question = snapshot.data
                 .firstWhere((e) => e.id == data.first.questionId, orElse: null);
             // set the question as title of the graph
-            final String _graphTitle = question?.question ?? "Not found";
+            final String _graphTitle =
+                question?.question ?? getTranslated(context, "graph_notFound");
 
             final count = data.groupBy((d) => d.value);
 
@@ -64,7 +66,7 @@ class SliderBarChart extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "${data.length} responses",
+                    "${data.length} ${getTranslated(context, "graph_responses")}",
                     style: TextStyle(fontWeight: FontWeight.w400),
                   ),
                   SizedBox(height: 16),

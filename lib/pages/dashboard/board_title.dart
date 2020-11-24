@@ -1,9 +1,11 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:flutter/material.dart';
 
 class BoardTitle extends StatelessWidget {
   final String title;
   final int count;
   const BoardTitle({this.title, this.count});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,7 +20,7 @@ class BoardTitle extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          "$count responses",
+          "$count ${getTranslated(context, "graph_responses")}",
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
         ),
         SizedBox(height: 20),

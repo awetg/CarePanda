@@ -159,28 +159,36 @@ class _UserDataPopup extends State<UserDataPopup> {
       _storageService.floor = int.parse(_floor);
     }
 
-    _storageService.firstTimeStartUp = false;
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
-        (Route<dynamic> route) => false).then(
-      (value) {
-        setState(() {});
-      },
-    );
+    if (_storageService.firstTimeStartUp ?? true == true) {
+      _storageService.firstTimeStartUp = false;
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+          (Route<dynamic> route) => false).then(
+        (value) {
+          setState(() {});
+        },
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   // Skips setting data but but changes shared preference so that the popup wont show up when opening app again
   skipSettingData() {
-    _storageService.firstTimeStartUp = false;
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
-        (Route<dynamic> route) => false).then(
-      (value) {
-        setState(() {});
-      },
-    );
+    if (_storageService.firstTimeStartUp ?? true == true) {
+      _storageService.firstTimeStartUp = false;
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+          (Route<dynamic> route) => false).then(
+        (value) {
+          setState(() {});
+        },
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   // Resets birth year variable from shared preferences

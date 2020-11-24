@@ -1,10 +1,14 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/graph_time_format.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/survey_response.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_common/common.dart' as common show DateTimeFactory;
+import 'package:intl/intl.dart';
 
 /* 
   NOTE: 
@@ -30,7 +34,8 @@ class TimeSeriesChart extends StatelessWidget {
             final QuestionItem question = snapshot.data
                 .firstWhere((e) => e.id == data.first.questionId, orElse: null);
             // set the question as title of the graph
-            final String _graphTitle = question?.question ?? "Not found";
+            final String _graphTitle =
+                question?.question ?? getTranslated(context, "graph_notFound");
 
             data.sort((a, b) => a.time.toDate().compareTo(b.time.toDate()));
 
@@ -76,7 +81,8 @@ class TimeSeriesChart extends StatelessWidget {
                       defaultRenderer: charts.LineRendererConfig(
                         includePoints: true,
                       ),
-                      dateTimeFactory: const charts.LocalDateTimeFactory(),
+                      dateTimeFactory: LocalizedTimeFactory(
+                          locator<LocalStorageService>().language),
                       primaryMeasureAxis: charts.NumericAxisSpec(
                         renderSpec: charts.GridlineRendererSpec(
                           labelStyle: charts.TextStyleSpec(
@@ -92,6 +98,13 @@ class TimeSeriesChart extends StatelessWidget {
                       ],
                       domainAxis: charts.DateTimeAxisSpec(
                         renderSpec: charts.GridlineRendererSpec(
+                          labelRotation:
+                              (locator<LocalStorageService>().language ??
+                                              "en") ==
+                                          "fi" &&
+                                      graphTimeFormat.timeFormat == "MMM"
+                                  ? 50
+                                  : 0,
                           labelStyle: charts.TextStyleSpec(
                               color: charts.MaterialPalette.gray.shadeDefault),
                           lineStyle: charts.LineStyleSpec(
@@ -129,5 +142,32 @@ class TimeSeriesChart extends StatelessWidget {
             return Container();
           }
         });
+  }
+}
+
+class LocalizedTimeFactory implements common.DateTimeFactory {
+  final languageCode;
+  const LocalizedTimeFactory(this.languageCode);
+
+  DateFormat createDateFormat(String pattern) {
+    return DateFormat(pattern, languageCode);
+  }
+
+  @override
+  DateTime createDateTime(int year,
+      [int month = 1,
+      int day = 1,
+      int hour = 0,
+      int minute = 0,
+      int second = 0,
+      int millisecond = 0,
+      int microsecond = 0]) {
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime createDateTimeFromMilliSecondsSinceEpoch(
+      int millisecondsSinceEpoch) {
+    throw UnimplementedError();
   }
 }

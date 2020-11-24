@@ -52,7 +52,6 @@ class MonthBoard extends StatelessWidget {
               title: boardTitle,
               count: monthGraphData.length,
             ),
-            SizedBox(height: 20),
             ..._lineGraphData
                 .groupBy((d) => d.questionId)
                 .entries

@@ -1,3 +1,4 @@
+import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class DasboardEmptyPage extends StatelessWidget {
           SizedBox(
             height: 60.0,
           ),
-          Text("Not enough data to show here!",
+          Text(getTranslated(context, "graph_notEnoughData"),
               style: TextStyle(fontWeight: FontWeight.w400)),
         ],
       ),
