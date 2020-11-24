@@ -171,7 +171,6 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     return Scaffold(
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Theme.of(context).accentIconTheme.color,
         selectedItemColor: Theme.of(context).accentColor,
         type: BottomNavigationBarType.fixed,
         items: [

@@ -1,4 +1,6 @@
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/main.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/pages/survey/question_page.dart';
@@ -86,7 +88,15 @@ class _SurveyFlowState extends State<SurveyFlow> {
   void submitResponse() {
     locator<FirestoreService>().saveAllSurveyResponse(
         locator<SurveyResponseService>().getAllResponses());
-    Navigator.pop(context);
+    locator<LocalStorageService>().hasQuestionnaire = false;
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+        (Route<dynamic> route) => false).then(
+      (value) {
+        setState(() {});
+      },
+    );
   }
 
   // builds alert dialog with title, content and postive and negative buttons

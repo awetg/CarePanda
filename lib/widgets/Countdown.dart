@@ -43,13 +43,12 @@ class _WeekCountdownState extends State<WeekCountdown> {
     _storageService = locator<LocalStorageService>();
 
     _currentTime = DateTime.now();
-
     // If last answered questionnaire is null (is null when launched first time)
     // Sets current time as last answered questionnaire
     if (_storageService.lastQuestionnaireRdy == null) {
       // If current time is over 3pm when application is opened first time, sets lastQuestionnaireRdy time to 2pm
       // This allows person to answer the questionnaire the first day user starts up the application
-      if (_currentTime.hour > 15) {
+      if (_currentTime.hour >= 15) {
         final _newlastQstRdyTime = new DateTime(_currentTime.year,
             _currentTime.month, _currentTime.day, 14, 0, 0, 0, 0);
         _storageService.lastQuestionnaireRdy = _newlastQstRdyTime.toString();
@@ -67,13 +66,20 @@ class _WeekCountdownState extends State<WeekCountdown> {
     // Calculates how much time is remaining to next questionnaire
     var remaining = nextDay.difference(_currentTime);
 
-    // Calculates time difference between current time and since questionnaire is available
-    var qstAvailableFor = _currentTime.difference(parsedTime);
     var calculatingRemaining = false;
 
-    // If questionnaire is ready and questionnaire has been available for under 9 hours,
+    // If its over 3pm and hasQuestionnaire is still true, sets it to false
+    if (_currentTime.hour < 15 && _storageService.hasQuestionnaire == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _storageService.hasQuestionnaire = false;
+        widget.questionnaireStatusChanged();
+      });
+    }
+
+    // If questionnaire is ready and it's under 3pm,
     // calculates how much time is left to answer the questionnaire
-    if (qstAvailableFor.inHours <= 9 &&
+    if (_currentTime.hour >= 15 &&
+        _currentTime.microsecond > 1 &&
         _storageService.hasQuestionnaire == true) {
       // Sets boolean calculating remaining to true, so that widget returns
       // how much time is reminaing to answer instead of how much time until next questionnaire
@@ -128,7 +134,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
           widget.questionnaireStatusChanged();
           _showLoading = false;
         });
-      } else {
+      } else if (_currentTime.hour >= 15 && _currentTime.microsecond > 1) {
         // If timer of showing how much time until next questionnaire goes to 0,
         // sets last time questionnaire is ready to current time
         // also sets hasQuestionnaire to true, to show correct card in home
@@ -136,6 +142,12 @@ class _WeekCountdownState extends State<WeekCountdown> {
           _storageService.hasQuestionnaire = true;
           _storageService.lastQuestionnaireRdy = DateTime.now().toString();
           widget.questionnaireStatusChanged();
+          _showLoading = false;
+        });
+      } else {
+        // If day has changed but hasQuestionnaire value doesn't need to change, changes only lastQuestionnaireRdy
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _storageService.lastQuestionnaireRdy = DateTime.now().toString();
           _showLoading = false;
         });
       }

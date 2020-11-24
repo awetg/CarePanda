@@ -114,7 +114,7 @@ class _AllCards extends State<AllCards> {
       _storageService.hasQuestionnaire = false;
       _hasQuestionnaire = false;
     }
-    return true;
+    return _hasQuestionnaire;
   }
 
   @override
@@ -254,7 +254,6 @@ class Questionnaire extends StatelessWidget {
                                     MaterialPageRoute(
                                         fullscreenDialog: true,
                                         builder: (context) => SurveyFlow()));
-                                _storageService.hasQuestionnaire = false;
                               },
                       ),
                     ),
