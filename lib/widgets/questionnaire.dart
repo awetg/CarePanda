@@ -1,11 +1,19 @@
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/pages/survey/survey_flow.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/questionnaire_provider.dart';
 import 'package:carePanda/widgets/Countdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Questionnaire extends StatelessWidget {
+class Questionnaire extends StatefulWidget {
+  @override
+  _QuestionnaireState createState() => _QuestionnaireState();
+}
+
+class _QuestionnaireState extends State<Questionnaire> {
+  final _storageService = locator<LocalStorageService>();
   @override
   Widget build(BuildContext context) {
     return Consumer<QuestionnairProvider>(
@@ -50,7 +58,7 @@ class Questionnaire extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(top: 8.0, left: 16.0),
                           child: Text(
-                            "Come back later \u{1f600}",
+                            "${getTranslated(context, "home_comeBackLater")} \u{1f600}",
                             style: TextStyle(
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w600,
@@ -68,7 +76,9 @@ class Questionnaire extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 8.0, left: 16.0),
                 child: WeekCountdown(
-                  questionnaireStatusChanged: () {},
+                  questionnaireStatusChanged: () {
+                    setState(() {});
+                  },
                 ),
               ),
               Expanded(
@@ -77,13 +87,13 @@ class Questionnaire extends StatelessWidget {
                   child: Padding(
                       padding: EdgeInsets.only(bottom: 16.0, right: 16.0),
                       child: ElevatedButton(
-                        onPressed: questionnairProvider.getHasQuestionnaire()
+                        onPressed: questionnairProvider.getHasQuestionnaire() &&
+                                !(_storageService.firstTimeStartUp ?? true)
                             ? () {
                                 Navigator.of(context, rootNavigator: true).push(
                                     MaterialPageRoute(
                                         fullscreenDialog: true,
                                         builder: (context) => SurveyFlow()));
-                                questionnairProvider.setHasQuestionnaire(false);
                               }
                             : null,
                         child: Text(getTranslated(context, "home_answerBtn")),

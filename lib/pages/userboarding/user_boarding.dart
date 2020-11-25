@@ -1,12 +1,9 @@
 import 'package:carePanda/localization/localization.dart';
-import 'package:carePanda/main.dart';
 import 'package:carePanda/model/slider_item.dart';
 import 'package:carePanda/pages/TermsAndServices.dart';
 import 'package:carePanda/pages/userboarding/slider_dot.dart';
 import 'package:carePanda/pages/userboarding/slider_page.dart';
-import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/services/ServiceLocator.dart';
 
 class UserBoarding extends StatefulWidget {
   @override
@@ -45,15 +42,12 @@ class _UserBoardingState extends State<UserBoarding> {
     super.didChangeDependencies();
   }
 
-  var _storageService = locator<LocalStorageService>();
-
   // handle next page of PageContorller
   nextPage() async {
     if (currentIndex < (_sliderItems.length - 1))
       _pageController.nextPage(
           duration: animation_duration, curve: animation_type);
     else {
-      _storageService.showBoarding = false;
       // Pushes to Terms & Services and removes history, which makes it unable to move back with back button
       Navigator.pushAndRemoveUntil(
           context,
@@ -64,7 +58,6 @@ class _UserBoardingState extends State<UserBoarding> {
 
   //  pop userboarding page
   skipAllPages() async {
-    _storageService.showBoarding = false;
     // Pushes to Terms & Services and removes history, which makes it unable to move back with back button
     Navigator.pushAndRemoveUntil(
         context,

@@ -121,10 +121,11 @@ class _MyAppState extends State<MyApp> {
         }
         return supportedLocales.first;
       },
-      initialRoute: _storageService.showBoarding ?? true ? "/boarding" : "/",
+      initialRoute:
+          _storageService.firstTimeStartUp ?? true ? "/boarding" : "/app",
       routes: {
-        "/": (context) => AppNavigation(),
         "/boarding": (context) => UserBoarding(),
+        "/app": (context) => AppNavigation(),
       },
     );
   }

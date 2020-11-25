@@ -68,7 +68,7 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                       style: TextStyle(
                           color: Theme.of(context).accentColor,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w500),
                     ),
                     SizedBox(height: 6),
                     Expanded(

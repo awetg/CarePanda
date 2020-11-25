@@ -7,7 +7,7 @@ class HomeSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).cardColor,
+      color: Theme.of(context).canvasColor,
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 64.0),
       child: Column(

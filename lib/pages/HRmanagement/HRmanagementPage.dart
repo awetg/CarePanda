@@ -56,15 +56,15 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
               tabs: [
                 Tab(
                     child: Text(
-                        getTranslated(context, "hr_questionnaireTopBtn"),
-                        style: TextStyle(fontSize: 16))),
+                  getTranslated(context, "hr_questionnaireTopBtn"),
+                )),
                 Tab(
-                    child: Text(getTranslated(context, "hr_MsgsTopBtn"),
-                        style: TextStyle(fontSize: 16))),
+                    child: Text(
+                  getTranslated(context, "hr_MsgsTopBtn"),
+                )),
                 Tab(
                     child: Text(
                   getTranslated(context, "hr_responsesBtn"),
-                  style: TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 )),
               ],

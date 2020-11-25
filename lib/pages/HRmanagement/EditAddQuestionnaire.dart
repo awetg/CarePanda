@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/services/ServiceLocator.dart';

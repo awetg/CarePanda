@@ -23,14 +23,14 @@ class ThemeChanger with ChangeNotifier {
 
   final _lightTheme = ThemeData(
     brightness: Brightness.light,
-    canvasColor: Color(0xffF8F8F6),
+    canvasColor: Color(0xffFDFDFD),
     primaryColor: Colors.white,
     primaryColorDark: Colors.black,
     primaryColorLight: Colors.white,
     accentColor: Color(0xff027DC5),
     accentIconTheme: IconThemeData(color: Color.fromRGBO(2, 125, 197, 90)),
     // toggleableActiveColor: Color(0xffA0C3E2),
-    dialogBackgroundColor: Color(0xffF8F8F6),
+    dialogBackgroundColor: Color(0xffFDFDFD),
     buttonColor: Color(0xff027DC5),
     disabledColor: Color(0xffA0C3E2),
     cardColor: Colors.white,

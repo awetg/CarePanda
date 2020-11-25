@@ -18,7 +18,6 @@ class LocalStorageService {
   // App
   static const String HasQuestionnaireKey = 'hasQuestionnaire';
   static const String FirsTimeStartUp = 'firstTimeStartUp';
-  static const String ShowBoarding = 'showBoarding';
   static const String LastQuestionnaireRdy = 'lastQuestionnaireRdy';
 
   // Settings
@@ -41,7 +40,6 @@ class LocalStorageService {
   // App
   bool get hasQuestionnaire => _getFromLocalStorage(HasQuestionnaireKey);
   bool get firstTimeStartUp => _getFromLocalStorage(FirsTimeStartUp);
-  bool get showBoarding => _getFromLocalStorage(ShowBoarding);
   String get lastQuestionnaireRdy => _getFromLocalStorage(LastQuestionnaireRdy);
 
   // Settings
@@ -66,7 +64,6 @@ class LocalStorageService {
       _saveToLocalStorage(HasQuestionnaireKey, value);
   set firstTimeStartUp(bool value) =>
       _saveToLocalStorage(FirsTimeStartUp, value);
-  set showBoarding(bool value) => _saveToLocalStorage(ShowBoarding, value);
   set lastQuestionnaireRdy(String value) =>
       _saveToLocalStorage(LastQuestionnaireRdy, value);
 

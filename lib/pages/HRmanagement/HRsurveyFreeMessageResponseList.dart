@@ -59,7 +59,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 0),
             child: Text(getTranslated(context, "hr_freeResponQst"),
-                style: TextStyle(fontSize: 20)),
+                style: TextStyle(fontSize: 17)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
@@ -67,13 +67,13 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                 style: TextStyle(
                     fontSize: 20,
                     color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w600)),
+                    fontWeight: FontWeight.w400)),
           ),
           Divider(color: Theme.of(context).accentColor),
           Padding(
             padding: const EdgeInsets.only(top: 6, bottom: 6),
             child: Text(getTranslated(context, "hr_freeResponMsgs"),
-                style: TextStyle(fontSize: 20)),
+                style: TextStyle(fontSize: 18)),
           ),
           StreamBuilder<List<SurveyResponse>>(
             stream: locator<FirestoreService>().getAllSurveyResponses(),
@@ -185,7 +185,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                             Text(
                                 getTranslated(context, "hr_freeResponNoRespon"),
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                                    fontSize: 24, fontWeight: FontWeight.w600)),
                           ],
                         ));
                   }
@@ -198,7 +198,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                         children: [
                           Text(getTranslated(context, "hr_freeResponNoRespon"),
                               style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold)),
+                                  fontSize: 24, fontWeight: FontWeight.w600)),
                         ],
                       ));
                 }

@@ -15,16 +15,18 @@ class HomePage extends StatelessWidget {
 
   final _storageService = locator<LocalStorageService>();
 
-  final List<QuickLinkModel> quickLinks = [
-    QuickLinkModel(title: "Human Resources", image: "assets/images/hr.jpg"),
-    QuickLinkModel(
-        title: "Real Estate", image: "assets/images/real_estate.jpg"),
-    QuickLinkModel(
-        title: "occupational Health",
-        image: "assets/images/occupational_health.jpg")
-  ];
-
   Widget build(BuildContext context) {
+    final List<QuickLinkModel> quickLinks = [
+      QuickLinkModel(
+          title: getTranslated(context, "home_hrTitle"),
+          image: "assets/images/hr.jpg"),
+      QuickLinkModel(
+          title: getTranslated(context, "home_realEstateTitle"),
+          image: "assets/images/real_estate.jpg"),
+      QuickLinkModel(
+          title: getTranslated(context, "home_occupationalHealthTitle"),
+          image: "assets/images/occupational_health.jpg")
+    ];
     return ChangeNotifierProvider(
       create: (context) => QuestionnairProvider(),
       child: Scaffold(
@@ -40,7 +42,7 @@ class HomePage extends StatelessWidget {
                       EdgeInsetsDirectional.only(start: 16, bottom: 16),
                   centerTitle: false,
                   title: Text(
-                    getTranslated(context, 'home_title'),
+                    "Garage Care App",
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                     ),
@@ -51,7 +53,7 @@ class HomePage extends StatelessWidget {
           },
           body: SingleChildScrollView(
             child: Container(
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).canvasColor,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -65,7 +67,7 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Hey there!",
+                          getTranslated(context, "home_heyThere"),
                           style: TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
@@ -75,7 +77,7 @@ class HomePage extends StatelessWidget {
                           height: 16.0,
                         ),
                         Text(
-                          "Wellcome to the Garage care App. You will answer daily survey that only takes less than a minute to answere. The answers will be also be used for improvement of your workplace. You can choose to submit your answeres completely anonymously.",
+                          getTranslated(context, "home_welcomeText"),
                           style: TextStyle(
                             color: Colors.grey,
                             height: 1.4,
@@ -84,8 +86,7 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  HomeSectionTitle(
-                      "SURVEY (${_storageService.hasQuestionnaire ?? false ? 1 : 0})"),
+                  HomeSectionTitle(getTranslated(context, "home_surveyTitle")),
                   // counter or answer questionnaire card
                   Container(
                     child: Questionnaire(),
@@ -93,7 +94,7 @@ class HomePage extends StatelessWidget {
                   SizedBox(
                     height: 24.0,
                   ),
-                  HomeSectionTitle("CONTACT"),
+                  HomeSectionTitle(getTranslated(context, "home_contactTitle")),
                   // contact HR card
                   Container(
                     height: 200,
@@ -112,7 +113,7 @@ class HomePage extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(top: 8.0, left: 16.0),
                             child: Text(
-                              "Contact human resources.",
+                              getTranslated(context, "home_contactCardTitle"),
                               style: TextStyle(
                                   fontSize: 18.0, fontWeight: FontWeight.w500),
                             ),
@@ -120,7 +121,7 @@ class HomePage extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(top: 8.0, left: 16.0),
                             child: Text(
-                              "You can send anonymous message to HR or include your personal details in them message to be contacted later.",
+                              getTranslated(context, "home_contactHrText"),
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
@@ -130,7 +131,14 @@ class HomePage extends StatelessWidget {
                               child: Padding(
                                 padding:
                                     EdgeInsets.only(bottom: 16.0, right: 16.0),
-                                child: OutlinedButton(
+                                child: OutlineButton(
+                                  child: Text(
+                                    getTranslated(context, "home_sendMsgBtn"),
+                                  ),
+                                  textColor: Theme.of(context).accentColor,
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                  ),
                                   onPressed: _storageService.firstTimeStartUp ??
                                           true
                                       ? null
@@ -146,17 +154,6 @@ class HomePage extends StatelessWidget {
                                             },
                                           );
                                         },
-                                  child: Text(
-                                    "Send Message",
-                                    style: TextStyle(
-                                        color: Theme.of(context).accentColor),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    minimumSize: Size(128, 36),
-                                    side: BorderSide(
-                                        color: Theme.of(context).accentColor,
-                                        style: BorderStyle.solid),
-                                  ),
                                 ),
                               ),
                             ),
@@ -168,7 +165,8 @@ class HomePage extends StatelessWidget {
                   SizedBox(
                     height: 24.0,
                   ),
-                  HomeSectionTitle("QUICK LINKS"),
+                  HomeSectionTitle(
+                      getTranslated(context, "home_quickLinksTitle")),
                   // Quick links list view
                   Container(
                     height: 184.0,
@@ -198,7 +196,7 @@ class HomePage extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              "Some of the links in this application might not work while the app is in testing phase. Thanks for your understanding.",
+                              getTranslated(context, "home_wipInfo"),
                               style: TextStyle(
                                 color: Colors.grey,
                               ),

@@ -228,7 +228,7 @@ class _AppSettingsState extends State<AppSettings> {
             getTranslated(context, 'settings_appSettings'),
             style: TextStyle(
                 fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
@@ -328,7 +328,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
             getTranslated(context, "settings_notifSettings"),
             style: TextStyle(
                 fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
@@ -372,7 +372,7 @@ class _UserSettingsState extends State<UserSettings> {
             getTranslated(context, "settings_userSettings"),
             style: TextStyle(
                 fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: Theme.of(context).accentColor),
           ),
           SizedBox(height: 6),
