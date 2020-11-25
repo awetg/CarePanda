@@ -17,15 +17,13 @@ import 'package:provider/provider.dart';
 import 'services/Theme.dart';
 import 'package:uuid/uuid.dart';
 
-bool showBoarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // initiliaze core firebase
   await Firebase.initializeApp();
   // start local storage service
   await startStorageService();
-  var _storageService = locator<LocalStorageService>();
-  showBoarding = _storageService.showBoarding ?? true;
+  final _storageService = locator<LocalStorageService>();
   final String userId = _storageService.anonymousUserId ?? null;
   // set if userId not set
   if (userId == null) {
@@ -123,23 +121,23 @@ class _MyAppState extends State<MyApp> {
         }
         return supportedLocales.first;
       },
-      initialRoute: showBoarding ? "/boarding" : "/",
+      initialRoute: _storageService.showBoarding ?? true ? "/boarding" : "/",
       routes: {
-        "/": (context) => MyStatefulWidget(),
+        "/": (context) => AppNavigation(),
         "/boarding": (context) => UserBoarding(),
       },
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
+class AppNavigation extends StatefulWidget {
+  AppNavigation({Key key}) : super(key: key);
 
   @override
-  _MyStatefulWidget createState() => _MyStatefulWidget();
+  _AppNavigation createState() => _AppNavigation();
 }
 
-class _MyStatefulWidget extends State<MyStatefulWidget> {
+class _AppNavigation extends State<AppNavigation> {
   int _selectedPage = 0;
   var _pageOptions;
   User user = FirebaseAuth.instance.currentUser;
@@ -171,6 +169,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     return Scaffold(
       body: _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
+        // unselectedItemColor: Theme.of(context).accentIconTheme.color,
         selectedItemColor: Theme.of(context).accentColor,
         type: BottomNavigationBarType.fixed,
         items: [
