@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
                       EdgeInsetsDirectional.only(start: 16, bottom: 16),
                   centerTitle: false,
                   title: Text(
-                    "Garage Care App",
+                    "Garage care app",
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                     ),
