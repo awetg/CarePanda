@@ -181,6 +181,7 @@ class HomePage extends StatelessWidget {
                   SizedBox(
                     height: 16.0,
                   ),
+                  // Information about non working links
                   Container(
                     height: 124,
                     width: MediaQuery.of(context).size.width,
