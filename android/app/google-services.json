@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93761698045:android:02b1551517862c9091a694",
+        "android_client_info": {
+          "package_name": "com.garage.carePanda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93761698045-qs06dmkcbklf1ukumc6bvplcscbaa69a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_ucXTjV80oFwG0mnxEP9u9t7v-5o2WW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93761698045-qs06dmkcbklf1ukumc6bvplcscbaa69a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

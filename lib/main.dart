@@ -12,6 +12,7 @@ import 'package:carePanda/pages/HomePage.dart';
 import 'package:carePanda/pages/SettingsPage.dart';
 import 'package:flutter/services.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'services/Theme.dart';
@@ -19,6 +20,8 @@ import 'package:uuid/uuid.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // initiliaze dotenv
+  await DotEnv().load('.env');
   // initiliaze core firebase
   await Firebase.initializeApp();
   // start local storage service
