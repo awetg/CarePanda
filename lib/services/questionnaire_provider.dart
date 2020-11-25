@@ -8,5 +8,6 @@ class QuestionnairProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool getHasQuestionnaire() => locator<LocalStorageService>().hasQuestionnaire;
+  bool getHasQuestionnaire() =>
+      locator<LocalStorageService>().hasQuestionnaire ?? false;
 }

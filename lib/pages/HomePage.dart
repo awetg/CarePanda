@@ -1,28 +1,17 @@
 import 'package:carePanda/localization/localization.dart';
 import 'package:carePanda/model/quick_link_model.dart';
-import 'package:carePanda/pages/TermsAndServices.dart';
 import 'package:carePanda/services/questionnaire_provider.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/widgets/home_section_title.dart';
 import 'package:carePanda/widgets/questionnaire.dart';
 import 'package:carePanda/widgets/quick_link_card.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 import 'package:carePanda/widgets/MsgForHRPopup.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   HomePage({Key key}) : super(key: key);
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-// Base widget for homepage. Includes base layout and icon
-class _HomePageState extends State<HomePage> {
-  var _firstStartUp;
-  var _userBoarding;
 
   final _storageService = locator<LocalStorageService>();
 
@@ -34,29 +23,6 @@ class _HomePageState extends State<HomePage> {
         title: "occupational Health",
         image: "assets/images/occupational_health.jpg")
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    // Gets boolean value wheter the app is started for the first time or not
-    final _storageService = locator<LocalStorageService>();
-    _firstStartUp = _storageService.firstTimeStartUp ?? true;
-    _userBoarding = _storageService.showBoarding ?? true;
-    log("first start up " + _firstStartUp.toString());
-    if (_firstStartUp && !_userBoarding && _userBoarding != null) {
-      openStartUpPopUp();
-    }
-  }
-
-// If application is started for the first time, opens up a popup
-  openStartUpPopUp() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => TermsAndServices()),
-          (Route<dynamic> route) => false);
-    });
-  }
 
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -222,7 +188,6 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.of(context).size.width,
                     child: Card(
                       child: Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             margin: EdgeInsets.only(left: 8, right: 8),
