@@ -159,7 +159,7 @@ class _WeekCountdownState extends State<WeekCountdown> {
         : Text(
             formattedRemaining,
             style: TextStyle(
-                fontSize: calculatingRemaining ?? false ? 30 : 42.0,
+                fontSize: 28.0,
                 fontWeight: FontWeight.bold,
                 color: _storageService.darkTheme
                     ? null

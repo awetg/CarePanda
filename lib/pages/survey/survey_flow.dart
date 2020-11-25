@@ -91,7 +91,7 @@ class _SurveyFlowState extends State<SurveyFlow> {
     locator<LocalStorageService>().hasQuestionnaire = false;
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyStatefulWidget()),
+        MaterialPageRoute(builder: (context) => AppNavigation()),
         (Route<dynamic> route) => false).then(
       (value) {
         setState(() {});

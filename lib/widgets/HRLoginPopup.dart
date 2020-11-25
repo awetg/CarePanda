@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// TODO: HR email field should set the keyboard to email so that user can write without spaces and have email completion on their keyboard
 class HRLoginPopup extends StatefulWidget {
   @override
   _HRLoginPopupState createState() => _HRLoginPopupState();

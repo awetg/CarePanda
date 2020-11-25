@@ -1,332 +1,221 @@
 import 'package:carePanda/localization/localization.dart';
-import 'package:carePanda/pages/TermsAndServices.dart';
-import 'package:carePanda/widgets/CardWidget.dart';
-import 'package:carePanda/widgets/OtherServicesPopup.dart';
-import 'package:carePanda/pages/survey/survey_flow.dart';
+import 'package:carePanda/model/quick_link_model.dart';
+import 'package:carePanda/services/questionnaire_provider.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/widgets/home_section_title.dart';
+import 'package:carePanda/widgets/questionnaire.dart';
+import 'package:carePanda/widgets/quick_link_card.dart';
 import 'package:flutter/material.dart';
-import 'package:carePanda/widgets/Countdown.dart';
-import 'dart:developer';
 import 'package:carePanda/widgets/MsgForHRPopup.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
-import 'package:carePanda/widgets/UserDataPopup.dart';
+import 'package:provider/provider.dart';
 
-var _storageService = locator<LocalStorageService>();
+class HomePage extends StatelessWidget {
+  HomePage({Key key}) : super(key: key);
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  final _storageService = locator<LocalStorageService>();
 
-  final String title;
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-// Base widget for homepage. Includes base layout and icon
-class _HomePageState extends State<HomePage> {
-  var _firstStartUp;
-  var _userBoarding;
-
-  @override
-  void initState() {
-    super.initState();
-    // Gets boolean value wheter the app is started for the first time or not
-    var _storageService = locator<LocalStorageService>();
-    _firstStartUp = _storageService.firstTimeStartUp ?? true;
-    _userBoarding = _storageService.showBoarding ?? true;
-    log("first start up " + _firstStartUp.toString());
-    if (_firstStartUp && !_userBoarding && _userBoarding != null) {
-      openStartUpPopUp();
-    }
-  }
-
-// If application is started for the first time, opens up a popup
-  openStartUpPopUp() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => TermsAndServices()),
-          (Route<dynamic> route) => false);
-    });
-  }
+  final List<QuickLinkModel> quickLinks = [
+    QuickLinkModel(title: "Human Resources", image: "assets/images/hr.jpg"),
+    QuickLinkModel(
+        title: "Real Estate", image: "assets/images/real_estate.jpg"),
+    QuickLinkModel(
+        title: "occupational Health",
+        image: "assets/images/occupational_health.jpg")
+  ];
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(getTranslated(context, 'home_title'),
-            style: TextStyle(color: Theme.of(context).accentColor)),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(height: 10),
-              // Changes logo depending on theme
-              if (!_storageService.darkTheme)
-                Image.asset(
-                  'assets/images/caregarooLogo_v2.png',
-                  height: 200,
-                  width: 400,
-                ),
-              if (_storageService.darkTheme)
-                Image.asset(
-                  'assets/images/caregaroologo_v2_light.png',
-                  height: 200,
-                  width: 400,
-                ),
-
-              AllCards(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Includes layout for all home screen cards (Questionnaire card, Countdown card and HR contacting card) and a load icon
-
-class AllCards extends StatefulWidget {
-  @override
-  _AllCards createState() => _AllCards();
-}
-
-class _AllCards extends State<AllCards> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  // Gets data wheter user has questionnare ready or not
-  Future<bool> get checkHasQuestionnaire async {
-    var _storageService = locator<LocalStorageService>();
-    var _hasQuestionnaire = _storageService.hasQuestionnaire;
-
-    // If the value is null, default it to false
-    if (_hasQuestionnaire == null) {
-      _storageService.hasQuestionnaire = false;
-      _hasQuestionnaire = false;
-    }
-    return _hasQuestionnaire;
-  }
-
-  @override
-  Widget build(BuildContext context) => FutureBuilder<bool>(
-      future: checkHasQuestionnaire,
-      builder: (context, snapshot) {
-        // Shows questionnaire/countdown card and HR card when receiving boolean value from shared preference
-        if (snapshot.hasData) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(height: 20),
-
-              // Shows questionnaire card if shared preference boolean value is true
-              if (snapshot.data)
-                SizedBox(
-                  width: double.infinity,
-                  child: CardWidget(
-                    widget: Questionnaire(
-                      countdownWidget:
-                          WeekCountdown(questionnaireStatusChanged: () {
-                        setState(() {});
-                      }),
+    return ChangeNotifierProvider(
+      create: (context) => QuestionnairProvider(),
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 112.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding:
+                      EdgeInsetsDirectional.only(start: 16, bottom: 16),
+                  centerTitle: false,
+                  title: Text(
+                    getTranslated(context, 'home_title'),
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                 ),
-
-              // Shows countdown card if shared preference boolean value is false
-              if (!snapshot.data)
-                SizedBox(
-                  width: double.infinity,
-                  child: CardWidget(
-                    widget: Timer(
-                      timerWidget: WeekCountdown(
-                        questionnaireStatusChanged: () {
-                          setState(() {});
-                        },
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Container(
+              color: Theme.of(context).cardColor,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  // Information card
+                  Container(
+                    padding:
+                        EdgeInsets.only(top: 16.0, left: 16.0, right: 64.0),
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hey there!",
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        Text(
+                          "Wellcome to the Garage care App. You will answer daily survey that only takes less than a minute to answere. The answers will be also be used for improvement of your workplace. You can choose to submit your answeres completely anonymously.",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            height: 1.4,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  HomeSectionTitle(
+                      "SURVEY (${_storageService.hasQuestionnaire ?? false ? 1 : 0})"),
+                  // counter or answer questionnaire card
+                  Container(
+                    child: Questionnaire(),
+                  ),
+                  SizedBox(
+                    height: 24.0,
+                  ),
+                  HomeSectionTitle("CONTACT"),
+                  // contact HR card
+                  Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context).dialogBackgroundColor,
+                            width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 16.0),
+                          Container(
+                            margin: EdgeInsets.only(top: 8.0, left: 16.0),
+                            child: Text(
+                              "Contact human resources.",
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 8.0, left: 16.0),
+                            child: Text(
+                              "You can send anonymous message to HR or include your personal details in them message to be contacted later.",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(bottom: 16.0, right: 16.0),
+                                child: OutlinedButton(
+                                  onPressed: _storageService.firstTimeStartUp ??
+                                          true
+                                      ? null
+                                      : () {
+                                          showDialog(
+                                            barrierColor: _storageService
+                                                    .darkTheme
+                                                ? Colors.black.withOpacity(0.4)
+                                                : null,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return MsgForHRPopup();
+                                            },
+                                          );
+                                        },
+                                  child: Text(
+                                    "Send Message",
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: Size(128, 36),
+                                    side: BorderSide(
+                                        color: Theme.of(context).accentColor,
+                                        style: BorderStyle.solid),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              SizedBox(height: 8),
-
-              // Shows big buttons for other services and sending msg for HR
-              BigButtons()
-            ],
-          );
-
-          // Shows loading indicator and HR card until receiving boolean value from shared preference
-        } else {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(height: 30),
-                CircularProgressIndicator(),
-                SizedBox(height: 30),
-
-                // Shows big buttons for other services and sending msg for HR
-                BigButtons()
-              ],
+                  SizedBox(
+                    height: 24.0,
+                  ),
+                  HomeSectionTitle("QUICK LINKS"),
+                  // Quick links list view
+                  Container(
+                    height: 184.0,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        for (final link in quickLinks)
+                          QuickLinkCard(link.title, link.image)
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  Container(
+                    height: 124,
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 8, right: 8),
+                            child: Icon(
+                              Icons.info_outlined,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Some of the links in this application might not work while the app is in testing phase. Thanks for your understanding.",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                ],
+              ),
             ),
-          );
-        }
-      });
-}
-
-// Widget with countdown clock
-class Timer extends StatelessWidget {
-  Timer({this.timerWidget});
-  final timerWidget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        SizedBox(height: 15),
-        Text(getTranslated(context, "home_nextQst"),
-            style: TextStyle(
-                fontSize: 22.0, color: Theme.of(context).accentColor)),
-        SizedBox(height: 10),
-        timerWidget,
-        SizedBox(height: 15),
-      ],
-    );
-  }
-}
-
-// Widget card to display that user has a qeustionnaire
-class Questionnaire extends StatelessWidget {
-  Questionnaire({this.countdownWidget});
-  final countdownWidget;
-  final _storageService = locator<LocalStorageService>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(width: 18),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(getTranslated(context, "home_userHasQst"),
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          color: Theme.of(context).accentColor)),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(getTranslated(context, "home_remainingQst"),
-                  style: TextStyle(
-                      fontSize: 16.0, color: Theme.of(context).accentColor)),
-              countdownWidget,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        child: Text(getTranslated(context, "home_answerBtn"),
-                            style: TextStyle(fontSize: 18)),
-                        textColor: Colors.white,
-                        onPressed: _storageService.firstTimeStartUp ?? true
-                            ? null
-                            : () {
-                                Navigator.of(context, rootNavigator: true).push(
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (context) => SurveyFlow()));
-                              },
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 18),
-                ],
-              ),
-              SizedBox(height: 18),
-            ],
           ),
-        )
-      ],
-    );
-  }
-}
-
-// Big buttons for other services and for sending a msg for HR
-class BigButtons extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Button for other services
-        Expanded(
-            child: Padding(
-                padding: EdgeInsets.only(left: 12, right: 7),
-                child: BigButton(
-                    title: getTranslated(context, "home_otherServicesBtn"),
-                    dialog: OtherServicesPopup()))),
-
-        // Button for sending a msg to HR
-        Expanded(
-          child: Padding(
-              padding: EdgeInsets.only(right: 12, left: 7),
-              child: BigButton(
-                  title: getTranslated(context, "home_msgForHrBtn"),
-                  dialog: MsgForHRPopup())),
         ),
-      ],
-    );
-  }
-}
-
-// Widget for big buttons (takes in a title and dialog)
-class BigButton extends StatelessWidget {
-  BigButton({this.title, this.dialog});
-  final title;
-  final dialog;
-  final _storageService = locator<LocalStorageService>();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 154,
-      child: RaisedButton(
-        child: Text(title,
-            textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-        color: Theme.of(context).cardColor,
-        textColor: Theme.of(context).accentColor,
-        onPressed: _storageService.firstTimeStartUp ?? true
-            ? null
-            : () {
-                showDialog(
-                  barrierColor: _storageService.darkTheme
-                      ? Colors.black.withOpacity(0.4)
-                      : null,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return dialog;
-                  },
-                );
-              },
       ),
     );
   }
