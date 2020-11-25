@@ -73,7 +73,7 @@ class TimeUtil {
       milliseconds: now.millisecond,
       microseconds: now.microsecond,
     ));
-    final weekPair = TimeUtil.instance.getStartAndEndOfMonth(now);
+    final weekPair = TimeUtil.instance.getStartAndEndOfWeek(now);
     final _boardTitles = {
       "Day": DateFormat("EEEE, MMMM dd").format(lastMidnight),
       "Week": DateFormat("MMMM dd - ").format(weekPair.first) +

@@ -27,7 +27,7 @@ class PieChart extends StatelessWidget {
             final group = data.groupBy((d) => d.value);
             final series = List.generate(question.options.length, (i) => i)
                 .map((e) => PieChartModel(
-                    optionCount: group[question.options[e]].length,
+                    optionCount: group[question.options[e]]?.length ?? 0,
                     option: question.options[e]))
                 .toList();
 
