@@ -210,38 +210,16 @@ class _SurveyFlowState extends State<SurveyFlow> {
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Padding(
-                                  padding: EdgeInsets.only(bottom: 96.0),
-                                  child: ElevatedButton(
-                                    onPressed: submitResponse,
-                                    child: Text(
-                                        getTranslated(context, "qst_doneBtn")),
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(128, 36),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50.0)),
-                                        )),
-                                  )),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                  padding: EdgeInsets.only(bottom: 32.0),
-                                  child: OutlinedButton(
-                                    onPressed: () {},
-                                    child: Text("CONTACT HR"),
-                                    style: OutlinedButton.styleFrom(
-                                        minimumSize: Size(128, 36),
-                                        side: currentIndex == 0
-                                            ? null
-                                            : BorderSide(
-                                                color: Colors.blue,
-                                                style: BorderStyle.solid),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50.0)),
-                                        )),
-                                  )),
+                                padding: EdgeInsets.only(bottom: 96.0),
+                                child: ElevatedButton(
+                                  onPressed: submitResponse,
+                                  child: Text(
+                                      getTranslated(context, "qst_doneBtn")),
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(128, 36),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         )
@@ -251,47 +229,43 @@ class _SurveyFlowState extends State<SurveyFlow> {
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Padding(
-                                  padding: EdgeInsets.only(
-                                      right: 16.0, bottom: 32.0),
-                                  child: ElevatedButton(
-                                    onPressed: () => continueToNextPage()
-                                        ? nextPage()
-                                        : showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                unansweredQuestionsAlert()),
-                                    child: Text(
-                                        getTranslated(context, "qst_nextBtn")),
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(128, 36),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50.0)),
-                                        )),
-                                  )),
+                                padding:
+                                    EdgeInsets.only(right: 16.0, bottom: 32.0),
+                                child: ElevatedButton(
+                                  onPressed: () => continueToNextPage()
+                                      ? nextPage()
+                                      : showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              unansweredQuestionsAlert()),
+                                  child: Text(
+                                      getTranslated(context, "qst_nextBtn")),
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(128, 36),
+                                  ),
+                                ),
+                              ),
                             ),
                             Align(
                               alignment: Alignment.bottomLeft,
                               child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 16.0, bottom: 32.0),
-                                  child: OutlinedButton(
-                                    onPressed:
-                                        currentIndex == 0 ? null : previousPage,
-                                    child: Text(getTranslated(
-                                        context, "qst_previousBtn")),
-                                    style: OutlinedButton.styleFrom(
-                                        minimumSize: Size(128, 36),
-                                        side: currentIndex == 0
-                                            ? null
-                                            : BorderSide(
-                                                color: Colors.blue,
-                                                style: BorderStyle.solid),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50.0)),
-                                        )),
-                                  )),
+                                padding:
+                                    EdgeInsets.only(left: 16.0, bottom: 32.0),
+                                child: OutlinedButton(
+                                  onPressed:
+                                      currentIndex == 0 ? null : previousPage,
+                                  child: Text(getTranslated(
+                                      context, "qst_previousBtn")),
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: Size(128, 36),
+                                    side: currentIndex == 0
+                                        ? null
+                                        : BorderSide(
+                                            color: Colors.blue,
+                                            style: BorderStyle.solid),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         )
