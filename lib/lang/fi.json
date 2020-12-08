@@ -149,7 +149,7 @@
     "hr_infoMsgDeletingText": "Viestejä voi poistaa pyyhkäisemällä viestikorttia oikealle tai vasemmalle, ja vahvistamalla poiston.",
     "hr_infoSurveyTitle": "Kyselyjen vastaukset",
     "hr_infoSurveyInfoTitle": "Tietoa kyselyjen vastauksista",
-    "hr_infoSurveryInfoText": "Kyselyjen vastaus -välilehti näyttää listan kyselyistä. Kyselyä klikkaamalla uusi sivu aukeaa, näyttäen kyselyn kaikki vapaat vastaukset. Vastauksen kortti laajenee sitä klikkaamalla, näyttäen enemmän tietoa vastauksen lähettäjästä.",
+    "hr_infoSurveryInfoText": "Kyselyjen vastaus -välilehti näyttää listan kyselyistä. Kyselyä klikkaamalla uusi sivu aukeaa, näyttäen kyselyn kaikki vapaat vastaukset. Vastauksen kortti laajenee sitä klikkaamalla, näyttäen koko viestin.",
     "qst_freeTextHint": "Valinnainen lisäkommentti",
     "qst_tyTitle": "Kittos, että vastasit kyselyyn!",
     "qst_tyText": "Vaustaustasi käytetään vain tavoin, joilla sinua ei voida tunnistaa. Käytämme palautettasi ymmärtääksemme työtilojanne paremmin.",

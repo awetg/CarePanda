@@ -27,6 +27,7 @@ class HRmanagementInfoPage extends StatelessWidget {
   }
 }
 
+// Info of adding, modifying and deleting questionnaires
 class QuestionnaireInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -115,6 +116,7 @@ class QuestionnaireInfo extends StatelessWidget {
   }
 }
 
+// Info of free messages (sent from home page)
 class MessageInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -182,6 +184,7 @@ class MessageInfo extends StatelessWidget {
   }
 }
 
+// Info of survey's free message responses
 class SurveyResponseInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

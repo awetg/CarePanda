@@ -93,7 +93,6 @@ class _HRsurveyResponsesState extends State<HRsurveyResponses> {
                                         ],
                                       ),
                                     ),
-                                    // Icon for all but the last questionnaire
                                     Icon(Icons.navigate_next, size: 28)
                                   ],
                                 ),
@@ -125,12 +124,14 @@ class _HRsurveyResponsesState extends State<HRsurveyResponses> {
                 ),
               ),
             );
+            // Shows message if there are no questionnaires
           } else {
             return Container(
                 padding: EdgeInsets.only(top: 50),
                 child: Text(getTranslated(context, "hr_qstNoQsts"),
                     style: TextStyle(fontSize: 24)));
           }
+          // Loading indicator when loading
         } else {
           return Padding(
               padding: const EdgeInsets.only(top: 50.0),

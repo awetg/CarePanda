@@ -38,6 +38,7 @@ class _HRmanagementPageState extends State<HRmanagementPage> {
                 },
               )
             ],
+            // Tab bar of hr management page
             bottom: TabBar(
               onTap: (index) {
                 setState(() {

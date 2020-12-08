@@ -428,6 +428,7 @@ class _EditAddQuestionnaireState extends State<EditAddQuestionnaire> {
   }
 }
 
+// Generates textfields that work as questionnaires options
 class TextFieldGenerator extends StatefulWidget {
   final amount;
   final listOfOptions;

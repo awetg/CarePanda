@@ -28,6 +28,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
     super.didChangeDependencies();
   }
 
+  // Expands survey's free message response to show entire message
   _expandItem(int data) {
     setState(() {
       if (_expandedOnesList.contains(data)) {
@@ -133,7 +134,7 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                                                 ? null
                                                 : TextOverflow.ellipsis,
                                             maxLines:
-                                                _expanded ?? false ? null : 2,
+                                                _expanded ?? false ? null : 1,
                                           ),
                                           SizedBox(height: 4),
 
@@ -146,14 +147,6 @@ class _SurveyFreeResponseListState extends State<SurveyFreeResponseList> {
                                                       .textTheme
                                                       .headline2
                                                       .color)),
-
-                                          _expanded ?? false
-                                              ? Text(
-                                                  "* No user data to show yet - Work In Progress",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .accentColor))
-                                              : Container(),
                                         ],
                                       ),
                                     ),

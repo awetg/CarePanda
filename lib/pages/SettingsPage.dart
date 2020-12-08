@@ -13,7 +13,6 @@ import 'package:carePanda/widgets/CardWidget.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
-  //SettingsPage({Key key}) : super(key: key);
   final VoidCallback refreshNavBar;
 
   SettingsPage({this.refreshNavBar});
@@ -164,6 +163,7 @@ class _SettingsPage extends State<SettingsPage> {
   }
 }
 
+// App settings (Language and dark theme on/off)
 class AppSettings extends StatefulWidget {
   @override
   _AppSettingsState createState() => _AppSettingsState();
@@ -176,6 +176,7 @@ class _AppSettingsState extends State<AppSettings> {
 
   @override
   didChangeDependencies() {
+    // List of languages (translated)
     languagesList = <Language>[
       new Language(1, getTranslated(context, "settings_languageEn"), "en"),
       new Language(2, getTranslated(context, "settings_languageFi"), "fi")
@@ -184,6 +185,7 @@ class _AppSettingsState extends State<AppSettings> {
     super.didChangeDependencies();
   }
 
+  // Gets current language
   _getCurrentLanguage() {
     var _languageCode = _storageService.language ?? "en";
     switch (_languageCode) {
@@ -198,6 +200,7 @@ class _AppSettingsState extends State<AppSettings> {
     }
   }
 
+  // Changes language
   _changeLanguage(newLanguage) {
     Locale _newLocale;
     switch (newLanguage.countryCode) {
@@ -287,6 +290,7 @@ class _AppSettingsState extends State<AppSettings> {
   }
 }
 
+// Notifications setting (Push notifications on/off)
 class NotificationSettings extends StatefulWidget {
   @override
   _NotificationSettingsState createState() => _NotificationSettingsState();
@@ -355,6 +359,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 }
 
+// User settings (Personal data modifying)
 class UserSettings extends StatefulWidget {
   @override
   _UserSettingsState createState() => _UserSettingsState();
@@ -383,6 +388,7 @@ class _UserSettingsState extends State<UserSettings> {
                 getTranslated(context, "settings_personalData"),
                 style: TextStyle(fontSize: 20.0),
               ),
+              // Button to open new page where data can be modified
               OutlineButton(
                 child: Text(getTranslated(context, "settings_modifyBtn"),
                     style: TextStyle(fontSize: 18)),
@@ -407,6 +413,7 @@ class _UserSettingsState extends State<UserSettings> {
   }
 }
 
+// Class for languages
 class Language {
   final int id;
   final String name;

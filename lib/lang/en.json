@@ -149,7 +149,7 @@
     "hr_infoMsgDeletingText": "Messages can be deleted by swiping message card either left or right and then confirming deletion.",
     "hr_infoSurveyTitle": "Survey responses",
     "hr_infoSurveyInfoTitle": "Information of survey responses",
-    "hr_infoSurveryInfoText": "Survey response tab shows a list of questionnaires and by clicking one of them, new page opens with a list of all the questionnaire's free message responses. Responses expand by clicking on them, showing more information of the user who wrote the response.",
+    "hr_infoSurveryInfoText": "Survey response tab shows a list of questionnaires and by clicking one of them, new page opens with a list of all the questionnaire's free message responses. Responses expand by clicking on them, showing the entire message.",
     "qst_freeTextHint": "Optional extra comment",
     "qst_tyTitle": "Thank you for completing the survey!",
     "qst_tyText": "Your response will only be used in ways that does not identify you. We will use your feedback to understand your workspace better.",

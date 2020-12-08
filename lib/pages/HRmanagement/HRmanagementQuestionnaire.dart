@@ -20,6 +20,8 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
   }
 
   // TRANSLATION FUNCTIONS
+
+  // Translates true / false
   _trueOrFalseTranslation(value) {
     switch (value) {
       case true:
@@ -31,6 +33,7 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
     }
   }
 
+  // Translates question type
   _typeTranslation(value) {
     switch (value) {
       case "QuestionType.RangeSelection":
@@ -243,12 +246,14 @@ class _QuestionnaireModificationState extends State<QuestionnaireModification> {
                 ),
               ),
             );
+            // Shows message if there are no questionnaires
           } else {
             return Container(
                 padding: EdgeInsets.only(top: 50),
                 child: Text(getTranslated(context, "hr_qstNoQsts"),
                     style: TextStyle(fontSize: 24)));
           }
+          // Shows loading indicator when loading
         } else {
           return Padding(
               padding: const EdgeInsets.only(top: 50.0),

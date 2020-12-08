@@ -10,6 +10,7 @@ class ThemeChanger with ChangeNotifier {
   }
   ThemeChanger._privateConstructor();
 
+  // Dark theme
   final _darkTheme = ThemeData(
     brightness: Brightness.dark,
     dialogBackgroundColor: Color(0xff303030),
@@ -21,6 +22,7 @@ class ThemeChanger with ChangeNotifier {
         BottomNavigationBarThemeData(backgroundColor: Color(0xff212121)),
   );
 
+  // Light theme
   final _lightTheme = ThemeData(
     brightness: Brightness.light,
     canvasColor: Color(0xffFDFDFD),
@@ -38,10 +40,12 @@ class ThemeChanger with ChangeNotifier {
         BottomNavigationBarThemeData(backgroundColor: Colors.white),
   );
 
+  // Get theme
   getTheme() => locator<LocalStorageService>().darkTheme ?? false
       ? _darkTheme
       : _lightTheme;
 
+  // Set theme
   setTheme(ThemeType theme) {
     if (theme == ThemeType.Dark) {
       locator<LocalStorageService>().darkTheme = true;

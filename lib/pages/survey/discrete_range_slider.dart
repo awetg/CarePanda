@@ -35,18 +35,32 @@ class _DiscreteRangeSliderState extends State<DiscreteRangeSlider> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Slider(
-            value: _discreteValue,
-            min: 0,
-            max: widget._sliderMaxRange,
-            divisions: widget._sliderMaxRange.toInt(),
-            onChanged: (value) {
-              setState(() {
-                _discreteValue = value;
-              });
-              locator<SurveyResponseService>()
-                  .updateResponseValue(widget._questionId, value.toString());
-            })
+        // Row which includes slider and texts which include slider's min and max value
+        Row(
+          children: [
+            Text(
+              "0",
+              style: TextStyle(fontSize: 18),
+            ),
+            Expanded(
+              child: Slider(
+                  value: _discreteValue,
+                  min: 0,
+                  max: widget._sliderMaxRange,
+                  divisions: widget._sliderMaxRange.toInt(),
+                  label: "$_discreteValue",
+                  onChanged: (value) {
+                    setState(() {
+                      _discreteValue = value;
+                    });
+                    locator<SurveyResponseService>().updateResponseValue(
+                        widget._questionId, value.toString());
+                  }),
+            ),
+            Text("${widget._sliderMaxRange.toInt() ?? 5}",
+                style: TextStyle(fontSize: 18)),
+          ],
+        )
       ],
     );
   }

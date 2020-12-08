@@ -408,12 +408,14 @@ class _MessagesState extends State<Messages> {
                 ),
               ),
             );
+            // Shows message if there are no messages
           } else {
             return Container(
                 padding: EdgeInsets.only(top: 50),
                 child: Text(getTranslated(context, "hr_msgNoMsgs"),
                     style: TextStyle(fontSize: 24)));
           }
+          // Loading indicator when getting data
         } else {
           return Padding(
               padding: const EdgeInsets.only(top: 50.0),
