@@ -28,9 +28,7 @@ class TimeUtil {
   }
 
   Pair<DateTime, DateTime> getStartAndEndOfMonth(DateTime date) {
-    final startDay = (date.month < 12)
-        ? new DateTime(date.year, date.month, 1)
-        : new DateTime(date.year + 1, 1, 1);
+    final startDay = new DateTime(date.year, date.month, 1);
     final lastDay = (date.month < 12)
         ? new DateTime(date.year, date.month + 1, 0)
         : new DateTime(date.year + 1, 1, 0);
@@ -104,7 +102,7 @@ class TimeUtil {
       ));
       return data.where((e) => lastMidnight.isBefore(e.time.toDate())).toList();
     } else if (timePeriod == "Week") {
-      final weekPair = TimeUtil.instance.getStartAndEndOfMonth(DateTime.now());
+      final weekPair = TimeUtil.instance.getStartAndEndOfWeek(DateTime.now());
       return data
           .where((e) => weekPair.first.isBefore(e.time.toDate()))
           .toList();
