@@ -1,4 +1,4 @@
-import 'package:carePanda/DataStructures/MsgDataStructure.dart';
+import 'package:carePanda/model/hr_message.dart';
 import 'package:carePanda/model/question_item.dart';
 import 'package:carePanda/model/reportMsgModel.dart';
 import 'package:carePanda/model/survey_response.dart';
@@ -24,6 +24,7 @@ class FirestoreService {
 
   // get all responses or answeres submitted by all users
   Stream<List<SurveyResponse>> getAllSurveyResponses() {
+    print("response path: ${DotEnv().env['_survey_response_path']}");
     return _db
         .collection(DotEnv().env['_survey_response_path'])
         // .get() //future
@@ -123,7 +124,7 @@ class FirestoreService {
   }
 
   // Save new HR message
-  Future<void> saveHrMessage(MsgDataStructure response) {
+  Future<void> saveHrMessage(HRMessage response) {
     return _db
         .collection(DotEnv().env['_hrMessages_path'])
         .doc()
@@ -131,13 +132,13 @@ class FirestoreService {
   }
 
   // Get all HR messages
-  Stream<List<MsgDataStructure>> getAllHrMessages() {
+  Stream<List<HRMessage>> getAllHrMessages() {
     return _db
         .collection(DotEnv().env['_hrMessages_path'])
         // .get() //future
         .snapshots()
         .map((snapshots) => snapshots.docs
-            .map((doc) => MsgDataStructure.fromMap({
+            .map((doc) => HRMessage.fromMap({
                   ...doc.data(),
                   ...{"id": doc.id}
                 }))

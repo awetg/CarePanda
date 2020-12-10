@@ -1,4 +1,6 @@
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/services/LocalStorageService.dart';
+import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/widgets/UserDataPopup.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +10,7 @@ class TermsAndServices extends StatefulWidget {
 }
 
 class _TermsAndServicesState extends State<TermsAndServices> {
-  var _checkboxValue = false;
+  bool _checkboxValue = false;
 
   // Changes checkbox value
   _onCheckBoxChange(value) {
@@ -110,10 +112,13 @@ class _TermsAndServicesState extends State<TermsAndServices> {
             textColor: Colors.white,
             onPressed: _checkboxValue
                 ? () {
-                    Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
+                    locator<LocalStorageService>().firstTimeStartUp = false;
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
                             fullscreenDialog: true,
-                            builder: (context) => UserDataPopup()));
+                            builder: (context) => UserDataPopup(
+                                  firstStartUp: true,
+                                )));
                   }
                 : null,
           ),

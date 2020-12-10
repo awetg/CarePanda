@@ -1,5 +1,7 @@
-import 'package:carePanda/DataStructures/MsgDataStructure.dart';
+import 'dart:convert';
 import 'package:carePanda/localization/localization.dart';
+import 'package:carePanda/model/hr_message.dart';
+import 'package:carePanda/model/user_data.dart';
 import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:carePanda/services/firestore_service.dart';
@@ -11,53 +13,46 @@ class MsgForHRPopup extends StatefulWidget {
 }
 
 class _MsgForHRPopup extends State<MsgForHRPopup> {
+  final _formKey = GlobalKey<FormState>();
   var _anonymousMsg = false;
-  var data;
+  HRMessage data;
   var _storageService = locator<LocalStorageService>();
   var _msg;
-  var _validMsg = false;
-  var _hasTriedToSendMsg = false;
-
-  // Checkbox on change
-  _onAnonymousCheckBoxChange(bool value) {
-    setState(() {
-      _anonymousMsg = value;
-    });
-  }
 
   // Sends message
   _sendMessage() {
-    setState(() {
-      _hasTriedToSendMsg = true;
-    });
-
     // Send message to firebase (if not anonymous, sends userdata with the msg)
     if (!_anonymousMsg) {
-      data = new MsgDataStructure(
-          name: _storageService.name,
-          lastName: _storageService.lastName,
-          building: _storageService.building,
-          floor: _storageService.floor,
-          birthYear: _storageService.birthYear,
-          message: _msg,
-          gender: _storageService.gender,
-          yearsInNokia: _storageService.yearsInNokia,
-          date: DateTime.now().toString());
+      String prevData = _storageService.userData;
+      UserData userData = prevData != null
+          ? UserData.fromMap(json.decode(prevData))
+          : UserData();
+      data = new HRMessage(
+        name: userData.name,
+        lastName: userData.lastName,
+        building: userData.building,
+        floor: userData.floor,
+        birthYear: userData.birthYear,
+        message: _msg,
+        gender: userData.gender,
+        yearsWorked: userData.yearsWorked,
+        date: DateTime.now().toString(),
+      );
     } else {
-      data = new MsgDataStructure(
-          name: "",
-          lastName: "",
-          building: 0,
-          floor: 0,
-          birthYear: 0,
-          message: _msg,
-          gender: 0,
-          yearsInNokia: 0,
-          date: DateTime.now().toString());
+      data = new HRMessage(
+        name: "",
+        lastName: "",
+        building: "-1",
+        floor: "-1",
+        birthYear: "-1",
+        message: _msg,
+        gender: "-1",
+        yearsWorked: "-1",
+        date: DateTime.now().toString(),
+      );
     }
-    if (_validMsg) {
+    if (_formKey.currentState.validate()) {
       locator<FirestoreService>().saveHrMessage(data);
-
       Navigator.of(context).pop();
     }
   }
@@ -83,7 +78,9 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
                 title: Text(getTranslated(context, "msgForHR_sendMsgAnon")),
                 value: _anonymousMsg,
                 activeColor: Theme.of(context).accentColor,
-                onChanged: _onAnonymousCheckBoxChange,
+                onChanged: (value) => setState(() {
+                  _anonymousMsg = value;
+                }),
                 controlAffinity: ListTileControlAffinity.trailing,
               ),
             ),
@@ -93,42 +90,34 @@ class _MsgForHRPopup extends State<MsgForHRPopup> {
             // Theme so that in light mode borders don't dissapear on focus
             Theme(
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
-              child: TextFormField(
-                  onChanged: (value) {
-                    _msg = value;
-                  },
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (value) {
-                    // Checks that message is not empty
-                    if (_hasTriedToSendMsg) {
-                      if (value.replaceAll(new RegExp(r"\s+"), "").isEmpty) {
-                        _validMsg = false;
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                    onChanged: (value) {
+                      _msg = value;
+                    },
+                    validator: (value) {
+                      // Checks that message is not empty
+                      if (value.trim().isEmpty)
                         return getTranslated(context, "msgForHr_noMsg");
-                      } else {
-                        _validMsg = true;
-                        return null;
-                      }
-                    }
-                    if (value.replaceAll(new RegExp(r"\s+"), "").isNotEmpty) {
-                      _validMsg = true;
-                    }
-                    return null;
-                  },
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context).cardColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).textTheme.bodyText1.color,
+                      return null;
+                    },
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).cardColor,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          ),
                         ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).textTheme.bodyText1.color,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          ),
                         ),
-                      ),
-                      hintText: getTranslated(context, "msgForHR_hint"))),
+                        hintText: getTranslated(context, "msgForHR_hint"))),
+              ),
             ),
           ],
         ),

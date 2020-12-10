@@ -23,119 +23,116 @@ class _HRsurveyResponsesState extends State<HRsurveyResponses> {
     return StreamBuilder<List<QuestionItem>>(
       stream: locator<FirestoreService>().getSurveyQuestions(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.isNotEmpty) {
-            _questionsData = snapshot.data;
+        if (snapshot.hasData && snapshot.data.isNotEmpty) {
+          _questionsData = snapshot.data;
 
-            // Sorting by date, newest to oldest
-            _questionsData.sort((a, b) => b.date.compareTo(a.date) as int);
+          // Sorting by date, newest to oldest
+          _questionsData.sort((a, b) => b.date.compareTo(a.date) as int);
 
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12),
-                      child: Text(
-                        getTranslated(context, "hr_responseTitle"),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
-                      ),
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, right: 12),
+                    child: Text(
+                      getTranslated(context, "hr_responseTitle"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(height: 6),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _questionsData.length,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 6.0),
-                            child: Card(
-                              // Different shade of color for first questionnaire since it can not be edited
+                  ),
+                  SizedBox(height: 6),
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _questionsData.length,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Card(
+                            // Different shade of color for first questionnaire since it can not be edited
 
-                              child: ListTile(
-                                title: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          // Free space
-                                          SizedBox(height: 6),
+                            child: ListTile(
+                              title: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        // Free space
+                                        SizedBox(height: 6),
 
-                                          // Question text
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                getTranslated(
-                                                    context, "hr_responseQst"),
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor),
+                                        // Question text
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              getTranslated(
+                                                  context, "hr_responseQst"),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                _questionsData[index]
+                                                        .question ??
+                                                    " ",
                                               ),
-                                              Flexible(
-                                                child: Text(
-                                                  _questionsData[index]
-                                                          .question ??
-                                                      " ",
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                    Icon(Icons.navigate_next, size: 28)
-                                  ],
-                                ),
-
-                                // Ontap -> opens page to edit questionnaire
-                                // Handles questionnaire edititing/deleting when coming back from edit page
-                                onTap: () async {
-                                  await Navigator.of(context,
-                                          rootNavigator: true)
-                                      .push(
-                                    MaterialPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (context) =>
-                                          SurveyFreeResponseList(
-                                              questionID:
-                                                  _questionsData[index].id,
-                                              question: _questionsData[index]
-                                                  .question),
-                                    ),
-                                  );
-                                },
+                                  ),
+                                  Icon(Icons.navigate_next, size: 28)
+                                ],
                               ),
+
+                              // Ontap -> opens page to edit questionnaire
+                              // Handles questionnaire edititing/deleting when coming back from edit page
+                              onTap: () async {
+                                await Navigator.of(context, rootNavigator: true)
+                                    .push(
+                                  MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (context) =>
+                                        SurveyFreeResponseList(
+                                            questionID:
+                                                _questionsData[index].id,
+                                            question:
+                                                _questionsData[index].question),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-            // Shows message if there are no questionnaires
-          } else {
-            return Container(
-                padding: EdgeInsets.only(top: 50),
-                child: Text(getTranslated(context, "hr_qstNoQsts"),
-                    style: TextStyle(fontSize: 24)));
-          }
+            ),
+          );
+          // Shows message if there are no questionnaires
           // Loading indicator when loading
-        } else {
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
           return Padding(
               padding: const EdgeInsets.only(top: 50.0),
               child: CircularProgressIndicator());
+        } else {
+          return Container(
+              padding: EdgeInsets.only(top: 50),
+              child: Text(getTranslated(context, "hr_qstNoQsts"),
+                  style: TextStyle(fontSize: 24)));
         }
       },
     );
