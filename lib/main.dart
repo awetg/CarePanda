@@ -26,7 +26,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   // start local storage service
   await startStorageService();
-  final _storageService = locator<LocalStorageService>();
+  final LocalStorageService _storageService = locator<LocalStorageService>();
   final String userId = _storageService.anonymousUserId ?? null;
   // set if userId not set
   if (userId == null) {
@@ -58,7 +58,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale;
-  var _storageService = locator<LocalStorageService>();
+  LocalStorageService _storageService = locator<LocalStorageService>();
 
   // Function to change language and saves language code to shared preferences
   setLocale(locale) {
@@ -143,7 +143,7 @@ class AppNavigation extends StatefulWidget {
 
 class _AppNavigation extends State<AppNavigation> {
   int _selectedPage = 0;
-  var _pageOptions;
+  List<Widget> _pageOptions;
   User user = FirebaseAuth.instance.currentUser;
 
   @override

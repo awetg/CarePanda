@@ -1,13 +1,17 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
-  static LocalStorageService _instance;
+  static LocalStorageService _instance =
+      LocalStorageService._privateConstructor();
   static SharedPreferences _preferences;
 
+  factory LocalStorageService() {
+    return _instance;
+  }
+
+  LocalStorageService._privateConstructor();
+
   static Future<LocalStorageService> getInstance() async {
-    if (_instance == null) {
-      _instance = LocalStorageService();
-    }
     if (_preferences == null) {
       _preferences = await SharedPreferences.getInstance();
     }
@@ -27,13 +31,7 @@ class LocalStorageService {
   static const String Language = 'language';
 
   // USER DATA
-  static const String Name = 'name';
-  static const String LastName = 'lastName';
-  static const String BirthYear = 'birthYear';
-  static const String Gender = 'gender';
-  static const String Building = 'building';
-  static const String Floor = 'floor';
-  static const String YearsInNokia = 'yearsInNokia';
+  static const String UserData = "userData";
   static const String AnonymousUserId = "uniqueId";
 
   // Gets value from local storage
@@ -49,13 +47,7 @@ class LocalStorageService {
   String get language => _getFromLocalStorage(Language);
 
   // USER DATA
-  String get name => _getFromLocalStorage(Name);
-  String get lastName => _getFromLocalStorage(LastName);
-  int get birthYear => _getFromLocalStorage(BirthYear);
-  int get gender => _getFromLocalStorage(Gender);
-  int get building => _getFromLocalStorage(Building);
-  int get floor => _getFromLocalStorage(Floor);
-  int get yearsInNokia => _getFromLocalStorage(YearsInNokia);
+  String get userData => _getFromLocalStorage(UserData);
   String get anonymousUserId => _getFromLocalStorage(AnonymousUserId);
 
   // Sets value to local storage
@@ -75,13 +67,7 @@ class LocalStorageService {
   set language(String value) => _saveToLocalStorage(Language, value);
 
   // USER DATA
-  set name(String value) => _saveToLocalStorage(Name, value);
-  set lastName(String value) => _saveToLocalStorage(LastName, value);
-  set birthYear(int value) => _saveToLocalStorage(BirthYear, value);
-  set gender(int value) => _saveToLocalStorage(Gender, value);
-  set building(int value) => _saveToLocalStorage(Building, value);
-  set floor(int value) => _saveToLocalStorage(Floor, value);
-  set yearsInNokia(int value) => _saveToLocalStorage(YearsInNokia, value);
+  set userData(String value) => _saveToLocalStorage(UserData, value);
   set anonymousUserId(String value) =>
       _saveToLocalStorage(AnonymousUserId, value);
 
@@ -113,9 +99,4 @@ class LocalStorageService {
       _preferences.setStringList(key, content);
     }
   }
-}
-
-class HasQuestionnaire {
-  final hasQuestionnaire;
-  HasQuestionnaire({this.hasQuestionnaire});
 }

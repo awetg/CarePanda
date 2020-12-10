@@ -23,12 +23,13 @@ class SurveyResponseService {
   void initResponseForQuestion(QuestionItem question) {
     if (!_responses.containsKey(question.id)) {
       _responses[question.id] = SurveyResponse(
-          questionId: question.id,
-          type: question.type,
-          value: "",
-          freeText: "",
-          time: Timestamp.now(),
-          userId: locator<LocalStorageService>().anonymousUserId);
+        questionId: question.id,
+        type: question.type,
+        value: "",
+        freeText: "",
+        time: Timestamp.now(),
+        userId: locator<LocalStorageService>().anonymousUserId,
+      );
     }
   }
 

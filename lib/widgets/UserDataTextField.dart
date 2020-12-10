@@ -27,10 +27,6 @@ class UserDataTextField extends StatelessWidget {
             filled: true,
             isDense: true,
             contentPadding: EdgeInsets.only(top: 4, left: 4, bottom: 4),
-            enabledBorder: UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: Theme.of(context).accentColor, width: 1.5),
-            ),
           ),
           onChanged: onChange,
         ),
