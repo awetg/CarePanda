@@ -2,6 +2,7 @@ import 'package:carePanda/localization/localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Picker popup used in userdata modifying
 class UserDataPickerPopup extends StatelessWidget {
   final List<String> data;
   final String value;
@@ -20,6 +21,7 @@ class UserDataPickerPopup extends StatelessWidget {
         height: 250,
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
+          // Picker
           child: CupertinoPicker(
               backgroundColor: Theme.of(context).cardColor,
               scrollController:

@@ -18,14 +18,18 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
   bool _invalidUser = false;
   bool _loadingIndicator = false;
   bool _tooManyRequests = false;
+  // Pattern of email
   Pattern _emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
+  // Logging in
   login() async {
     setState(() {
       _hasTriedLogin = true;
     });
 
+    // Checks that email and password are valid before trying to log in
+    // Shows errors if too many requests been sent or if login details are wrong
     if (_validEmail && _validPassword) {
       try {
         _loadingIndicator = true;
@@ -79,6 +83,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.always,
+                // Username validating
                 validator: (value) {
                   RegExp regex = new RegExp(_emailPattern);
                   if (_hasTriedLogin) {
@@ -135,6 +140,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
               data: Theme.of(context).copyWith(primaryColor: Color(0xff027DC5)),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.always,
+                // Password validating
                 validator: (value) {
                   if (_hasTriedLogin) {
                     if (value.isEmpty) {
@@ -177,12 +183,14 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
             ),
           ),
 
+          // Loading indicator when logging in
           if (_loadingIndicator)
             Padding(
               padding: const EdgeInsets.only(top: 18.0),
               child: CircularProgressIndicator(),
             ),
 
+          // Invalid login details error msg
           if (_invalidUser)
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
@@ -190,6 +198,7 @@ class _HRLoginPopupState extends State<HRLoginPopup> {
                   style: TextStyle(color: Colors.red, fontSize: 14)),
             ),
 
+          // Too many requests error msg
           if (_tooManyRequests)
             Flexible(
               child: Padding(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Simple popup that has text and 2 buttons
 class SimplePopUp extends StatefulWidget {
   final cancelBtnName;
   final confirmBtnName;

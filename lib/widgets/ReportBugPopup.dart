@@ -23,6 +23,7 @@ class _ReportBugPopup extends State<ReportBugPopup> {
     var data =
         new ReportMsgModel(message: _msg, date: DateTime.now().toString());
 
+    // If message is valid, sends bug report
     if (_validMsg) {
       locator<FirestoreService>().saveReportBugMsg(data);
       Navigator.of(context).pop();

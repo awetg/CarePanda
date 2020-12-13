@@ -2,6 +2,7 @@ import 'package:carePanda/services/LocalStorageService.dart';
 import 'package:carePanda/services/ServiceLocator.dart';
 import 'package:flutter/material.dart';
 
+// Drop down buttons used in userdata modifying
 class UserDataDropDownButton extends StatelessWidget {
   final settingName;
   final value;
@@ -28,6 +29,7 @@ class UserDataDropDownButton extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 6),
           height: 40,
+          // Decoration
           decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -41,6 +43,7 @@ class UserDataDropDownButton extends StatelessWidget {
               ],
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(4)),
+          // Drop down buttton
           child: DropdownButton(
             dropdownColor: Theme.of(context).cardColor,
             value: value.toString(),

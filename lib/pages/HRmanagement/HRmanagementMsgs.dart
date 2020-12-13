@@ -190,7 +190,8 @@ class _MessagesState extends State<Messages> {
                                           : Container(),
 
                                     // Floor
-                                    if (_msgData[index].floor != null)
+                                    if (_msgData[index].floor != null &&
+                                        _msgData[index].floor != "-1")
                                       Row(
                                         children: [
                                           _shouldExpand ?? false
@@ -250,7 +251,7 @@ class _MessagesState extends State<Messages> {
                                                 ? Text(
                                                     (_msgData[index]
                                                                 .birthYear ==
-                                                            0)
+                                                            "-1")
                                                         ? getTranslated(context,
                                                             "userData_notSelected")
                                                         : snapshot.data[index]
@@ -328,7 +329,7 @@ class _MessagesState extends State<Messages> {
                                                 ? Text(
                                                     (_msgData[index]
                                                                 .yearsWorked ==
-                                                            0)
+                                                            "-1")
                                                         ? getTranslated(context,
                                                             "userData_notSelected")
                                                         : _msgData[index]
